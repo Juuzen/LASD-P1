@@ -28,10 +28,25 @@ Patient patientInsert(Patient ptList, char fiscalCode[], char password[]) {
     }
 }
 
-
 void printPatientList(Patient ptList) {
     if (ptList != NULL) {
         printf("%s | %s\n", ptList->fiscalCode, ptList->password);
         printPatientList(ptList->next);
     }
+}
+
+// GESTIONE APPUNTAMENTI
+
+Appointment newAppointmentNode(char fiscalCode[], char synthoms[], timeSlot slot) {
+    Appointment app = (Appointment) calloc(1, sizeof(struct appointment));
+
+    if (app != NULL) {
+        strcpy(app->fiscalCode, fiscalCode);
+        if (synthoms != NULL) {
+            app->synthoms = (char *) calloc(1, SYNTHOMS_SIZE * sizeof(char));
+            strcpy(app->synthoms, synthoms);
+        }
+        app->slot = slot;
+    }
+    return app;
 }

@@ -21,7 +21,7 @@ typedef enum timeSlot { DAY, AFTERNOON, EVENING } timeSlot;
 
 struct appointment {
     char fiscalCode[FISCALCODE_SIZE];
-    char synthoms[SYNTHOMS_SIZE];
+    char *synthoms;
     timeSlot slot;
 };
 typedef struct appointment* Appointment;
@@ -32,5 +32,5 @@ typedef struct testingDay {
     Appointment evening[2];
 } testingDay;
 
-Appointment newAppointmentQueue();
+Appointment newAppointmentNode(char fiscalCode[], char synthoms[], timeSlot slot);
 #endif // structure_h
