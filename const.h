@@ -21,4 +21,6 @@
 #define PATIENT_DB "patient_db.txt"
 #define LABWORKER_DB "labworker_db.txt"
 
+#define APPOINTMENT_DB "appointment_db.txt"
+
 #endif // const_h

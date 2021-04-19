@@ -28,6 +28,16 @@ Patient patientInsert(Patient ptList, char fiscalCode[], char password[]) {
     }
 }
 
+void deletePatientList(Patient ptList) {
+    if (ptList != NULL) {
+        deletePatientList(ptList->next);
+        memset(ptList->fiscalCode, '\0', sizeof(ptList->fiscalCode));
+        memset(ptList->password, '\0', sizeof(ptList->password));
+        ptList->next = NULL;
+        free(ptList);
+    }
+}
+
 void printPatientList(Patient ptList) {
     if (ptList != NULL) {
         printf("%s | %s\n", ptList->fiscalCode, ptList->password);
@@ -37,7 +47,25 @@ void printPatientList(Patient ptList) {
 
 // GESTIONE APPUNTAMENTI
 
-Appointment newAppointmentNode(char fiscalCode[], char synthoms[], timeSlot slot) {
+const char* getTimeSlot(timeSlot slot) {
+    switch (slot) {
+        case MORNING:
+            return "MORNING";
+        case AFTERNOON:
+            return "AFTERNOON";
+        case EVENING:
+            return "EVENING";
+        default:
+            return "";
+    }
+}
+
+Appointment newAppointmentList() {
+    Appointment app = NULL;
+    return app;
+}
+
+Appointment newAppointmentNode(char fiscalCode[], timeSlot slot, char synthoms[]) {
     Appointment app = (Appointment) calloc(1, sizeof(struct appointment));
 
     if (app != NULL) {
@@ -49,4 +77,49 @@ Appointment newAppointmentNode(char fiscalCode[], char synthoms[], timeSlot slot
         app->slot = slot;
     }
     return app;
+}
+
+void deleteAppointmentNode (Appointment app) {
+    if (app != NULL) {
+        memset(app->fiscalCode, '\0', sizeof(app->fiscalCode));
+        if (app->synthoms != NULL) {
+            free(app->synthoms);
+            app->synthoms = NULL;
+        }
+        app->slot = 0;
+        free(app);
+    }
+}
+
+void deleteAppointmentList (Appointment appList) {
+    if (appList != NULL) {
+        deleteAppointmentList(appList->next);
+        deleteAppointmentNode(appList);
+    }
+}
+
+Appointment appointmentInsert(Appointment appList, char fiscalCode[], timeSlot slot, char synthoms[]) {
+    if (appList == NULL) {
+        return newAppointmentNode(fiscalCode, slot, synthoms);
+    }
+
+    else {
+        appList->next = appointmentInsert(appList->next, fiscalCode, slot, synthoms);
+        return appList;
+    }
+}
+
+void printAppointmentNode(Appointment app) {
+    printf("Fiscal Code: %s\n", app->fiscalCode);
+    printf("Time slot: %s\n", getTimeSlot(app->slot));
+    printf("Synthoms: ");
+    printf((app->synthoms == NULL) ? "None" : app->synthoms);
+    printf("\n\n");
+}
+
+void printAppointmentList(Appointment appList) {
+    if (appList != NULL) {
+        printAppointmentNode(appList);
+        printAppointmentList(appList->next);
+    }
 }

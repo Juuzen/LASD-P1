@@ -24,7 +24,7 @@ void patientAccountUi(Patient ptList, char fiscalCode[]) {
             printf("5. GO BACK\n");
             printf("\nYour choice: ");
 
-            userChoice = getChoice(3);
+            userChoice = getChoice(5);
         } while (userChoice == -1);
 
         switch(userChoice) {
@@ -52,6 +52,7 @@ void patientAccountUi(Patient ptList, char fiscalCode[]) {
     } while (running);
 
     savePatientList(ptList);
+    deletePatientList(ptList);
 }
 
 void patientLoginUi(Patient ptList) {
@@ -183,6 +184,7 @@ void patientUi() {
     } while (running);
 
     savePatientList(ptList);
+    deletePatientList(ptList);
 }
 
 void labUi() {
