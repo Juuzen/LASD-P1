@@ -5,6 +5,7 @@
 /* UI PAZIENTI */
 void patientAppointmentRequestUi(Appointment appList, char fiscalCode[]);
 void patientShowAppointmentUi(Appointment appList, char fiscalCode[]);
+void patientDeleteAppointmentUi(Appointment* appList, char fiscalCode[]);
 void patientAccountUi(char fiscalCode[]);
 void patientLoginUi(Patient ptList);
 void patientRegisterUi(Patient ptList);

@@ -69,7 +69,7 @@
 	<stdbool.h>
 	"structure.h"
 
-1618930883 source:f:\university\laboratorio di algoritmi e strutture dati\esercizi\lasd-p1\database.c
+1618939176 source:f:\university\laboratorio di algoritmi e strutture dati\esercizi\lasd-p1\database.c
 	<stdio.h>
 	<stdlib.h>
 	<stdbool.h>
@@ -78,16 +78,16 @@
 	"const.h"
 	"structure.h"
 
-1618930904 f:\university\laboratorio di algoritmi e strutture dati\esercizi\lasd-p1\database.h
+1618951066 f:\university\laboratorio di algoritmi e strutture dati\esercizi\lasd-p1\database.h
 	"structure.h"
 
-1618933857 f:\university\laboratorio di algoritmi e strutture dati\esercizi\lasd-p1\structure.h
+1618951638 f:\university\laboratorio di algoritmi e strutture dati\esercizi\lasd-p1\structure.h
 	<stdbool.h>
 	"const.h"
 
 1618928905 f:\university\laboratorio di algoritmi e strutture dati\esercizi\lasd-p1\const.h
 
-1618934760 source:f:\university\laboratorio di algoritmi e strutture dati\esercizi\lasd-p1\helper.c
+1618953140 source:f:\university\laboratorio di algoritmi e strutture dati\esercizi\lasd-p1\helper.c
 	<stdio.h>
 	<stdlib.h>
 	"const.h"
@@ -104,7 +104,7 @@
 	"lab.h"
 	"structure.h"
 
-1618930889 source:f:\university\laboratorio di algoritmi e strutture dati\esercizi\lasd-p1\main.c
+1618953312 source:f:\university\laboratorio di algoritmi e strutture dati\esercizi\lasd-p1\main.c
 	<stdio.h>
 	<string.h>
 	<malloc.h>
@@ -113,14 +113,14 @@
 	"patient.h"
 	"lab.h"
 
-1618935591 f:\university\laboratorio di algoritmi e strutture dati\esercizi\lasd-p1\ui.h
+1618952750 f:\university\laboratorio di algoritmi e strutture dati\esercizi\lasd-p1\ui.h
 	"structure.h"
 
-1618935517 f:\university\laboratorio di algoritmi e strutture dati\esercizi\lasd-p1\patient.h
+1618951094 f:\university\laboratorio di algoritmi e strutture dati\esercizi\lasd-p1\patient.h
 	<stdbool.h>
 	"structure.h"
 
-1618935549 source:f:\university\laboratorio di algoritmi e strutture dati\esercizi\lasd-p1\patient.c
+1618953183 source:f:\university\laboratorio di algoritmi e strutture dati\esercizi\lasd-p1\patient.c
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
@@ -129,7 +129,7 @@
 	"patient.h"
 	"structure.h"
 
-1618935421 source:f:\university\laboratorio di algoritmi e strutture dati\esercizi\lasd-p1\ui.c
+1618952947 source:f:\university\laboratorio di algoritmi e strutture dati\esercizi\lasd-p1\ui.c
 	<stdio.h>
 	<stdlib.h>
 	<stdbool.h>
@@ -139,7 +139,7 @@
 	"helper.h"
 	"database.h"
 
-1618933857 source:f:\university\laboratorio di algoritmi e strutture dati\esercizi\lasd-p1\structure.c
+1618950890 source:f:\university\laboratorio di algoritmi e strutture dati\esercizi\lasd-p1\structure.c
 	<stdio.h>
 	<stdlib.h>
 	<string.h>

@@ -20,6 +20,6 @@ void clearScreen() {
 void pause(char message[]) {
     printf("%s\n", message);
     fflush(stdin);
-    getchar();
+    getchar(); //FIXME: Qualsiasi tasto premuto (ora accetta solo invio)
     fflush(stdin);
 }

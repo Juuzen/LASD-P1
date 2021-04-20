@@ -42,12 +42,43 @@ void patientAppointmentRequestUi(Appointment appList, char fiscalCode[]) {
 }
 
 void patientShowAppointmentUi(Appointment appList, char fiscalCode[]) {
+    clearScreen();
     Appointment app = findAppointmentByFiscalCode(appList, fiscalCode);
     if (app == NULL) pause("You have no appointments.\nPress any key to go back...");
     else {
         printf("Here is you appointment informations:\n");
         printAppointmentNode(app);
         pause("Press any key to go back...");
+    }
+}
+
+void patientDeleteAppointmentUi(Appointment* appList, char fiscalCode[]) {
+    clearScreen();
+    Appointment app = findAppointmentByFiscalCode(*appList, fiscalCode);
+    printAppointmentNode(app);
+
+    if (app == NULL) pause("You have no appointments.\nPress any key to go back...");
+    else {
+        char input;
+        do {
+            clearScreen();
+            printf("Here is you appointment informations:\n");
+            printAppointmentNode(app);
+            printf("Do you want to delete this appointment? [y/n] ");
+            scanf("%c", &input);
+            if ((input == 'y') || (input == 'Y')) {
+                patientDeleteAppointment(appList, fiscalCode);
+            }
+
+            else if ((input == 'n') || (input == 'N')) {
+                pause("The appointment will not be deleted.\nPress any key to go back...");
+            }
+
+            else {
+                //FIXME: Flush somewhere
+                pause("Wrong choice! Only 'y' or 'n' are permitted.\nPress any key to continue...");
+            }
+        } while ((input != 'y') && (input != 'Y') && (input != 'n') && (input != 'N'));
     }
 }
 
@@ -63,7 +94,7 @@ void patientAccountUi(char fiscalCode[]) {
             printf("Welcome %s.\n", fiscalCode);
             printf("Please make a choice:\n\n");
             printf("1. REQUEST A COVID TEST APPOINTMENT\n");
-            printf("2. CHECK YOUR APPOINTMENT\n");
+            printf("2. CHECK YOUR APPOINTMENTS\n");
             printf("3. CANCEL AN APPOINTMENT\n");
             printf("4. SHOW THE RESULTS FOR PREVIOUS TESTS\n");
             printf("5. GO BACK\n");
@@ -80,7 +111,7 @@ void patientAccountUi(char fiscalCode[]) {
                 patientShowAppointmentUi(appList, fiscalCode);
                 break;
             case 3:
-
+                patientDeleteAppointmentUi(&appList, fiscalCode);
                 break;
             case 4:
 
@@ -110,7 +141,7 @@ void patientLoginUi(Patient ptList) {
         printf("Please provide your fiscal code: ");
         scanf("%16s", fiscalCode);
         fflush(stdin);
-        printf("Please choose a password: ");
+        printf("Please provide your password: ");
         //TODO: masked scanf
         scanf("%20s", password);
         fflush(stdin);
@@ -211,7 +242,7 @@ void patientUi() {
 
         switch(userChoice) {
             case 1:
-                //patientLoginUi();
+                patientLoginUi(ptList);
                 break;
             case 2:
                 patientRegisterUi(ptList);

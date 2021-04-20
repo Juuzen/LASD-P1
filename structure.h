@@ -41,6 +41,7 @@ Appointment appointmentInsert(Appointment appList, char fiscalCode[], timeSlot s
 void printAppointmentNode(Appointment app);
 void printAppointmentList(Appointment appList);
 Appointment findAppointmentByFiscalCode(Appointment appList, char fiscalCode[]);
+Appointment deleteAppointmentByFiscalCode(Appointment appList, char fiscalCode[]);
 
 // GESTIONE INFO TEST
 struct testingDay {

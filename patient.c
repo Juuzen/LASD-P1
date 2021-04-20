@@ -58,3 +58,7 @@ bool patientRequestAppointment(Appointment* appList, char fiscalCode[], timeSlot
     return response;
 }
 
+void patientDeleteAppointment(Appointment* appList, char fiscalCode[]) {
+    *appList = deleteAppointmentByFiscalCode(*appList, fiscalCode);
+    saveAppointmentList(*appList);
+}

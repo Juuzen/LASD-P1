@@ -150,6 +150,21 @@ Appointment findAppointmentByFiscalCode(Appointment appList, char fiscalCode[]) 
     }
 }
 
+Appointment deleteAppointmentByFiscalCode(Appointment appList, char fiscalCode[]) {
+    if (appList == NULL) return appList;
+    else {
+        if (strcmp(appList->fiscalCode, fiscalCode) == 0) {
+            Appointment tmp = appList->next;
+            deleteAppointmentNode(appList);
+            return tmp;
+        }
+        else {
+            appList->next = deleteAppointmentByFiscalCode(appList->next, fiscalCode);
+            return appList;
+        }
+    }
+}
+
 // GESTIONE STRUTTURA TEST
 TestingDay newTestingDay() {
     TestingDay test = (TestingDay) calloc(1, sizeof(struct testingDay));

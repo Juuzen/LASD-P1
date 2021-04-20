@@ -1,5 +1,1 @@
-100	0	(null)
-100	0	(null)
-200	1	Tosse, catarro
-100	0	(null)
 200	1	Tosse, catarro

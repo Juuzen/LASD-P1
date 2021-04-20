@@ -134,5 +134,27 @@ Appointment loadAppointmentList() {
     return appList;
 }
 
+void saveAppointmentListBody(Appointment appList, FILE * appointmentDB) {
+    if (appointmentDB != NULL) {
+        if (appList != NULL) {
+            if (fprintf(appointmentDB, "%s\t%d\t%s\n", appList->fiscalCode, appList->slot, appList->symptoms) < 0) {
+            // TODO: Handle error in writing
+            }
+            else {
+                saveAppointmentListBody(appList->next, appointmentDB);
+            }
+        }
+    }
+}
+
+void saveAppointmentList(Appointment appList) {
+    FILE * appointmentDB = fopen(APPOINTMENT_DB, "w");
+    if (appointmentDB != NULL) {
+        saveAppointmentListBody(appList, appointmentDB);
+    }
+    else {
+        //TODO: Handle error file opening
+    }
+}
 
 // GESTIONE DB TEST

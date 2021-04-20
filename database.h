@@ -10,5 +10,7 @@ Patient loadPatientList();
 void saveAppointment(Appointment app);
 char *getSymptoms(FILE * file);
 Appointment loadAppointmentList();
+void saveAppointmentListBody(Appointment appList, FILE * appointmentDB);
+void saveAppointmentList(Appointment appList);
 
 #endif // database_h
