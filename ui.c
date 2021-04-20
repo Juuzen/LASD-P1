@@ -7,11 +7,56 @@
 #include "helper.h"
 #include "database.h"
 
-void patientAccountUi(Patient ptList, char fiscalCode[]) {
+void patientAppointmentRequestUi(Appointment appList, char fiscalCode[]) {
+    int userChoice = -1;
+    Appointment found = findAppointmentByFiscalCode(appList, fiscalCode);
+    if (found != NULL) {
+        printf("You already have an appointment with the following informations:\n");
+        printAppointmentNode(found);
+        pause("Press any key to go back...");
+    }
+    else {
+        do {
+            clearScreen();
+            printf("You are now requesting an appointment for a COVID test. Please choose your time slot:\n");
+            printf("1. MORNING\n");
+            printf("2. AFTERNOON\n");
+            printf("3. EVENING\n");
+            printf("4. EXIT\n");
+            printf("Your choice: ");
+            userChoice = getChoice(4);
+        } while (userChoice == -1);
+
+        if (userChoice != 4) {
+            timeSlot slot = (timeSlot) userChoice;
+
+            printf("If you have any symptoms, please provide a concise explanation (max %d characters):\n", SYMPTOMS_SIZE);
+            char * symptoms = getSymptoms(stdin);
+
+            bool response = patientRequestAppointment(&appList, fiscalCode, slot, symptoms);
+            if (response) pause("Appointment requested!\nPress any key to go back...");
+            else pause("There was a problem in requesting the appointment.\nPress any key to go back...");
+        }
+    }
+
+}
+
+void patientShowAppointmentUi(Appointment appList, char fiscalCode[]) {
+    Appointment app = findAppointmentByFiscalCode(appList, fiscalCode);
+    if (app == NULL) pause("You have no appointments.\nPress any key to go back...");
+    else {
+        printf("Here is you appointment informations:\n");
+        printAppointmentNode(app);
+        pause("Press any key to go back...");
+    }
+}
+
+void patientAccountUi(char fiscalCode[]) {
     int userChoice = -1;
     bool running = true;
-    // TODO: load Appointment queue
+    Appointment appList = loadAppointmentList();
     // TODO: load Results list
+
     do {
         do {
             clearScreen();
@@ -29,10 +74,10 @@ void patientAccountUi(Patient ptList, char fiscalCode[]) {
 
         switch(userChoice) {
             case 1:
-
+                patientAppointmentRequestUi(appList, fiscalCode);
                 break;
             case 2:
-
+                patientShowAppointmentUi(appList, fiscalCode);
                 break;
             case 3:
 
@@ -51,8 +96,7 @@ void patientAccountUi(Patient ptList, char fiscalCode[]) {
         }
     } while (running);
 
-    savePatientList(ptList);
-    deletePatientList(ptList);
+    deleteAppointmentList(appList);
 }
 
 void patientLoginUi(Patient ptList) {
@@ -73,7 +117,7 @@ void patientLoginUi(Patient ptList) {
 
         if (loginCheck(ptList, fiscalCode, password)) {
             //login authorized
-            patientAccountUi(ptList, fiscalCode);
+            patientAccountUi(fiscalCode);
             running = false;
         }
         else {
@@ -230,10 +274,7 @@ void mainUi() {
 
 void wrongChoice() {
     printf("Your choice is not correct! Please choose one of the numbers provided.\n");
-    printf("Press any key to continue... ");
-    fflush(stdin);
-    getchar();
-    fflush(stdin);
+    pause("Press any key to continue...");
 }
 
 int getChoice(int maxOptions) {

@@ -16,3 +16,10 @@ void clearScreen() {
     system("clear");
     #endif
 }
+
+void pause(char message[]) {
+    printf("%s\n", message);
+    fflush(stdin);
+    getchar();
+    fflush(stdin);
+}

@@ -47,5 +47,14 @@ bool patientRegister(Patient* ptList, char fiscalCode[], char password[]) {
     return response;
 }
 
-
+bool patientRequestAppointment(Appointment* appList, char fiscalCode[], timeSlot slot, char symptoms[]) {
+    bool response = false;
+    Appointment newApp = newAppointmentNode(fiscalCode, slot, symptoms);
+    if (newApp != NULL) {
+        *appList = appointmentAppend(*appList, newApp);
+        saveAppointment(newApp);
+        response = true;
+    }
+    return response;
+}
 

@@ -16,7 +16,7 @@
 #define FILENAMESIZE 21
 #define FISCALCODE_SIZE 17
 #define PASSWORD_SIZE 20
-#define SYNTHOMS_SIZE 400
+#define SYMPTOMS_SIZE 400
 
 #define PATIENT_DB "patient_db.txt"
 #define LABWORKER_DB "labworker_db.txt"

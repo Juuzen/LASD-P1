@@ -6,6 +6,8 @@
 #include "const.h"
 #include "structure.h"
 
+// GESTIONE DB PAZIENTI
+
 void savePatient(char fiscalCode[], char password[]) {
     FILE * patientDB;
     patientDB = fopen(PATIENT_DB, "a");
@@ -18,6 +20,7 @@ void savePatient(char fiscalCode[], char password[]) {
     fclose(patientDB);
 }
 
+//useless
 void savePatientListBody (Patient ptList, FILE * patientDB) {
     if (patientDB != NULL) {
         if (ptList != NULL) {
@@ -29,6 +32,7 @@ void savePatientListBody (Patient ptList, FILE * patientDB) {
     // file non più aperto - ERRORE
 }
 
+//useless
 void savePatientList(Patient ptList) {
     FILE * patientDB;
     patientDB = fopen(PATIENT_DB, "w");
@@ -60,13 +64,14 @@ Patient loadPatientList() {
     return ptList;
 }
 
+
 // GESTIONE DB APPUNTAMENTI
 
 void saveAppointment(Appointment app) {
     FILE * appointmentDB;
     appointmentDB = fopen(APPOINTMENT_DB, "a");
     if (appointmentDB != NULL) {
-        if (fprintf(appointmentDB, "%s\t%d\t%s\n", app->fiscalCode, app->slot, app->synthoms) < 0) {
+        if (fprintf(appointmentDB, "%s\t%d\t%s\n", app->fiscalCode, app->slot, app->symptoms) < 0) {
             // TODO: Handle error in writing
         }
     }
@@ -76,24 +81,58 @@ void saveAppointment(Appointment app) {
     fclose(appointmentDB);
 }
 
+char * getSymptoms(FILE * file) {
+    if (file != NULL) {
+        int i = 0;
+        char c;
+        char * scan = (char *) calloc(1, SYMPTOMS_SIZE * sizeof(char));
+        while (((c = fgetc(file)) != EOF) && c != '\n' && i < SYMPTOMS_SIZE) {
+            scan[i] = c;
+            i++;
+        }
+
+        if (feof(file)) {
+            printf("FILE FINITO\n");
+            return NULL;
+        }
+        return scan;
+    }
+    else return NULL;
+}
+
 Appointment loadAppointmentList() {
     Appointment appList = newAppointmentList();
     FILE * appointmentDB = fopen(APPOINTMENT_DB, "r");
     if (appointmentDB != NULL) {
+        Appointment synthomaticList = newAppointmentList();
+        Appointment asynthomaticList = newAppointmentList();
         char fiscalCode[FISCALCODE_SIZE];
-        char scanSynthoms[SYNTHOMS_SIZE + 1];
+        char *scansymptoms = NULL;
         int scanSlot;
-        //FIXME: Aggiustare la lettura dei sintomi
-        while ((fscanf(appointmentDB, "%s\t%d\t", fiscalCode, &scanSlot) != EOF) || fgets(scanSynthoms, SYNTHOMS_SIZE + 1, appointmentDB) != NULL) {
-            timeSlot slot = (timeSlot) scanSlot;
-            char synthoms[SYNTHOMS_SIZE];
-            (strcmp(scanSynthoms, "(null)") == 0) ? memset(synthoms, '\0', sizeof(synthoms)) : strncpy(synthoms, scanSynthoms, SYNTHOMS_SIZE);
-            appList = appointmentInsert(appList, fiscalCode, slot, synthoms);
+
+        while (!feof(appointmentDB)) {
+            if (fscanf(appointmentDB, "%s\t%d\t", fiscalCode, &scanSlot) != EOF) {
+                scansymptoms = getSymptoms(appointmentDB);
+                if (scansymptoms != NULL) {
+                    timeSlot slot = (timeSlot) scanSlot;
+                    if (strcmp(scansymptoms, "(null)") == 0) {
+                        asynthomaticList = appointmentInsert(asynthomaticList, fiscalCode, slot, NULL);
+                    }
+
+                    else {
+                        synthomaticList = appointmentInsert(synthomaticList, fiscalCode, slot, scansymptoms);
+                    }
+                }
+            }
         }
+        appList = appointmentAppend(synthomaticList, asynthomaticList);
+        fclose(appointmentDB);
     }
     else {
         //TODO: Handle file opening error
     }
-    fclose(appointmentDB);
     return appList;
 }
+
+
+// GESTIONE DB TEST

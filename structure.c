@@ -65,26 +65,31 @@ Appointment newAppointmentList() {
     return app;
 }
 
-Appointment newAppointmentNode(char fiscalCode[], timeSlot slot, char synthoms[]) {
+Appointment newAppointmentNode(char fiscalCode[], timeSlot slot, char symptoms[]) {
     Appointment app = (Appointment) calloc(1, sizeof(struct appointment));
 
     if (app != NULL) {
         strcpy(app->fiscalCode, fiscalCode);
-        if (synthoms != NULL) {
-            app->synthoms = (char *) calloc(1, SYNTHOMS_SIZE * sizeof(char));
-            strcpy(app->synthoms, synthoms);
+        if (symptoms != NULL) {
+            app->symptoms = (char *) calloc(1, SYMPTOMS_SIZE * sizeof(char));
+            strcpy(app->symptoms, symptoms);
         }
         app->slot = slot;
     }
     return app;
 }
 
+Appointment cloneAppointment(Appointment app) {
+    if (app == NULL) return NULL;
+    else return newAppointmentNode(app->fiscalCode, app->slot, app->symptoms);
+}
+
 void deleteAppointmentNode (Appointment app) {
     if (app != NULL) {
         memset(app->fiscalCode, '\0', sizeof(app->fiscalCode));
-        if (app->synthoms != NULL) {
-            free(app->synthoms);
-            app->synthoms = NULL;
+        if (app->symptoms != NULL) {
+            free(app->symptoms);
+            app->symptoms = NULL;
         }
         app->slot = 0;
         free(app);
@@ -98,23 +103,36 @@ void deleteAppointmentList (Appointment appList) {
     }
 }
 
-Appointment appointmentInsert(Appointment appList, char fiscalCode[], timeSlot slot, char synthoms[]) {
-    if (appList == NULL) {
-        return newAppointmentNode(fiscalCode, slot, synthoms);
+Appointment appointmentAppend(Appointment first, Appointment append) {
+    if (first == NULL) {
+        return append;
     }
 
     else {
-        appList->next = appointmentInsert(appList->next, fiscalCode, slot, synthoms);
+        first->next = appointmentAppend(first->next, append);
+        return first;
+    }
+}
+
+Appointment appointmentInsert(Appointment appList, char fiscalCode[], timeSlot slot, char symptoms[]) {
+    if (appList == NULL) {
+        return newAppointmentNode(fiscalCode, slot, symptoms);
+    }
+
+    else {
+        appList->next = appointmentInsert(appList->next, fiscalCode, slot, symptoms);
         return appList;
     }
 }
 
 void printAppointmentNode(Appointment app) {
-    printf("Fiscal Code: %s\n", app->fiscalCode);
-    printf("Time slot: %s\n", getTimeSlot(app->slot));
-    printf("Synthoms: ");
-    printf((app->synthoms == NULL) ? "None" : app->synthoms);
-    printf("\n\n");
+    if (app != NULL) {
+        printf("Fiscal Code: %s\n", app->fiscalCode);
+        printf("Time slot: %s\n", getTimeSlot(app->slot));
+        printf("symptoms: ");
+        printf((app->symptoms == NULL) ? "None" : app->symptoms);
+        printf("\n\n");
+    }
 }
 
 void printAppointmentList(Appointment appList) {
@@ -122,4 +140,76 @@ void printAppointmentList(Appointment appList) {
         printAppointmentNode(appList);
         printAppointmentList(appList->next);
     }
+}
+
+Appointment findAppointmentByFiscalCode(Appointment appList, char fiscalCode[]) {
+    if (appList == NULL) return NULL;
+    else {
+        if (strcmp(appList->fiscalCode, fiscalCode) == 0) return appList;
+        else return findAppointmentByFiscalCode(appList->next, fiscalCode);
+    }
+}
+
+// GESTIONE STRUTTURA TEST
+TestingDay newTestingDay() {
+    TestingDay test = (TestingDay) calloc(1, sizeof(struct testingDay));
+    return test;
+}
+
+void deleteTestingDay(TestingDay test) {
+    if (test != NULL) {
+    deleteAppointmentList(test->morning);
+    deleteAppointmentList(test->afternoon);
+    deleteAppointmentList(test->evening);
+    test->morning = NULL;
+    test->afternoon = NULL;
+    test->evening = NULL;
+
+    free(test);
+    }
+}
+
+void printTestingDay(TestingDay test) {
+    if (test != NULL) {
+        printf("Morning tests:\n");
+        printAppointmentList(test->morning);
+
+        printf("\nAfternoon tests:\n");
+        printAppointmentList(test->afternoon);
+
+        printf("\nEvening tests:\n");
+        printAppointmentList(test->evening);
+    }
+}
+
+int appointmentListCount(Appointment appList) {
+    if (appList == NULL) return 0;
+    else return 1 + appointmentListCount(appList->next);
+}
+
+bool isTimeSlotFull(TestingDay test, timeSlot slot) {
+    bool response = true;
+    if (test != NULL) {
+        switch (slot) {
+            case MORNING:
+                if (appointmentListCount(test->morning) < 2) {
+                    response = false;
+                }
+                break;
+            case AFTERNOON:
+                if (appointmentListCount(test->afternoon) < 2) {
+                    response = false;
+                }
+                break;
+            case EVENING:
+                if (appointmentListCount(test->evening) < 2) {
+                    response = false;
+                }
+                break;
+            default:
+                break;
+        }
+    }
+
+    return response;
 }

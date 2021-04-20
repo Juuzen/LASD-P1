@@ -8,6 +8,7 @@ void savePatientList(Patient ptList);
 Patient loadPatientList();
 
 void saveAppointment(Appointment app);
+char *getSymptoms(FILE * file);
 Appointment loadAppointmentList();
 
 #endif // database_h
