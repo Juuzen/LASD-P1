@@ -1,29 +1,38 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "lab.h"
 #include "structure.h"
 
-TestingDay acceptAppointment(TestingDay test, Appointment app) {
-    if (test == NULL) {
-        test = newTestingDay();
+bool labLoginCheck(LabWorker wkList, int workerId, char password[]) {
+    if (wkList == NULL) return false;
+    else {
+        if ((wkList->id == workerId) && (strcmp(wkList->password, password) == 0)) return true;
+        else return labLoginCheck(wkList->next, workerId, password);
+    }
+}
+
+TestReservation acceptAppointment(TestReservation reservation, Appointment app) {
+    if (reservation == NULL) {
+        reservation = newTestReservation();
     }
 
     if (app != NULL) {
-        if (!isTimeSlotFull(test, app->slot)) {
+        if (!isTimeSlotFull(reservation, app->slot)) {
             switch (app->slot) {
                 case MORNING:
-                    test->morning = appointmentAppend(test->morning, cloneAppointment(app));
+                    reservation->morning = appointmentAppend(reservation->morning, cloneAppointment(app));
                     break;
                 case AFTERNOON:
-                    test->afternoon = appointmentAppend(test->afternoon, cloneAppointment(app));
+                    reservation->afternoon = appointmentAppend(reservation->afternoon, cloneAppointment(app));
                     break;
                 case EVENING:
-                    test->evening = appointmentAppend(test->evening, cloneAppointment(app));
+                    reservation->evening = appointmentAppend(reservation->evening, cloneAppointment(app));
                     break;
                 default:
                     break;
             }
         }
     }
-    return test;
+    return reservation;
 }

@@ -43,18 +43,53 @@ void printAppointmentList(Appointment appList);
 Appointment findAppointmentByFiscalCode(Appointment appList, char fiscalCode[]);
 Appointment deleteAppointmentByFiscalCode(Appointment appList, char fiscalCode[]);
 
-// GESTIONE INFO TEST
-struct testingDay {
+// GESTIONE LAVORATORI LABORATORIO
+struct labWorker {
+    int id;
+    char password[PASSWORD_SIZE];
+    struct labWorker* next;
+};
+typedef struct labWorker* LabWorker;
+
+LabWorker newLabWorkerList();
+LabWorker newLabWorkerNode(int workerId, char password[]);
+void deleteLabWorkerNode(LabWorker worker);
+void deleteLabWorkerList(LabWorker wkList);
+LabWorker labWorkerInsert(LabWorker wkList, int workerId, char password[]);
+
+// GESTIONE TEST FISSATI
+struct testReservation {
     Appointment morning;
     Appointment afternoon;
     Appointment evening;
+    int currentDay;
 };
-typedef struct testingDay* TestingDay;
+typedef struct testReservation* TestReservation;
 
-TestingDay newTestingDay();
-void deleteTestingDay(TestingDay test);
-void printTestingDay(TestingDay test);
+TestReservation newTestReservation();
+void deleteTestReservation(TestReservation reservation);
+void printTestReservation(TestReservation reservation);
 int appointmentListCount(Appointment appList);
-bool isTimeSlotFull(TestingDay test, timeSlot slot);
+bool isTimeSlotFull(TestReservation reservation, timeSlot slot);
+
+// GESTIONE ESITI TEST
+struct testResult {
+    char fiscalCode[FISCALCODE_SIZE];
+    char response[RESPONSE_SIZE];
+    int day;
+
+    struct testResult* next;
+};
+typedef struct testResult* TestResult;
+
+TestResult newTestResultList ();
+TestResult newTestResultNode (char fiscalCode[], char response[], int day);
+void deleteTestResultNode (TestResult result);
+void deleteTestResultList (TestResult rsList);
+TestResult testResultInsert (TestResult rsList, char fiscalCode[], char response[], int day);
+void printTestResultList (TestResult rsList);
+void printTestResultsByDay (TestResult rsList, int day);
+
 #endif // structure_h
+
 

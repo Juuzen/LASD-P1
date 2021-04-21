@@ -5,10 +5,12 @@
 #include "database.h"
 #include "patient.h"
 #include "lab.h"
+#include "helper.h"
+
+#include <unistd.h>
 
 int main() {
 
     run();
-
     return 0;
 }

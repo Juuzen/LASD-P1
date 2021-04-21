@@ -5,6 +5,7 @@
 #include "database.h"
 #include "const.h"
 #include "structure.h"
+#include "helper.h"
 
 // GESTIONE DB PAZIENTI
 
@@ -19,7 +20,6 @@ void savePatient(char fiscalCode[], char password[]) {
     }
     fclose(patientDB);
 }
-
 //useless
 void savePatientListBody (Patient ptList, FILE * patientDB) {
     if (patientDB != NULL) {
@@ -31,7 +31,6 @@ void savePatientListBody (Patient ptList, FILE * patientDB) {
     }
     // file non più aperto - ERRORE
 }
-
 //useless
 void savePatientList(Patient ptList) {
     FILE * patientDB;
@@ -45,7 +44,6 @@ void savePatientList(Patient ptList) {
     }
     fclose(patientDB);
 }
-
 Patient loadPatientList() {
     Patient ptList = newPatientList();
     FILE * patient_db = fopen(PATIENT_DB, "r");
@@ -64,6 +62,27 @@ Patient loadPatientList() {
     return ptList;
 }
 
+// GESTIONE DB LAVORATORI LABORATORIO
+
+LabWorker loadLabWorkers() {
+    LabWorker wkList = newLabWorkerList();
+    FILE * labWorkerDB = fopen(LABWORKER_DB, "r");
+    if (labWorkerDB != NULL) {
+        LabWorker wkList = newLabWorkerList();
+        int workerId;
+        char password[PASSWORD_SIZE];
+
+        while (!feof(labWorkerDB)) {
+            if(fscanf(labWorkerDB, "%d\t%s\n", &workerId, password) != EOF) {
+                wkList = labWorkerInsert(wkList, workerId, password);
+            }
+        }
+        fclose(labWorkerDB);
+    }
+    return wkList;
+}
+
+
 
 // GESTIONE DB APPUNTAMENTI
 
@@ -80,7 +99,6 @@ void saveAppointment(Appointment app) {
     }
     fclose(appointmentDB);
 }
-
 char * getSymptoms(FILE * file) {
     if (file != NULL) {
         int i = 0;
@@ -99,7 +117,6 @@ char * getSymptoms(FILE * file) {
     }
     else return NULL;
 }
-
 Appointment loadAppointmentList() {
     Appointment appList = newAppointmentList();
     FILE * appointmentDB = fopen(APPOINTMENT_DB, "r");
@@ -133,7 +150,6 @@ Appointment loadAppointmentList() {
     }
     return appList;
 }
-
 void saveAppointmentListBody(Appointment appList, FILE * appointmentDB) {
     if (appointmentDB != NULL) {
         if (appList != NULL) {
@@ -146,15 +162,120 @@ void saveAppointmentListBody(Appointment appList, FILE * appointmentDB) {
         }
     }
 }
-
 void saveAppointmentList(Appointment appList) {
     FILE * appointmentDB = fopen(APPOINTMENT_DB, "w");
     if (appointmentDB != NULL) {
         saveAppointmentListBody(appList, appointmentDB);
+        fclose(appointmentDB);
     }
     else {
         //TODO: Handle error file opening
     }
+
 }
 
 // GESTIONE DB TEST
+
+int getCurrentDay() {
+    FILE * fp = fopen(TESTRESULT_DB, "r");
+
+    if (fp != NULL) {
+        fseek(fp, -1, SEEK_END);
+        char c;
+        do {
+            fseek(fp, -2, SEEK_CUR);
+            c = fgetc(fp);
+
+        } while (c != '\t');
+
+        int lastDay;
+        if (fscanf(fp, "%d", &lastDay) > 0) {
+            lastDay += 1;
+        }
+        else {
+            //TODO: Gestire errore in lettura del giorno
+        }
+        fclose(fp);
+        return lastDay;
+    }
+    else {
+        //FIXME: Gestire fopen quando il file non esiste (crearlo? restituire 1?)
+        return 1;
+    }
+}
+
+
+
+// GESTIONE ESITI TEST
+TestResult loadTestResults() {
+    TestResult rsList = newTestResultList();
+    FILE * testResultDB = fopen(TESTRESULT_DB, "r");
+    if (testResultDB != NULL) {
+        char fiscalCode[FISCALCODE_SIZE];
+        char response[RESPONSE_SIZE];
+        int day;
+
+        while (!feof(testResultDB)) {
+            if(fscanf(testResultDB, "%s\t%s\t%d\n", fiscalCode, response, &day) != EOF) {
+                rsList = testResultInsert(rsList, fiscalCode, response, day);
+            }
+        }
+        fclose(testResultDB);
+    }
+
+    return rsList;
+}
+void saveTestResultListBody(Appointment appList, FILE * testResultDB, int currentDay) {
+    if (testResultDB != NULL) {
+        if (appList != NULL) {
+            if (fprintf(testResultDB, "%s\t", appList->fiscalCode) < 0) {
+
+            }
+            else {
+                char response[RESPONSE_SIZE];
+                if (generateTestResult()) strcpy(response, "POSITIVE");
+                else strcpy(response, "NEGATIVE");
+                if (fprintf(testResultDB, "%s\t", response) < 0) {
+
+                }
+                else {
+                    if (fprintf(testResultDB, "%d\n", currentDay) < 0) {
+
+                    }
+                    else {
+                        saveTestResultListBody(appList->next, testResultDB, currentDay);
+                    }
+                }
+            }
+        }
+    }
+}
+void saveTestResultList(TestReservation testList) {
+    FILE * testResultDB = fopen(TESTRESULT_DB, "a");
+    if (testResultDB != NULL) {
+        saveTestResultListBody(testList->morning, testResultDB, testList->currentDay);
+        saveTestResultListBody(testList->afternoon, testResultDB, testList->currentDay);
+        saveTestResultListBody(testList->evening, testResultDB, testList->currentDay);
+        fclose(testResultDB);
+    }
+
+    else {
+        //TODO: Handle error in opening file
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

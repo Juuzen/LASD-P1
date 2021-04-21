@@ -12,14 +12,16 @@ void patientRegisterUi(Patient ptList);
 void patientUi();
 
 /* UI LABORATORIO */
-void labUi();
+void labShowTestHistoryUi(int currentDay);
+void labLoginUi(TestReservation *test);
+void labUi(TestReservation *test);
 
 /* FUNZIONI AUSILIARIE */
 void wrongChoice();
 int getChoice(int maxOptions);
 
 /* AVVIO PROGRAMMA */
-void mainUi();
+void mainUi(TestReservation *test);
 void run();
 
 #endif // ui_h

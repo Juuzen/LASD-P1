@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
+#include <stdbool.h>
 #include "const.h"
 #include "helper.h"
 
@@ -22,4 +24,9 @@ void pause(char message[]) {
     fflush(stdin);
     getchar(); //FIXME: Qualsiasi tasto premuto (ora accetta solo invio)
     fflush(stdin);
+}
+
+bool generateTestResult() {
+    srand(time(NULL));
+    return rand() % 2;
 }

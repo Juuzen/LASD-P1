@@ -4,8 +4,11 @@
 #include "ui.h"
 #include "structure.h"
 #include "patient.h"
+#include "lab.h"
 #include "helper.h"
 #include "database.h"
+
+/* UI LATO PAZIENTE */
 
 void patientAppointmentRequestUi(Appointment appList, char fiscalCode[]) {
     int userChoice = -1;
@@ -258,18 +261,159 @@ void patientUi() {
         }
     } while (running);
 
-    savePatientList(ptList);
     deletePatientList(ptList);
 }
 
-void labUi() {
-    clearScreen();
+/* UI LATO LABORATORIO */
 
+void labShowTestHistoryUi(int currentDay) {
+    int userChoice = -1;
+    TestResult rsList = loadTestResults();
+    do {
+        clearScreen();
+        printf("Please make a choice:\n\n");
+        printf("1. SHOW ALL TEST RESULTS\n");
+        printf("2. SHOW TEST RESULTS WITH SPECIFIC DAY\n");
+        printf("3. GO BACK\n");
+        printf("\nYour choice: ");
+
+        userChoice = getChoice(3);
+    } while (userChoice == -1);
+
+    switch (userChoice) {
+        case 1:
+            printTestResultList(rsList);
+            pause("Press ENTER to go back...");
+            break;
+        case 2:
+            userChoice = -1;
+            do {
+                clearScreen();
+                printf("Choose a day (range: 1-%d): ", currentDay - 1);
+                userChoice = getChoice(currentDay - 1);
+            } while (userChoice == -1);
+            clearScreen();
+            printf("DAY %d:\n", userChoice);
+            printTestResultsByDay(rsList, userChoice);
+            pause("Press ENTER to go back...");
+            break;
+        case 3:
+            break;
+        default:
+            break;
+    }
 }
 
-void mainUi() {
+void labLoginUi(TestReservation *test) {
     int userChoice = -1;
     bool running = true;
+    int workerId;
+    char password[PASSWORD_SIZE];
+    //WorkerList wkList = loadWorkerList();
+    LabWorker wkList = newLabWorkerList();
+    do {
+        clearScreen();
+        printf("Please provide your worker ID: ");
+        scanf("%d", &workerId); //FIXME: Controllo sull'input (hint: adattare getChoice?)
+        fflush(stdin);
+        printf("Please provide your password: ");
+        scanf("%20s", password); //TODO: masked scanf
+        fflush(stdin);
+
+        if ( labLoginCheck(wkList, workerId, password) ) {
+            //login authorized
+            labUi(test);
+            running = false;
+        }
+        else {
+            do {
+                //credentials are not correct
+                //you can choose to stop and go back
+                printf("Your credentials are incorrect.\n");
+                printf("Please make a choice:\n");
+                printf("1. TRY AGAIN\n");
+                printf("2. GO BACK\n");
+                printf("\nYour choice: ");
+                userChoice = getChoice(2);
+            } while (userChoice == -1);
+
+            switch (userChoice) {
+                // TODO: Delete if useless
+                case 1:
+                    break;
+                case 2:
+                    running = false;
+                    break;
+                default:
+                    break;
+                    // TODO: Handle error
+            }
+        }
+    } while (running);
+}
+
+void labUi(TestReservation *test) {
+    int userChoice = -1;
+    bool running = true;
+
+    do {
+        do {
+            clearScreen();
+            printf("Welcome to the COVID-19 testing centre - Lab Area.\n");
+            printf("Please make a choice:\n\n");
+            printf("1. SHOW CARRIED OUT TESTS HISTORY\n");
+            printf("2. SHOW APPOINTMENT REQUESTS\n");
+            printf("3. SHOW TEST RESERVATIONS\n");
+            printf("4. ADD OR REMOVE A RESERVATION\n");
+            printf("5. GO BACK TO THE MAIN MENU\n");
+            printf("\nYour choice: ");
+
+            userChoice = getChoice(5);
+        } while (userChoice == -1);
+
+        switch(userChoice) {
+            case 1:
+                printf("%d", (*test)->currentDay);
+                //labShowTestHistoryUi((*test)->currentDay);
+                break;
+            case 2:
+                //labManageAppointmentRequestsUi();
+                break;
+            case 3:
+                //labShowReservationsUi();
+                break;
+            case 4:
+                //labManageReservationsUi();
+                break;
+            case 5:
+                running = true;
+                break;
+            default:
+                pause("Something went wrong...");
+                // FIXME: Handle shutdown
+                break;
+        }
+    } while (running);
+}
+
+/* UI PROGRAMMA */
+
+void run() {
+    //Bootstrap
+    TestReservation test = newTestReservation();
+
+    // Avvio programma
+    mainUi(&test); //TODO: Deve essere propagato test per riferimento fino al laboratorio
+
+    // Operazioni conclusive prima della chiusura del programma
+    saveTestResultList(test);
+    deleteTestReservation(test);
+}
+
+void mainUi(TestReservation *test) {
+    int userChoice = -1;
+    bool running = true;
+
     do {
         do {
             clearScreen();
@@ -288,8 +432,7 @@ void mainUi() {
                 patientUi();
                 break;
             case 2:
-                //labUi();
-                printf("I'm the lab.\n");
+                labLoginUi(test);
                 break;
             case 3:
                 printf("I'm now halting.\n");
@@ -303,6 +446,8 @@ void mainUi() {
     } while (running);
 }
 
+/* FUNZIONI AUSILIARIE */
+
 void wrongChoice() {
     printf("Your choice is not correct! Please choose one of the numbers provided.\n");
     pause("Press any key to continue...");
@@ -310,6 +455,7 @@ void wrongChoice() {
 
 int getChoice(int maxOptions) {
     int tmp, choice = -1;
+    fflush(stdin);
     if ((scanf("%d", &tmp)) == 1) {
         if ((tmp > 0) && (tmp <= maxOptions)) {
             choice = tmp;
@@ -320,10 +466,4 @@ int getChoice(int maxOptions) {
     return choice;
 }
 
-void run() {
-    // TODO: Tutte le funzioni di boot
 
-    mainUi();
-
-    // TODO: Tutte le funzioni di chiusura
-}

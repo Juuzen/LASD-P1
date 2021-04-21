@@ -3,12 +3,12 @@
 #include <string.h>
 #include <stdbool.h>
 #include "structure.h"
+#include "database.h"
 
 Patient newPatientList() {
     Patient pt = NULL;
     return pt;
 }
-
 Patient newPatientNode(char fiscalCode[], char password[]) {
     Patient pt = (Patient) calloc(1, sizeof(patient));
     pt->next = NULL;
@@ -17,7 +17,6 @@ Patient newPatientNode(char fiscalCode[], char password[]) {
     // TODO: Assicurarsi che alla fine delle stringhe vi sia la terminazione
     return pt;
 }
-
 Patient patientInsert(Patient ptList, char fiscalCode[], char password[]) {
     if (ptList == NULL) {
         return newPatientNode(fiscalCode, password);
@@ -27,7 +26,6 @@ Patient patientInsert(Patient ptList, char fiscalCode[], char password[]) {
         return ptList;
     }
 }
-
 void deletePatientList(Patient ptList) {
     if (ptList != NULL) {
         deletePatientList(ptList->next);
@@ -37,7 +35,6 @@ void deletePatientList(Patient ptList) {
         free(ptList);
     }
 }
-
 void printPatientList(Patient ptList) {
     if (ptList != NULL) {
         printf("%s | %s\n", ptList->fiscalCode, ptList->password);
@@ -59,12 +56,10 @@ const char* getTimeSlot(timeSlot slot) {
             return "";
     }
 }
-
 Appointment newAppointmentList() {
     Appointment app = NULL;
     return app;
 }
-
 Appointment newAppointmentNode(char fiscalCode[], timeSlot slot, char symptoms[]) {
     Appointment app = (Appointment) calloc(1, sizeof(struct appointment));
 
@@ -78,12 +73,10 @@ Appointment newAppointmentNode(char fiscalCode[], timeSlot slot, char symptoms[]
     }
     return app;
 }
-
 Appointment cloneAppointment(Appointment app) {
     if (app == NULL) return NULL;
     else return newAppointmentNode(app->fiscalCode, app->slot, app->symptoms);
 }
-
 void deleteAppointmentNode (Appointment app) {
     if (app != NULL) {
         memset(app->fiscalCode, '\0', sizeof(app->fiscalCode));
@@ -95,14 +88,12 @@ void deleteAppointmentNode (Appointment app) {
         free(app);
     }
 }
-
 void deleteAppointmentList (Appointment appList) {
     if (appList != NULL) {
         deleteAppointmentList(appList->next);
         deleteAppointmentNode(appList);
     }
 }
-
 Appointment appointmentAppend(Appointment first, Appointment append) {
     if (first == NULL) {
         return append;
@@ -113,7 +104,6 @@ Appointment appointmentAppend(Appointment first, Appointment append) {
         return first;
     }
 }
-
 Appointment appointmentInsert(Appointment appList, char fiscalCode[], timeSlot slot, char symptoms[]) {
     if (appList == NULL) {
         return newAppointmentNode(fiscalCode, slot, symptoms);
@@ -124,7 +114,6 @@ Appointment appointmentInsert(Appointment appList, char fiscalCode[], timeSlot s
         return appList;
     }
 }
-
 void printAppointmentNode(Appointment app) {
     if (app != NULL) {
         printf("Fiscal Code: %s\n", app->fiscalCode);
@@ -134,14 +123,12 @@ void printAppointmentNode(Appointment app) {
         printf("\n\n");
     }
 }
-
 void printAppointmentList(Appointment appList) {
     if (appList != NULL) {
         printAppointmentNode(appList);
         printAppointmentList(appList->next);
     }
 }
-
 Appointment findAppointmentByFiscalCode(Appointment appList, char fiscalCode[]) {
     if (appList == NULL) return NULL;
     else {
@@ -149,7 +136,6 @@ Appointment findAppointmentByFiscalCode(Appointment appList, char fiscalCode[]) 
         else return findAppointmentByFiscalCode(appList->next, fiscalCode);
     }
 }
-
 Appointment deleteAppointmentByFiscalCode(Appointment appList, char fiscalCode[]) {
     if (appList == NULL) return appList;
     else {
@@ -165,59 +151,99 @@ Appointment deleteAppointmentByFiscalCode(Appointment appList, char fiscalCode[]
     }
 }
 
-// GESTIONE STRUTTURA TEST
-TestingDay newTestingDay() {
-    TestingDay test = (TestingDay) calloc(1, sizeof(struct testingDay));
-    return test;
+// GESTIONE LAVORATORI
+
+LabWorker newLabWorkerList() {
+    LabWorker list = NULL;
+    return list;
 }
+LabWorker newLabWorkerNode(int workerId, char password[]) {
+    LabWorker worker = (LabWorker) calloc(1, sizeof(struct labWorker));
+    if (worker != NULL) {
+        worker->id = workerId;
+        strcpy(worker->password, password);
+        worker->next = NULL;
+    }
 
-void deleteTestingDay(TestingDay test) {
-    if (test != NULL) {
-    deleteAppointmentList(test->morning);
-    deleteAppointmentList(test->afternoon);
-    deleteAppointmentList(test->evening);
-    test->morning = NULL;
-    test->afternoon = NULL;
-    test->evening = NULL;
+    return worker;
+}
+void deleteLabWorkerNode(LabWorker worker) {
+    if (worker != NULL) {
+        worker->id = 0;
+        memset(worker->password, '\0', sizeof(worker->password));
+        worker->next = NULL;
 
-    free(test);
+        free(worker);
+    }
+}
+void deleteLabWorkerList(LabWorker wkList) {
+    if (wkList != NULL) {
+        deleteLabWorkerList(wkList->next);
+        deleteLabWorkerNode(wkList);
+    }
+}
+LabWorker labWorkerInsert(LabWorker wkList, int workerId, char password[]) {
+    if (wkList == NULL) return newLabWorkerNode(workerId, password);
+    else {
+        wkList->next = labWorkerInsert(wkList->next, workerId, password);
+        return wkList;
     }
 }
 
-void printTestingDay(TestingDay test) {
-    if (test != NULL) {
+// GESTIONE STRUTTURA TEST
+TestReservation newTestReservation() {
+    TestReservation reservation = (TestReservation) calloc(1, sizeof(struct testReservation));
+    reservation->morning = NULL;
+    reservation->afternoon = NULL;
+    reservation->evening = NULL;
+    reservation->currentDay = getCurrentDay();
+    return reservation;
+}
+void deleteTestReservation(TestReservation reservation) {
+    if (reservation != NULL) {
+    deleteAppointmentList(reservation->morning);
+    deleteAppointmentList(reservation->afternoon);
+    deleteAppointmentList(reservation->evening);
+    reservation->morning = NULL;
+    reservation->afternoon = NULL;
+    reservation->evening = NULL;
+    reservation->currentDay = 0;
+    free(reservation);
+    }
+}
+void printTestingDay(TestReservation reservation) {
+    if (reservation != NULL) {
+        printf("DAY %d:\n", reservation->currentDay);
         printf("Morning tests:\n");
-        printAppointmentList(test->morning);
+        printAppointmentList(reservation->morning);
 
         printf("\nAfternoon tests:\n");
-        printAppointmentList(test->afternoon);
+        printAppointmentList(reservation->afternoon);
 
         printf("\nEvening tests:\n");
-        printAppointmentList(test->evening);
+        printAppointmentList(reservation->evening);
     }
 }
-
 int appointmentListCount(Appointment appList) {
     if (appList == NULL) return 0;
     else return 1 + appointmentListCount(appList->next);
 }
-
-bool isTimeSlotFull(TestingDay test, timeSlot slot) {
+bool isTimeSlotFull(TestReservation reservation, timeSlot slot) {
     bool response = true;
-    if (test != NULL) {
+    if (reservation != NULL) {
         switch (slot) {
             case MORNING:
-                if (appointmentListCount(test->morning) < 2) {
+                if (appointmentListCount(reservation->morning) < 2) {
                     response = false;
                 }
                 break;
             case AFTERNOON:
-                if (appointmentListCount(test->afternoon) < 2) {
+                if (appointmentListCount(reservation->afternoon) < 2) {
                     response = false;
                 }
                 break;
             case EVENING:
-                if (appointmentListCount(test->evening) < 2) {
+                if (appointmentListCount(reservation->evening) < 2) {
                     response = false;
                 }
                 break;
@@ -228,3 +254,63 @@ bool isTimeSlotFull(TestingDay test, timeSlot slot) {
 
     return response;
 }
+
+// GESTIONE ESITI TEST
+TestResult newTestResultList() {
+    TestResult list = NULL;
+    return list;
+}
+TestResult newTestResultNode(char fiscalCode[], char response[], int day) {
+    TestResult result = (TestResult) calloc(1, sizeof(struct testResult));
+    if (result != NULL) {
+        strcpy(result->fiscalCode, fiscalCode);
+        strcpy(result->response, response);
+        result->day = day;
+        result->next = NULL;
+    }
+
+    return result;
+}
+void deleteTestResultNode(TestResult result) {
+    if (result != NULL) {
+        memset(result->fiscalCode, '\0', sizeof(result->fiscalCode));
+        memset(result->response, '\0', sizeof(result->response));
+        result->day = 0;
+
+        free(result);
+    }
+}
+void deleteTestResultList(TestResult rsList) {
+    if (rsList != NULL) {
+        deleteTestResultList(rsList->next);
+        deleteTestResultNode(rsList);
+    }
+}
+TestResult testResultInsert(TestResult rsList, char fiscalCode[], char response[], int day) {
+    if (rsList == NULL) return newTestResultNode(fiscalCode, response, day);
+    else {
+        rsList->next = testResultInsert(rsList->next, fiscalCode, response, day);
+        return rsList;
+    }
+}
+void printTestResultList(TestResult rsList) {
+    if (rsList != NULL) {
+        printf("Patient: %s\n", rsList->fiscalCode);
+        printf("Response: %s\n", rsList->response);
+        printf("Day: %d\n\n", rsList->day);
+
+        printTestResultList(rsList->next);
+    }
+}
+void printTestResultsByDay (TestResult rsList, int day) {
+    if (rsList != NULL) {
+        if (rsList->day == day) {
+            printf("Patient: %s - %s\n", rsList->fiscalCode, rsList->response);
+        }
+
+    printTestResultList(rsList->next);
+    }
+}
+
+
+
