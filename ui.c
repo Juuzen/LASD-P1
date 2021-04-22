@@ -31,7 +31,7 @@ void patientAppointmentRequestUi(Appointment appList, char fiscalCode[]) {
     if (found != NULL) {
         printf("You already have an appointment with the following informations:\n");
         printAppointmentNode(found);
-        pause("Press any key to go back...");
+        pause("Press ENTER key to go back...");
     }
     else {
         do {
@@ -60,6 +60,7 @@ void patientAppointmentRequestUi(Appointment appList, char fiscalCode[]) {
 }
 
 void patientShowAppointmentUi(Appointment appList, char fiscalCode[]) {
+    // TODO: deve mostrare gli appuntamenti fissati, propagare test
     clearScreen();
     Appointment app = findAppointmentByFiscalCode(appList, fiscalCode);
     if (app == NULL) pause("You have no appointments.\nPress any key to go back...");
@@ -83,7 +84,9 @@ void patientDeleteAppointmentUi(Appointment* appList, char fiscalCode[]) {
             printf("Here is you appointment informations:\n");
             printAppointmentNode(app);
             printf("Do you want to delete this appointment? [y/n] ");
+            fflush(stdin);
             scanf("%c", &input);
+            fflush(stdin);
             if ((input == 'y') || (input == 'Y')) {
                 patientDeleteAppointment(appList, fiscalCode);
             }
@@ -93,7 +96,6 @@ void patientDeleteAppointmentUi(Appointment* appList, char fiscalCode[]) {
             }
 
             else {
-                //FIXME: Flush somewhere
                 pause("Wrong choice! Only 'y' or 'n' are permitted.\nPress any key to continue...");
             }
         } while ((input != 'y') && (input != 'Y') && (input != 'n') && (input != 'N'));
@@ -321,6 +323,41 @@ void labShowTestHistoryUi(int currentDay) {
     }
 }
 
+void labManageAppointmentRequestsUi(TestReservation *test) {
+
+    Appointment appList = loadAppointmentList();
+    if (appList == NULL) {
+        clearScreen();
+        printf("There are no requests so far.\n");
+        pause("Press ENTER to go back...");
+    }
+
+    else {
+        char input;
+        do {
+            clearScreen();
+            printf("Here are the appointment request up to now:\n");
+            printAppointmentList(appList);
+            printf("Do you want to start the confirmation process? [y/n] ");
+            fflush(stdin);
+            scanf("%c", &input);
+            fflush(stdin);
+            if ((input == 'y') || (input == 'Y')) {
+                // CONFERMA APPUNTAMENTI
+            }
+
+            else if ((input == 'n') || (input == 'N')) {
+                printf("The confirmation process is halted. No changes have been made.\n");
+                printf("Press ENTER to go back...");
+            }
+
+            else {
+                pause("Wrong choice! Only 'y' or 'n' are permitted.\nPress any key to continue...");
+            }
+        } while ((input != 'y') && (input != 'Y') && (input != 'n') && (input != 'N'));
+    }
+}
+
 void labLoginUi(TestReservation *test) {
     int userChoice = -1;
     bool running = true;
@@ -391,7 +428,7 @@ void labUi(TestReservation *test) {
                 labShowTestHistoryUi((*test)->currentDay);
                 break;
             case 2:
-                //labManageAppointmentRequestsUi();
+                labManageAppointmentRequestsUi(test);
                 break;
             case 3:
                 //labShowReservationsUi();

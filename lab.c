@@ -12,27 +12,29 @@ bool labLoginCheck(LabWorker wkList, int workerId, char password[]) {
     }
 }
 
-TestReservation acceptAppointment(TestReservation reservation, Appointment app) {
-    if (reservation == NULL) {
-        reservation = newTestReservation();
+void labPopulateReservations(TestReservation *reservation, Appointment appList) {
+    //TODO: gestire il caso in cui reservation sia null
+    if ((*reservation) == NULL) {
+        (*reservation) = newTestReservation();
     }
 
-    if (app != NULL) {
-        if (!isTimeSlotFull(reservation, app->slot)) {
-            switch (app->slot) {
+    if (appList != NULL) {
+        if (!isTimeSlotFull((*reservation), appList->slot)) {
+            switch (appList->slot) {
                 case MORNING:
-                    reservation->morning = appointmentAppend(reservation->morning, cloneAppointment(app));
+                    (*reservation)->morning = appointmentAppend((*reservation)->morning, cloneAppointment(appList));
                     break;
                 case AFTERNOON:
-                    reservation->afternoon = appointmentAppend(reservation->afternoon, cloneAppointment(app));
+                    (*reservation)->afternoon = appointmentAppend((*reservation)->afternoon, cloneAppointment(appList));
                     break;
                 case EVENING:
-                    reservation->evening = appointmentAppend(reservation->evening, cloneAppointment(app));
+                    (*reservation)->evening = appointmentAppend((*reservation)->evening, cloneAppointment(appList));
                     break;
                 default:
                     break;
             }
         }
+
+        labPopulateReservations(reservation, appList->next);
     }
-    return reservation;
 }

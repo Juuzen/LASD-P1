@@ -91,6 +91,10 @@ TestResult testResultInsert (TestResult rsList, char fiscalCode[], char response
 void printTestResultList (TestResult rsList, bool chronoOrder);
 void printTestResultsByDay (TestResult rsList, int day, bool chronoOrder);
 void printTestResultByFiscalCode (TestResult rsList, char fiscalCode[], bool chronoOrder);
+
+
+
+
 #endif // structure_h
 
 

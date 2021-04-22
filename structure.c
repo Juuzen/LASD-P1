@@ -196,7 +196,7 @@ void printLabWorkers(LabWorker wkList) {
     }
 }
 
-// GESTIONE STRUTTURA TEST
+// GESTIONE TEST RESERVATIONS
 TestReservation newTestReservation() {
     TestReservation reservation = (TestReservation) calloc(1, sizeof(struct testReservation));
     reservation->morning = NULL;
@@ -217,7 +217,7 @@ void deleteTestReservation(TestReservation reservation) {
     free(reservation);
     }
 }
-void printTestingDay(TestReservation reservation) {
+void printTestReservation(TestReservation reservation) {
     if (reservation != NULL) {
         printf("DAY %d:\n", reservation->currentDay);
         printf("Morning tests:\n");
@@ -260,6 +260,7 @@ bool isTimeSlotFull(TestReservation reservation, timeSlot slot) {
 
     return response;
 }
+
 
 // GESTIONE ESITI TEST
 TestResult newTestResultList() {
