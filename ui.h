@@ -5,12 +5,12 @@
 /* UI PAZIENTI */
 void patientShowTestResultsUi(char fiscalCode[]);
 void patientAppointmentRequestUi(Appointment appList, char fiscalCode[]);
-void patientShowAppointmentUi(Appointment appList, char fiscalCode[]);
+void patientShowReservationUi(TestReservation *test, char fiscalCode[]);
 void patientDeleteAppointmentUi(Appointment* appList, char fiscalCode[]);
-void patientAccountUi(char fiscalCode[]);
-void patientLoginUi(Patient ptList);
+void patientAccountUi(TestReservation *test, char fiscalCode[]);
+void patientLoginUi(TestReservation *test, Patient ptList);
 void patientRegisterUi(Patient ptList);
-void patientUi();
+void patientUi(TestReservation *test);
 
 /* UI LABORATORIO */
 void labShowTestHistoryUi(int currentDay);

@@ -72,6 +72,7 @@ void deleteTestReservation(TestReservation reservation);
 void printTestReservation(TestReservation reservation);
 int appointmentListCount(Appointment appList);
 bool isTimeSlotFull(TestReservation reservation, timeSlot slot);
+Appointment searchAppointmentByFiscalCode(TestReservation reservation, char fiscalCode[]);
 
 // GESTIONE ESITI TEST
 struct testResult {

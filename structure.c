@@ -118,8 +118,8 @@ void printAppointmentNode(Appointment app) {
     if (app != NULL) {
         printf("Fiscal Code: %s\n", app->fiscalCode);
         printf("Time slot: %s\n", getTimeSlot(app->slot));
-        printf("symptoms: ");
-        printf((app->symptoms == NULL) ? "None" : app->symptoms);
+        printf("Symptoms: ");
+        printf((app->symptoms == NULL) ? "///" : app->symptoms);
         printf("\n\n");
     }
 }
@@ -260,7 +260,19 @@ bool isTimeSlotFull(TestReservation reservation, timeSlot slot) {
 
     return response;
 }
-
+Appointment searchAppointmentByFiscalCode(TestReservation reservation, char fiscalCode[]) {
+    Appointment app = NULL;
+    if (reservation != NULL) {
+        app = findAppointmentByFiscalCode(reservation->morning, fiscalCode);
+        if (app == NULL) {
+            app = findAppointmentByFiscalCode(reservation->afternoon, fiscalCode);
+            if (app == NULL) {
+                app = findAppointmentByFiscalCode(reservation->evening, fiscalCode);
+            }
+        }
+    }
+    return app;
+}
 
 // GESTIONE ESITI TEST
 TestResult newTestResultList() {

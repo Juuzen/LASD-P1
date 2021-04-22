@@ -44,31 +44,32 @@ void patientAppointmentRequestUi(Appointment appList, char fiscalCode[]) {
             printf("Your choice: ");
             userChoice = getChoice(4);
         } while (userChoice == -1);
-
+        fflush(stdin);
         if (userChoice != 4) {
-            timeSlot slot = (timeSlot) userChoice;
+            timeSlot slot = (timeSlot) --userChoice;
 
             printf("If you have any symptoms, please provide a concise explanation (max %d characters):\n", SYMPTOMS_SIZE);
             char * symptoms = getSymptoms(stdin);
 
             bool response = patientRequestAppointment(&appList, fiscalCode, slot, symptoms);
-            if (response) pause("Appointment requested!\nPress any key to go back...");
-            else pause("There was a problem in requesting the appointment.\nPress any key to go back...");
+            if (response) printf("Appointment requested!\n");
+            else printf("There was a problem in requesting the appointment. Please try again later.\n");
+            pause("Press ENTER key to go back...");
         }
     }
 
 }
 
-void patientShowAppointmentUi(Appointment appList, char fiscalCode[]) {
-    // TODO: deve mostrare gli appuntamenti fissati, propagare test
+void patientShowReservationUi(TestReservation *test, char fiscalCode[]) {
     clearScreen();
-    Appointment app = findAppointmentByFiscalCode(appList, fiscalCode);
-    if (app == NULL) pause("You have no appointments.\nPress any key to go back...");
+    Appointment app = searchAppointmentByFiscalCode((*test), fiscalCode);
+    if (app == NULL) printf("You have no reservations at the moment.\n");
+
     else {
-        printf("Here is you appointment informations:\n");
+        printf("Here is your test reservation:\n");
         printAppointmentNode(app);
-        pause("Press any key to go back...");
     }
+    pause("Press ENTER key to go back...");
 }
 
 void patientDeleteAppointmentUi(Appointment* appList, char fiscalCode[]) {
@@ -102,11 +103,10 @@ void patientDeleteAppointmentUi(Appointment* appList, char fiscalCode[]) {
     }
 }
 
-void patientAccountUi(char fiscalCode[]) {
+void patientAccountUi(TestReservation *test, char fiscalCode[]) {
     int userChoice = -1;
     bool running = true;
     Appointment appList = loadAppointmentList();
-    // TODO: load Results list
 
     do {
         do {
@@ -128,7 +128,7 @@ void patientAccountUi(char fiscalCode[]) {
                 patientAppointmentRequestUi(appList, fiscalCode);
                 break;
             case 2:
-                patientShowAppointmentUi(appList, fiscalCode);
+                patientShowReservationUi(test, fiscalCode);
                 break;
             case 3:
                 patientDeleteAppointmentUi(&appList, fiscalCode);
@@ -150,7 +150,7 @@ void patientAccountUi(char fiscalCode[]) {
     deleteAppointmentList(appList);
 }
 
-void patientLoginUi(Patient ptList) {
+void patientLoginUi(TestReservation *test, Patient ptList) {
 
     int userChoice = -1;
     bool running = true;
@@ -168,7 +168,7 @@ void patientLoginUi(Patient ptList) {
 
         if (loginCheck(ptList, fiscalCode, password)) {
             //login authorized
-            patientAccountUi(fiscalCode);
+            patientAccountUi(test, fiscalCode);
             running = false;
         }
         else {
@@ -243,7 +243,7 @@ void patientRegisterUi(Patient ptList) {
     } while (running);
 }
 
-void patientUi() {
+void patientUi(TestReservation *test) {
     int userChoice = -1;
     bool running = true;
     Patient ptList = loadPatientList();
@@ -262,7 +262,7 @@ void patientUi() {
 
         switch(userChoice) {
             case 1:
-                patientLoginUi(ptList);
+                patientLoginUi(test, ptList);
                 break;
             case 2:
                 patientRegisterUi(ptList);
@@ -329,7 +329,7 @@ void labManageAppointmentRequestsUi(TestReservation *test) {
     if (appList == NULL) {
         clearScreen();
         printf("There are no requests so far.\n");
-        pause("Press ENTER to go back...");
+        pause("Press ENTER key to go back...");
     }
 
     else {
@@ -347,12 +347,13 @@ void labManageAppointmentRequestsUi(TestReservation *test) {
             }
 
             else if ((input == 'n') || (input == 'N')) {
-                printf("The confirmation process is halted. No changes have been made.\n");
-                printf("Press ENTER to go back...");
+                printf("The confirmation process is stopped. No changes have been made.\n");
+                pause("Press ENTER key to go back...");
             }
 
             else {
-                pause("Wrong choice! Only 'y' or 'n' are permitted.\nPress any key to continue...");
+                printf("Wrong input: only 'y' or 'n' are permitted (case insensitive).\n");
+                pause("Press ENTER key to try again...");
             }
         } while ((input != 'y') && (input != 'Y') && (input != 'n') && (input != 'N'));
     }
@@ -480,7 +481,7 @@ void mainUi(TestReservation *test) {
 
         switch(userChoice) {
             case 1:
-                patientUi();
+                patientUi(test);
                 break;
             case 2:
                 labLoginUi(test);
