@@ -40,7 +40,7 @@ void patientAppointmentRequestUi(Appointment appList, char fiscalCode[]) {
             printf("1. MORNING\n");
             printf("2. AFTERNOON\n");
             printf("3. EVENING\n");
-            printf("4. EXIT\n");
+            printf("4. GO BACK\n");
             printf("Your choice: ");
             userChoice = getChoice(4);
         } while (userChoice == -1);
@@ -369,6 +369,130 @@ void labShowReservationUi(TestReservation test) {
     pause("Press ENTER key to go back...");
 }
 
+void labAddReservationUi(TestReservation *test) {
+    int userChoice = -1;
+    do {
+        clearScreen();
+        printf("Please choose a time slot:\n");
+        printf("1. MORNING\n");
+        printf("2. AFTERNOON\n");
+        printf("3. EVENING\n");
+        printf("4. GO BACK\n");
+
+        userChoice = getChoice(4);
+    } while (userChoice == -1);
+
+    if (userChoice != 4) {
+        timeSlot slot = (timeSlot) --userChoice;
+        if (!isTimeSlotFull((*test), slot)) {
+            char fiscalCode[FISCALCODE_SIZE];
+            char *symptoms;
+
+            printf("Please provide the fiscal code of the patient: ");
+            scanf("%17s", fiscalCode);
+
+            printf("If you have any symptoms, please provide a concise explanation (max %d characters);\n", SYMPTOMS_SIZE);
+            printf("Otherwise just press ENTER KEY to go further.\n");
+            printf("Your symptoms: ");
+            symptoms = getSymptoms(stdin);
+
+            Appointment manualApp = newAppointmentNode(fiscalCode, slot, symptoms);
+            addReservation(test, manualApp);
+            printf("Reservation created! Exit the program to process it.\n");
+            pause("Press ENTER key to go back...");
+        }
+
+        else {
+            printf("Reservations are at max capacity in this time slot.\n");
+            pause("Press ENTER key to go back...");
+        }
+    }
+}
+
+void labRemoveReservationUi(TestReservation *test) {
+    int userChoice = -1;
+    do {
+        clearScreen();
+        printf("Please choose a time slot:\n");
+        printf("1. MORNING\n");
+        printf("2. AFTERNOON\n");
+        printf("3. EVENING\n");
+        printf("4. GO BACK\n");
+
+        userChoice = getChoice(4);
+    } while (userChoice == -1);
+
+    if (userChoice != 4) {
+        timeSlot slot = (timeSlot) --userChoice;
+        char fiscalCode[FISCALCODE_SIZE];
+        clearScreen();
+        switch (slot) {
+            case MORNING:
+                printf("Reservation for the morning slot:\n");
+                printAppointmentList((*test)->morning);
+                break;
+            case AFTERNOON:
+                printf("Reservation for the afternoon slot:\n");
+                printAppointmentList((*test)->afternoon);
+                break;
+            case EVENING:
+                printf("Reservation for the evening slot:\n");
+                printAppointmentList((*test)->evening);
+                break;
+            default:
+                break;
+        }
+
+        printf("\nPlease provide the fiscal code of the patient: ");
+        scanf("%17s", fiscalCode);
+
+        switch (slot) {
+            case MORNING:
+                (*test)->morning = deleteAppointmentByFiscalCode((*test)->morning, fiscalCode);
+                break;
+            case AFTERNOON:
+                (*test)->afternoon = deleteAppointmentByFiscalCode((*test)->afternoon, fiscalCode);
+                break;
+            case EVENING:
+                (*test)->evening = deleteAppointmentByFiscalCode((*test)->evening, fiscalCode);
+                break;
+            default:
+                break;
+        }
+
+        printf("Reservation removed. You can check reservation by choosing the option 3 in the main menu.\n");
+        pause("Press ENTER key to go back...");
+    }
+}
+
+void labHandleReservationUi(TestReservation *test) {
+    int userChoice = -1;
+    do {
+        clearScreen();
+        printf("Please make a choice:\n");
+        printf("1. ADD A RESERVATION\n");
+        printf("2. REMOVE A RESERVATION\n");
+        printf("3. GO BACK\n");
+        printf("Your choice: ");
+        userChoice = getChoice(3);
+    } while (userChoice == -1);
+
+    if (userChoice != 3) {
+        switch (userChoice) {
+            case 1:
+                labAddReservationUi(test);
+                break;
+
+            case 2:
+                labRemoveReservationUi(test);
+                break;
+
+            default:
+                break;
+        }
+    }
+}
+
 void labLoginUi(TestReservation *test) {
     int userChoice = -1;
     bool running = true;
@@ -519,12 +643,16 @@ int getChoice(int maxOptions) {
     int tmp, choice = -1;
     fflush(stdin);
     if ((scanf("%d", &tmp)) == 1) {
+        fflush(stdin);
         if ((tmp > 0) && (tmp <= maxOptions)) {
             choice = tmp;
         }
         else wrongChoice();
     }
-    else wrongChoice();
+    else {
+        fflush(stdin);
+        wrongChoice();
+    }
     return choice;
 }
 

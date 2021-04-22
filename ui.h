@@ -16,6 +16,9 @@ void patientUi(TestReservation *test);
 void labShowTestHistoryUi(int currentDay);
 void labManageAppointmentRequestsUi(TestReservation *test);
 void labShowReservationUi(TestReservation test);
+void labAddReservationUi(TestReservation *test);
+void labRemoveReservationUi(TestReservation *test);
+void labHandleReservationUi(TestReservation *test);
 void labLoginUi(TestReservation *test);
 void labUi(TestReservation *test);
 

@@ -11,18 +11,15 @@
 #include <unistd.h>
 
 int main() {
-
+    //FIXME: aggiustare i puntatori in TestReservation durante il popolamento
     //run();
-
     Appointment appList = loadAppointmentList();
     TestReservation test = newTestReservation();
-    printAppointmentList(appList);
-    printTestReservation(test);
-    pause("Test 1");
 
     appList = labPopulateReservations(&test, appList);
-    printAppointmentList(appList);
-    printTestReservation(test);
 
+    labRemoveReservationUi(&test);
+
+    printTestReservation(test);
     return 0;
 }

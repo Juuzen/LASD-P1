@@ -12,6 +12,26 @@ bool labLoginCheck(LabWorker wkList, int workerId, char password[]) {
     }
 }
 
+void addReservation(TestReservation *reservation, Appointment app) {
+    if ((*reservation) != NULL) {
+        if (app != NULL) {
+            switch (app->slot) {
+                case MORNING:
+                    (*reservation)->morning = appointmentAppend((*reservation)->morning, app);
+                    break;
+                case AFTERNOON:
+                    (*reservation)->afternoon = appointmentAppend((*reservation)->afternoon, app);
+                    break;
+                case EVENING:
+                    (*reservation)->evening = appointmentAppend((*reservation)->evening, app);
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+}
+
 Appointment labPopulateReservations(TestReservation *reservation, Appointment appList) {
     if ((*reservation) == NULL) {
         (*reservation) = newTestReservation();
@@ -20,19 +40,22 @@ Appointment labPopulateReservations(TestReservation *reservation, Appointment ap
     if (appList != NULL) {
 
         if (!isTimeSlotFull((*reservation), appList->slot)) {
+                /*
             switch (appList->slot) {
                 case MORNING:
-                    (*reservation)->morning = appointmentAppend((*reservation)->morning, cloneAppointment(appList));
+                    (*reservation)->morning = appointmentAppend((*reservation)->morning, appList);
                     break;
                 case AFTERNOON:
-                    (*reservation)->afternoon = appointmentAppend((*reservation)->afternoon, cloneAppointment(appList));
+                    (*reservation)->afternoon = appointmentAppend((*reservation)->afternoon, appList);
                     break;
                 case EVENING:
-                    (*reservation)->evening = appointmentAppend((*reservation)->evening, cloneAppointment(appList));
+                    (*reservation)->evening = appointmentAppend((*reservation)->evening, appList);
                     break;
                 default:
                     break;
             }
+            */
+            addReservation(reservation, appList);
             appList->next = labPopulateReservations(reservation, appList->next);
             return appList->next;
         }
