@@ -3,6 +3,6 @@
 
 bool labLoginCheck(LabWorker wkList, int workerId, char password[]);
 
-void labPopulateReservations(TestReservation *reservation, Appointment appList);
+Appointment labPopulateReservations(TestReservation *reservation, Appointment appList);
 
 #endif // lab_h

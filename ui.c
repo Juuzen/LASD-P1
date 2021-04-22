@@ -343,7 +343,10 @@ void labManageAppointmentRequestsUi(TestReservation *test) {
             scanf("%c", &input);
             fflush(stdin);
             if ((input == 'y') || (input == 'Y')) {
-                // CONFERMA APPUNTAMENTI
+                appList = labPopulateReservations(test, appList);
+                saveAppointmentList(appList);
+                printf("Reservations made. You can check them by choosing the option 3.\n");
+                pause("Press ENTER key to go back...");
             }
 
             else if ((input == 'n') || (input == 'N')) {

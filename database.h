@@ -15,6 +15,7 @@ char *getSymptoms(FILE * file);
 Appointment loadAppointmentList();
 void saveAppointmentListBody(Appointment appList, FILE * appointmentDB);
 void saveAppointmentList(Appointment appList);
+void dropAppointments();
 
 // GESTIONE RISULTATI TEST
 int getCurrentDay();

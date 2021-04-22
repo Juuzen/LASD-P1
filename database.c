@@ -182,6 +182,12 @@ void saveAppointmentList(Appointment appList) {
     }
 
 }
+void dropAppointments() {
+    FILE * appointmentDB = fopen(APPOINTMENT_DB, "w");
+    if (appointmentDB != NULL) {
+        fclose(appointmentDB);
+    }
+}
 
 // GESTIONE DB TEST
 

@@ -12,7 +12,17 @@
 
 int main() {
 
-    run();
+    //run();
+
+    Appointment appList = loadAppointmentList();
+    TestReservation test = newTestReservation();
+    printAppointmentList(appList);
+    printTestReservation(test);
+    pause("Test 1");
+
+    appList = labPopulateReservations(&test, appList);
+    printAppointmentList(appList);
+    printTestReservation(test);
 
     return 0;
 }
