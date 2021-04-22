@@ -359,6 +359,13 @@ void labManageAppointmentRequestsUi(TestReservation *test) {
     }
 }
 
+void labShowReservationUi(TestReservation test) {
+    clearScreen();
+    printf("Here are the test reservations for the current day.\n");
+    printTestReservation(test);
+    pause("Press ENTER key to go back...");
+}
+
 void labLoginUi(TestReservation *test) {
     int userChoice = -1;
     bool running = true;
@@ -432,7 +439,7 @@ void labUi(TestReservation *test) {
                 labManageAppointmentRequestsUi(test);
                 break;
             case 3:
-                //labShowReservationsUi();
+                labShowReservationUi((*test));
                 break;
             case 4:
                 //labManageReservationsUi();

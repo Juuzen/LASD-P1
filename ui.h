@@ -14,6 +14,8 @@ void patientUi(TestReservation *test);
 
 /* UI LABORATORIO */
 void labShowTestHistoryUi(int currentDay);
+void labManageAppointmentRequestsUi(TestReservation *test);
+void labShowReservationUi(TestReservation test);
 void labLoginUi(TestReservation *test);
 void labUi(TestReservation *test);
 

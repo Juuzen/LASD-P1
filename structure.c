@@ -221,13 +221,16 @@ void printTestReservation(TestReservation reservation) {
     if (reservation != NULL) {
         printf("DAY %d:\n", reservation->currentDay);
         printf("Morning tests:\n");
-        printAppointmentList(reservation->morning);
+        if (reservation->morning == NULL) printf("No reservations.\n");
+        else printAppointmentList(reservation->morning);
 
         printf("\nAfternoon tests:\n");
-        printAppointmentList(reservation->afternoon);
+        if (reservation->afternoon == NULL) printf("No reservations.\n");
+        else printAppointmentList(reservation->afternoon);
 
         printf("\nEvening tests:\n");
-        printAppointmentList(reservation->evening);
+        if (reservation->evening == NULL) printf("No reservations.\n\n");
+        else printAppointmentList(reservation->evening);
     }
 }
 int appointmentListCount(Appointment appList) {
