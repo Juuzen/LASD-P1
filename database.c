@@ -89,8 +89,18 @@ void saveAppointment(Appointment app) {
     FILE * appointmentDB;
     appointmentDB = fopen(APPOINTMENT_DB, "a");
     if (appointmentDB != NULL) {
-        if (fprintf(appointmentDB, "%s\t%d\t%s\n", app->fiscalCode, app->slot, app->symptoms) < 0) {
+        if (fprintf(appointmentDB, "%s\t%d\t", app->fiscalCode, app->slot) < 0) {
             // TODO: Handle error in writing
+        }
+
+        if (strcmp(app->symptoms, "") == 0) {
+            if (fprintf(appointmentDB, "(null)\n") < 0) {
+                //TODO: Handle error in writing
+            }
+        } else {
+            if (fprintf(appointmentDB, "%s\n", app->symptoms) < 0) {
+                //TODO: Handle error in writing
+            }
         }
     }
     else {

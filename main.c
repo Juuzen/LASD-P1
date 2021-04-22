@@ -12,20 +12,7 @@
 
 int main() {
 
-    //run();
-    Appointment appList = loadAppointmentList();
-    TestReservation test = newTestReservation();
+    run();
 
-    printf("Before taking the appointments:\n\n");
-    printTestReservation(test);
-    printAppointmentList(appList);
-
-    labPopulateReservations(&test, appList);
-
-    printf("After taking the appointments:\n");
-    printTestReservation(test);
-
-    deleteAppointmentList(appList);
-    deleteTestReservation(test);
     return 0;
 }

@@ -35,7 +35,6 @@ bool isPatientRegistered(Patient ptList, char fiscalCode[]) {
     }
 }
 
-// TIP: Nella funzione chiamante usa &ptList
 bool patientRegister(Patient* ptList, char fiscalCode[], char password[]) {
     bool response = false;
     if (!isPatientRegistered(*ptList, fiscalCode)) {
