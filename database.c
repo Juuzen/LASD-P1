@@ -182,7 +182,7 @@ void saveAppointmentList(Appointment appList) {
     }
 
 }
-void dropAppointments() {
+void dropAppointmentDB() {
     FILE * appointmentDB = fopen(APPOINTMENT_DB, "w");
     if (appointmentDB != NULL) {
         fclose(appointmentDB);

@@ -276,6 +276,25 @@ Appointment searchAppointmentByFiscalCode(TestReservation reservation, char fisc
     }
     return app;
 }
+void addReservation(TestReservation *reservation, Appointment app) {
+    if ((*reservation) != NULL) {
+        if (app != NULL) {
+            switch (app->slot) {
+                case MORNING:
+                    (*reservation)->morning = appointmentAppend((*reservation)->morning, app);
+                    break;
+                case AFTERNOON:
+                    (*reservation)->afternoon = appointmentAppend((*reservation)->afternoon, app);
+                    break;
+                case EVENING:
+                    (*reservation)->evening = appointmentAppend((*reservation)->evening, app);
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+}
 
 // GESTIONE ESITI TEST
 TestResult newTestResultList() {
