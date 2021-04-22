@@ -189,6 +189,12 @@ LabWorker labWorkerInsert(LabWorker wkList, int workerId, char password[]) {
         return wkList;
     }
 }
+void printLabWorkers(LabWorker wkList) {
+    if (wkList != NULL) {
+        printf("%d - %s\n", wkList->id, wkList->password);
+        printLabWorkers(wkList->next);
+    }
+}
 
 // GESTIONE STRUTTURA TEST
 TestReservation newTestReservation() {
@@ -308,7 +314,7 @@ void printTestResultsByDay (TestResult rsList, int day) {
             printf("Patient: %s - %s\n", rsList->fiscalCode, rsList->response);
         }
 
-    printTestResultList(rsList->next);
+    printTestResultsByDay(rsList->next, day);
     }
 }
 

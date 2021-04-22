@@ -68,7 +68,6 @@ LabWorker loadLabWorkers() {
     LabWorker wkList = newLabWorkerList();
     FILE * labWorkerDB = fopen(LABWORKER_DB, "r");
     if (labWorkerDB != NULL) {
-        LabWorker wkList = newLabWorkerList();
         int workerId;
         char password[PASSWORD_SIZE];
 

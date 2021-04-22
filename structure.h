@@ -56,6 +56,7 @@ LabWorker newLabWorkerNode(int workerId, char password[]);
 void deleteLabWorkerNode(LabWorker worker);
 void deleteLabWorkerList(LabWorker wkList);
 LabWorker labWorkerInsert(LabWorker wkList, int workerId, char password[]);
+void printLabWorkers(LabWorker wkList);
 
 // GESTIONE TEST FISSATI
 struct testReservation {

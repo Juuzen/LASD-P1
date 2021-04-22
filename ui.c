@@ -294,7 +294,9 @@ void labShowTestHistoryUi(int currentDay) {
             } while (userChoice == -1);
             clearScreen();
             printf("DAY %d:\n", userChoice);
+
             printTestResultsByDay(rsList, userChoice);
+
             pause("Press ENTER to go back...");
             break;
         case 3:
@@ -309,8 +311,7 @@ void labLoginUi(TestReservation *test) {
     bool running = true;
     int workerId;
     char password[PASSWORD_SIZE];
-    //WorkerList wkList = loadWorkerList();
-    LabWorker wkList = newLabWorkerList();
+    LabWorker wkList = loadLabWorkers();
     do {
         clearScreen();
         printf("Please provide your worker ID: ");
@@ -319,7 +320,6 @@ void labLoginUi(TestReservation *test) {
         printf("Please provide your password: ");
         scanf("%20s", password); //TODO: masked scanf
         fflush(stdin);
-
         if ( labLoginCheck(wkList, workerId, password) ) {
             //login authorized
             labUi(test);
@@ -373,8 +373,7 @@ void labUi(TestReservation *test) {
 
         switch(userChoice) {
             case 1:
-                printf("%d", (*test)->currentDay);
-                //labShowTestHistoryUi((*test)->currentDay);
+                labShowTestHistoryUi((*test)->currentDay);
                 break;
             case 2:
                 //labManageAppointmentRequestsUi();
@@ -386,7 +385,7 @@ void labUi(TestReservation *test) {
                 //labManageReservationsUi();
                 break;
             case 5:
-                running = true;
+                running = false;
                 break;
             default:
                 pause("Something went wrong...");
