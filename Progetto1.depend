@@ -79,10 +79,10 @@
 	"structure.h"
 	"helper.h"
 
-1619035692 f:\university\laboratorio di algoritmi e strutture dati\esercizi\lasd-p1\database.h
+1619083214 f:\university\laboratorio di algoritmi e strutture dati\esercizi\lasd-p1\database.h
 	"structure.h"
 
-1619081364 f:\university\laboratorio di algoritmi e strutture dati\esercizi\lasd-p1\structure.h
+1619083176 f:\university\laboratorio di algoritmi e strutture dati\esercizi\lasd-p1\structure.h
 	<stdbool.h>
 	"const.h"
 
@@ -119,7 +119,7 @@
 	"helper.h"
 	<unistd.h>
 
-1619029005 f:\university\laboratorio di algoritmi e strutture dati\esercizi\lasd-p1\ui.h
+1619083644 f:\university\laboratorio di algoritmi e strutture dati\esercizi\lasd-p1\ui.h
 	"structure.h"
 
 1618951094 f:\university\laboratorio di algoritmi e strutture dati\esercizi\lasd-p1\patient.h
@@ -146,7 +146,7 @@
 	"helper.h"
 	"database.h"
 
-1619081364 source:f:\university\laboratorio di algoritmi e strutture dati\esercizi\lasd-p1\structure.c
+1619083176 source:f:\university\laboratorio di algoritmi e strutture dati\esercizi\lasd-p1\structure.c
 	<stdio.h>
 	<stdlib.h>
 	<string.h>

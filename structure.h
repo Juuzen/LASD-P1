@@ -88,9 +88,9 @@ TestResult newTestResultNode (char fiscalCode[], char response[], int day);
 void deleteTestResultNode (TestResult result);
 void deleteTestResultList (TestResult rsList);
 TestResult testResultInsert (TestResult rsList, char fiscalCode[], char response[], int day);
-void printTestResultList (TestResult rsList);
-void printTestResultsByDay (TestResult rsList, int day);
-
+void printTestResultList (TestResult rsList, bool chronoOrder);
+void printTestResultsByDay (TestResult rsList, int day, bool chronoOrder);
+void printTestResultByFiscalCode (TestResult rsList, char fiscalCode[], bool chronoOrder);
 #endif // structure_h
 
 

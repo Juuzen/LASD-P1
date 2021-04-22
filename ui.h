@@ -3,6 +3,7 @@
 #include "structure.h"
 
 /* UI PAZIENTI */
+void patientShowTestResultsUi(char fiscalCode[]);
 void patientAppointmentRequestUi(Appointment appList, char fiscalCode[]);
 void patientShowAppointmentUi(Appointment appList, char fiscalCode[]);
 void patientDeleteAppointmentUi(Appointment* appList, char fiscalCode[]);

@@ -9,6 +9,21 @@
 #include "database.h"
 
 /* UI LATO PAZIENTE */
+void patientShowTestResultsUi(char fiscalCode[]) {
+    TestResult rsList = loadTestResults();
+    clearScreen();
+    if (rsList == NULL) {
+        //FIXME: Non c'è modo di capire se la lista è vuota perché non ci sono elementi o perché vi è stato un errore
+        printf("You made 0 tests up to this moment.\n");
+        pause("Press ENTER to go back...");
+    }
+    else {
+        printf("Here are your test results:\n");
+        // by default, anti-chronological order is used
+        printTestResultByFiscalCode(rsList, fiscalCode, false);
+        pause("Press ENTER to go back...");
+    }
+}
 
 void patientAppointmentRequestUi(Appointment appList, char fiscalCode[]) {
     int userChoice = -1;
@@ -117,7 +132,7 @@ void patientAccountUi(char fiscalCode[]) {
                 patientDeleteAppointmentUi(&appList, fiscalCode);
                 break;
             case 4:
-
+                patientShowTestResultsUi(fiscalCode);
                 break;
             case 5:
                 printf("I'm now halting.\n");
@@ -282,7 +297,8 @@ void labShowTestHistoryUi(int currentDay) {
 
     switch (userChoice) {
         case 1:
-            printTestResultList(rsList);
+            // By default, chronological order is used
+            printTestResultList(rsList, true);
             pause("Press ENTER to go back...");
             break;
         case 2:
@@ -294,9 +310,8 @@ void labShowTestHistoryUi(int currentDay) {
             } while (userChoice == -1);
             clearScreen();
             printf("DAY %d:\n", userChoice);
-
-            printTestResultsByDay(rsList, userChoice);
-
+            // By default, chronological order is used
+            printTestResultsByDay(rsList, userChoice, true);
             pause("Press ENTER to go back...");
             break;
         case 3:

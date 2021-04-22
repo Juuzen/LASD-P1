@@ -21,6 +21,5 @@ int getCurrentDay();
 TestResult loadTestResults();
 void saveTestResultListBody(Appointment appList, FILE * testResultDB, int currentDay);
 void saveTestResultList(TestReservation testList);
-void printTestResultList(TestResult rsList);
 
 #endif // database_h

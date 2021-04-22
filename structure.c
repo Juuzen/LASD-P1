@@ -299,22 +299,58 @@ TestResult testResultInsert(TestResult rsList, char fiscalCode[], char response[
         return rsList;
     }
 }
-void printTestResultList(TestResult rsList) {
+void printTestResultList(TestResult rsList, bool chronoOrder) {
     if (rsList != NULL) {
-        printf("Patient: %s\n", rsList->fiscalCode);
-        printf("Response: %s\n", rsList->response);
-        printf("Day: %d\n\n", rsList->day);
+        if (!chronoOrder) {
+            // In questa maniera viene stampato in maniera anti-cronologica (più recente -> meno recente)
+            printTestResultList(rsList->next, chronoOrder);
+        }
 
-        printTestResultList(rsList->next);
+        printf("DAY: %d - %s: %s\n", rsList->day, rsList->fiscalCode, rsList->response);
+
+        if (chronoOrder) {
+            // In questa maniera viene stampato in maniera cronologica (meno recente -> più recente)
+            printTestResultList(rsList->next, chronoOrder);
+        }
+
     }
 }
-void printTestResultsByDay (TestResult rsList, int day) {
+void printTestResultsByDay (TestResult rsList, int day, bool chronoOrder) {
     if (rsList != NULL) {
+        if (!chronoOrder) {
+            // In questa maniera viene stampato in maniera anti-cronologica (più recente -> meno recente)
+            printTestResultsByDay(rsList->next, day, chronoOrder);
+        }
+
         if (rsList->day == day) {
             printf("Patient: %s - %s\n", rsList->fiscalCode, rsList->response);
         }
 
-    printTestResultsByDay(rsList->next, day);
+        if (chronoOrder) {
+            // In questa maniera viene stampato in maniera cronologica (meno recente -> più recente)
+            printTestResultsByDay(rsList->next, day, chronoOrder);
+        }
+
+
+
+    }
+}
+void printTestResultByFiscalCode (TestResult rsList, char fiscalCode[], bool chronoOrder) {
+    if (rsList != NULL) {
+        if (!chronoOrder) {
+            // In questa maniera viene stampato in maniera anti-cronologica (più recente -> meno recente)
+            printTestResultByFiscalCode(rsList->next, fiscalCode, chronoOrder);
+        }
+
+        if ((strcmp(rsList->fiscalCode, fiscalCode)) == 0) {
+            printf("DAY %d - %s\n", rsList->day, rsList->response);
+        }
+
+        if (chronoOrder) {
+            // In questa maniera viene stampato in maniera cronologica (meno recente -> più recente)
+            printTestResultByFiscalCode(rsList->next, fiscalCode, chronoOrder);
+        }
+
     }
 }
 
