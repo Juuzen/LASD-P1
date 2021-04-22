@@ -3,7 +3,7 @@
 #include <stdbool.h>
 #include "const.h"
 
-// GESTIONE LISTA PAZIENTI
+/* STRUTTURA DATI PAZIENTI */
 
 typedef struct patient {
     char fiscalCode[FISCALCODE_SIZE];

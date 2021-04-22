@@ -7,8 +7,7 @@
 #include "structure.h"
 #include "helper.h"
 
-// GESTIONE DB PAZIENTI
-
+/* GESTIONE DB PAZIENTI */
 void savePatient(char fiscalCode[], char password[]) {
     FILE * patientDB;
     patientDB = fopen(PATIENT_DB, "a");
@@ -17,30 +16,6 @@ void savePatient(char fiscalCode[], char password[]) {
     }
     else {
         printf ("SAVE: The DB could not be opened.\n");
-    }
-    fclose(patientDB);
-}
-//useless
-void savePatientListBody (Patient ptList, FILE * patientDB) {
-    if (patientDB != NULL) {
-        if (ptList != NULL) {
-            fprintf(patientDB, "%s\t%s\n", ptList->fiscalCode, ptList->password);
-            savePatientListBody(ptList->next, patientDB);
-        }
-        // lista caricata con successo
-    }
-    // file non più aperto - ERRORE
-}
-//useless
-void savePatientList(Patient ptList) {
-    FILE * patientDB;
-    patientDB = fopen(PATIENT_DB, "w");
-    if (patientDB != NULL) {
-        savePatientListBody(ptList, patientDB);
-    }
-    else {
-        printf ("SAVE: The DB could not be opened.\n");
-        // TODO: Handle file opening error
     }
     fclose(patientDB);
 }
@@ -62,8 +37,8 @@ Patient loadPatientList() {
     return ptList;
 }
 
-// GESTIONE DB LAVORATORI LABORATORIO
 
+/* GESTIONE DB LAVORATORI LABORATORIO */
 LabWorker loadLabWorkers() {
     LabWorker wkList = newLabWorkerList();
     FILE * labWorkerDB = fopen(LABWORKER_DB, "r");
@@ -82,9 +57,7 @@ LabWorker loadLabWorkers() {
 }
 
 
-
-// GESTIONE DB APPUNTAMENTI
-
+/* GESTIONE DB APPUNTAMENTI */
 void saveAppointment(Appointment app) {
     FILE * appointmentDB;
     appointmentDB = fopen(APPOINTMENT_DB, "a");
@@ -107,24 +80,6 @@ void saveAppointment(Appointment app) {
         printf ("SAVE: The DB could not be opened.\n");
     }
     fclose(appointmentDB);
-}
-char * getSymptoms(FILE * file) {
-    if (file != NULL) {
-        int i = 0;
-        char c;
-        char * scan = (char *) calloc(1, SYMPTOMS_SIZE * sizeof(char));
-        while (((c = fgetc(file)) != EOF) && c != '\n' && i < SYMPTOMS_SIZE) {
-            scan[i] = c;
-            i++;
-        }
-
-        if (feof(file)) {
-            printf("FILE FINITO\n");
-            return NULL;
-        }
-        return scan;
-    }
-    else return NULL;
 }
 Appointment loadAppointmentList() {
     Appointment appList = newAppointmentList();
@@ -189,39 +144,8 @@ void dropAppointmentDB() {
     }
 }
 
-// GESTIONE DB TEST
 
-int getCurrentDay() {
-    FILE * fp = fopen(TESTRESULT_DB, "r");
-
-    if (fp != NULL) {
-        fseek(fp, -1, SEEK_END);
-        char c;
-        do {
-            fseek(fp, -2, SEEK_CUR);
-            c = fgetc(fp);
-
-        } while (c != '\t');
-
-        int lastDay;
-        if (fscanf(fp, "%d", &lastDay) > 0) {
-            lastDay += 1;
-        }
-        else {
-            //TODO: Gestire errore in lettura del giorno
-        }
-        fclose(fp);
-        return lastDay;
-    }
-    else {
-        //FIXME: Gestire fopen quando il file non esiste (crearlo? restituire 1?)
-        return 1;
-    }
-}
-
-
-
-// GESTIONE ESITI TEST
+/* GESTIONE DB RISULTATI TEST */
 TestResult loadTestResults() {
     TestResult rsList = newTestResultList();
     FILE * testResultDB = fopen(TESTRESULT_DB, "r");
@@ -278,19 +202,3 @@ void saveTestResultList(TestReservation testList) {
         //TODO: Handle error in opening file
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

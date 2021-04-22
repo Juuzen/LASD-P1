@@ -5,6 +5,10 @@
 void clearScreen();
 void pause(char message[]);
 bool generateTestResult();
+int getCurrentDay();
+char *getSymptoms(FILE * file);
+void wrongChoice();
+int getChoice(int maxOptions);
 
 #endif // helper_h
 

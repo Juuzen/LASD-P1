@@ -4,6 +4,7 @@
 #include <stdbool.h>
 #include "structure.h"
 #include "database.h"
+#include "helper.h"
 
 Patient newPatientList() {
     Patient pt = NULL;
@@ -388,6 +389,3 @@ void printTestResultByFiscalCode (TestResult rsList, char fiscalCode[], bool chr
 
     }
 }
-
-
-
