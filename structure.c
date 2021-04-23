@@ -6,120 +6,6 @@
 #include "database.h"
 #include "helper.h"
 
-
-
-// GESTIONE APPUNTAMENTI
-
-const char* getTimeSlot(timeSlot slot) {
-    switch (slot) {
-        case MORNING:
-            return "MORNING";
-        case AFTERNOON:
-            return "AFTERNOON";
-        case EVENING:
-            return "EVENING";
-        default:
-            return "";
-    }
-}
-Appointment newAppointmentList() {
-    Appointment app = NULL;
-    return app;
-}
-Appointment newAppointmentNode(char fiscalCode[], timeSlot slot, char symptoms[]) {
-    Appointment app = (Appointment) calloc(1, sizeof(struct appointment));
-
-    if (app != NULL) {
-        strcpy(app->fiscalCode, fiscalCode);
-        if (symptoms != NULL) {
-            app->symptoms = (char *) calloc(1, SYMPTOMS_SIZE * sizeof(char));
-            strcpy(app->symptoms, symptoms);
-        }
-        app->slot = slot;
-    }
-    return app;
-}
-Appointment cloneAppointment(Appointment app) {
-    if (app == NULL) return NULL;
-    else return newAppointmentNode(app->fiscalCode, app->slot, app->symptoms);
-}
-void deleteAppointmentNode (Appointment app) {
-    if (app != NULL) {
-        memset(app->fiscalCode, '\0', sizeof(app->fiscalCode));
-        if (app->symptoms != NULL) {
-            free(app->symptoms);
-            app->symptoms = NULL;
-        }
-        app->slot = 0;
-        free(app);
-    }
-}
-void deleteAppointmentList (Appointment appList) {
-    if (appList != NULL) {
-        deleteAppointmentList(appList->next);
-        deleteAppointmentNode(appList);
-    }
-}
-Appointment appointmentAppend(Appointment first, Appointment append) {
-    if (first == NULL) {
-        return append;
-    }
-
-    else {
-        first->next = appointmentAppend(first->next, append);
-        return first;
-    }
-}
-Appointment appointmentInsert(Appointment appList, char fiscalCode[], timeSlot slot, char symptoms[]) {
-    if (appList == NULL) {
-        return newAppointmentNode(fiscalCode, slot, symptoms);
-    }
-
-    else {
-        appList->next = appointmentInsert(appList->next, fiscalCode, slot, symptoms);
-        return appList;
-    }
-}
-void printAppointmentNode(Appointment app) {
-    if (app != NULL) {
-        printf("Fiscal Code: %s\n", app->fiscalCode);
-        printf("Time slot: %s\n", getTimeSlot(app->slot));
-        printf("Symptoms: ");
-        printf((app->symptoms == NULL) ? "///" : app->symptoms);
-        printf("\n\n");
-    }
-}
-void printAppointmentList(Appointment appList) {
-    if (appList != NULL) {
-        printAppointmentNode(appList);
-        printAppointmentList(appList->next);
-    }
-}
-Appointment findAppointmentByFiscalCode(Appointment appList, char fiscalCode[]) {
-    if (appList == NULL) return NULL;
-    else {
-        if (strcmp(appList->fiscalCode, fiscalCode) == 0) return appList;
-        else return findAppointmentByFiscalCode(appList->next, fiscalCode);
-    }
-}
-Appointment deleteAppointmentByFiscalCode(Appointment appList, char fiscalCode[]) {
-    if (appList == NULL) return appList;
-    else {
-        if (strcmp(appList->fiscalCode, fiscalCode) == 0) {
-            Appointment tmp = appList->next;
-            deleteAppointmentNode(appList);
-            return tmp;
-        }
-        else {
-            appList->next = deleteAppointmentByFiscalCode(appList->next, fiscalCode);
-            return appList;
-        }
-    }
-}
-
-// GESTIONE LAVORATORI
-
-
 // GESTIONE TEST RESERVATIONS
 TestReservation newTestReservation() {
     TestReservation reservation = (TestReservation) calloc(1, sizeof(struct testReservation));
@@ -131,9 +17,9 @@ TestReservation newTestReservation() {
 }
 void deleteTestReservation(TestReservation reservation) {
     if (reservation != NULL) {
-    deleteAppointmentList(reservation->morning);
-    deleteAppointmentList(reservation->afternoon);
-    deleteAppointmentList(reservation->evening);
+    appointmentFreeList(reservation->morning);
+    appointmentFreeList(reservation->afternoon);
+    appointmentFreeList(reservation->evening);
     reservation->morning = NULL;
     reservation->afternoon = NULL;
     reservation->evening = NULL;
@@ -146,15 +32,15 @@ void printTestReservation(TestReservation reservation) {
         printf("DAY %d:\n", reservation->currentDay);
         printf("Morning tests:\n");
         if (reservation->morning == NULL) printf("No reservations.\n");
-        else printAppointmentList(reservation->morning);
+        else appointmentPrintList(reservation->morning);
 
         printf("\nAfternoon tests:\n");
         if (reservation->afternoon == NULL) printf("No reservations.\n");
-        else printAppointmentList(reservation->afternoon);
+        else appointmentPrintList(reservation->afternoon);
 
         printf("\nEvening tests:\n");
         if (reservation->evening == NULL) printf("No reservations.\n\n");
-        else printAppointmentList(reservation->evening);
+        else appointmentPrintList(reservation->evening);
     }
 }
 int appointmentListCount(Appointment appList) {
@@ -190,11 +76,11 @@ bool isTimeSlotFull(TestReservation reservation, timeSlot slot) {
 Appointment searchAppointmentByFiscalCode(TestReservation reservation, char fiscalCode[]) {
     Appointment app = NULL;
     if (reservation != NULL) {
-        app = findAppointmentByFiscalCode(reservation->morning, fiscalCode);
+        app = appointmentFindByFiscalCode(reservation->morning, fiscalCode);
         if (app == NULL) {
-            app = findAppointmentByFiscalCode(reservation->afternoon, fiscalCode);
+            app = appointmentFindByFiscalCode(reservation->afternoon, fiscalCode);
             if (app == NULL) {
-                app = findAppointmentByFiscalCode(reservation->evening, fiscalCode);
+                app = appointmentFindByFiscalCode(reservation->evening, fiscalCode);
             }
         }
     }
@@ -205,13 +91,13 @@ void addReservation(TestReservation *reservation, Appointment app) {
         if (app != NULL) {
             switch (app->slot) {
                 case MORNING:
-                    (*reservation)->morning = appointmentAppend((*reservation)->morning, app);
+                    (*reservation)->morning = appointmentAppendToList((*reservation)->morning, app);
                     break;
                 case AFTERNOON:
-                    (*reservation)->afternoon = appointmentAppend((*reservation)->afternoon, app);
+                    (*reservation)->afternoon = appointmentAppendToList((*reservation)->afternoon, app);
                     break;
                 case EVENING:
-                    (*reservation)->evening = appointmentAppend((*reservation)->evening, app);
+                    (*reservation)->evening = appointmentAppendToList((*reservation)->evening, app);
                     break;
                 default:
                     break;

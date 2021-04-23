@@ -15,8 +15,8 @@ typedef struct employee* Employee;
 /* FUNZIONI SULLA STRUTTURA DATI */
 Employee employeeNewList();
 Employee employeeNewNode(int id, char password[]);
-void employeeDeleteNode(Employee emNode);
-void employeeDeleteList(Employee emList);
+void employeeFreeNode(Employee emNode);
+void employeeFreeList(Employee emList);
 Employee employeeTailInsert(Employee emList, int id, char password[]);
 void employeePrintNode(Employee emNode);
 void employeePrintList(Employee emList);

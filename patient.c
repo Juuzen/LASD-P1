@@ -6,6 +6,7 @@
 #include "patient.h"
 #include "structure.h"
 #include "s_patient.h"
+#include "s_appointment.h"
 #include "helper.h"
 
 /* FUNZIONI AUSILIARIE */
@@ -47,20 +48,20 @@ bool patientRegister(Patient* ptList, char fiscalCode[], char password[]) {
     return response;
 }
 
-bool patientRequestAppointment(Appointment* appList, char fiscalCode[], timeSlot slot, char symptoms[]) {
+bool patientRequestAppointment(Appointment* apList, char fiscalCode[], timeSlot slot, char symptoms[]) {
     bool response = false;
-    Appointment newApp = newAppointmentNode(fiscalCode, slot, symptoms);
+    Appointment newApp = appointmentNewNode(fiscalCode, slot, symptoms);
     if (newApp != NULL) {
-        *appList = appointmentAppend(*appList, newApp);
+        *apList = appointmentAppendToList(*apList, newApp);
         saveAppointment(newApp);
         response = true;
     }
     return response;
 }
 
-void patientDeleteAppointment(Appointment* appList, char fiscalCode[]) {
-    *appList = deleteAppointmentByFiscalCode(*appList, fiscalCode);
-    saveAppointmentList(*appList);
+void patientDeleteAppointment(Appointment* apList, char fiscalCode[]) {
+    *apList = appointmentDeleteByFiscalCode(*apList, fiscalCode);
+    saveAppointmentList(*apList);
 }
 
 
@@ -81,12 +82,12 @@ void patientShowTestResultsUi(char fiscalCode[]) {
     }
 }
 
-void patientAppointmentRequestUi(Appointment appList, char fiscalCode[]) {
+void patientAppointmentRequestUi(Appointment apList, char fiscalCode[]) {
     int userChoice = -1;
-    Appointment found = findAppointmentByFiscalCode(appList, fiscalCode);
+    Appointment found = appointmentFindByFiscalCode(apList, fiscalCode);
     if (found != NULL) {
         printf("You already have an appointment with the following informations:\n");
-        printAppointmentNode(found);
+        appointmentPrintNode(found);
         pause("Press ENTER key to go back...");
     }
     else {
@@ -107,7 +108,7 @@ void patientAppointmentRequestUi(Appointment appList, char fiscalCode[]) {
             printf("If you have any symptoms, please provide a concise explanation (max %d characters):\n", SYMPTOMS_SIZE);
             char * symptoms = getSymptoms(stdin);
 
-            bool response = patientRequestAppointment(&appList, fiscalCode, slot, symptoms);
+            bool response = patientRequestAppointment(&apList, fiscalCode, slot, symptoms);
             if (response) printf("Appointment requested!\n");
             else printf("There was a problem in requesting the appointment. Please try again later.\n");
             pause("Press ENTER key to go back...");
@@ -123,15 +124,15 @@ void patientShowReservationUi(TestReservation *test, char fiscalCode[]) {
 
     else {
         printf("Here is your test reservation:\n");
-        printAppointmentNode(app);
+        appointmentPrintNode(app);
     }
     pause("Press ENTER key to go back...");
 }
 
-void patientDeleteAppointmentUi(Appointment* appList, char fiscalCode[]) {
+void patientDeleteAppointmentUi(Appointment* apList, char fiscalCode[]) {
     clearScreen();
-    Appointment app = findAppointmentByFiscalCode(*appList, fiscalCode);
-    printAppointmentNode(app);
+    Appointment app = appointmentFindByFiscalCode(*apList, fiscalCode);
+    appointmentPrintNode(app);
 
     if (app == NULL) pause("You have no appointments.\nPress any key to go back...");
     else {
@@ -139,13 +140,13 @@ void patientDeleteAppointmentUi(Appointment* appList, char fiscalCode[]) {
         do {
             clearScreen();
             printf("Here is you appointment informations:\n");
-            printAppointmentNode(app);
+            appointmentPrintNode(app);
             printf("Do you want to delete this appointment? [y/n] ");
             fflush(stdin);
             scanf("%c", &input);
             fflush(stdin);
             if ((input == 'y') || (input == 'Y')) {
-                patientDeleteAppointment(appList, fiscalCode);
+                patientDeleteAppointment(apList, fiscalCode);
             }
 
             else if ((input == 'n') || (input == 'N')) {
@@ -203,7 +204,7 @@ void patientAccountUi(TestReservation *test, char fiscalCode[]) {
         }
     } while (running);
 
-    deleteAppointmentList(appList);
+    appointmentFreeList(appList);
 }
 
 void patientLoginUi(TestReservation *test, Patient ptList) {
@@ -334,6 +335,6 @@ void patientMainMenuUi(TestReservation *test) {
         }
     } while (running);
 
-    patientDeleteList(ptList);
+    patientFreeList(ptList);
 }
 

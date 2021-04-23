@@ -1,36 +1,8 @@
 #ifndef structure_h
 #define structure_h
 #include <stdbool.h>
+#include "s_appointment.h"
 #include "const.h"
-
-// GESTIONE CODA APPUNTAMENTI
-typedef enum timeSlot { MORNING, AFTERNOON, EVENING } timeSlot;
-
-struct appointment {
-    char fiscalCode[FISCALCODE_SIZE];
-    timeSlot slot;
-    char *symptoms;
-
-    struct appointment* next;
-};
-typedef struct appointment* Appointment;
-
-const char* getTimeSlot(timeSlot slot);
-Appointment newAppointmentList();
-Appointment newAppointmentNode(char fiscalCode[], timeSlot slot, char symptoms[]);
-Appointment cloneAppointment(Appointment app);
-void deleteAppointmentNode (Appointment app);
-void deleteAppointmentList(Appointment appList);
-Appointment appointmentAppend(Appointment first, Appointment append);
-Appointment appointmentInsert(Appointment appList, char fiscalCode[], timeSlot slot, char symptoms[]);
-void printAppointmentNode(Appointment app);
-void printAppointmentList(Appointment appList);
-Appointment findAppointmentByFiscalCode(Appointment appList, char fiscalCode[]);
-Appointment deleteAppointmentByFiscalCode(Appointment appList, char fiscalCode[]);
-
-// GESTIONE LAVORATORI LABORATORIO
-
-
 
 
 // GESTIONE TEST FISSATI

@@ -19,7 +19,7 @@ Employee employeeNewNode(int id, char password[]) {
     return emNode;
 }
 
-void employeeDeleteNode(Employee emNode) {
+void employeeFreeNode(Employee emNode) {
     if (emNode != NULL) {
         emNode->id = 0;
         memset(emNode->password, '\0', sizeof(emNode->password));
@@ -28,10 +28,10 @@ void employeeDeleteNode(Employee emNode) {
     }
 }
 
-void employeeDeleteList(Employee emList) {
+void employeeFreeList(Employee emList) {
     if (emList != NULL) {
-        employeeDeleteList(emList->next);
-        employeeDeleteNode(emList);
+        employeeFreeList(emList->next);
+        employeeFreeNode(emList);
     }
 }
 

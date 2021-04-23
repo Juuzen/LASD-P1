@@ -69,7 +69,7 @@
 	<stdbool.h>
 	"structure.h"
 
-1619169886 source:f:\university\laboratorio di algoritmi e strutture dati\esercizi\lasd-p1\database.c
+1619172226 source:f:\university\laboratorio di algoritmi e strutture dati\esercizi\lasd-p1\database.c
 	<stdio.h>
 	<stdlib.h>
 	<stdbool.h>
@@ -87,13 +87,14 @@
 	"s_employee.h"
 	"s_quarantine.h"
 
-1619169721 f:\university\laboratorio di algoritmi e strutture dati\esercizi\lasd-p1\structure.h
+1619171335 f:\university\laboratorio di algoritmi e strutture dati\esercizi\lasd-p1\structure.h
 	<stdbool.h>
+	"s_appointment.h"
 	"const.h"
 
-1619169886 f:\university\laboratorio di algoritmi e strutture dati\esercizi\lasd-p1\const.h
+1619171435 f:\university\laboratorio di algoritmi e strutture dati\esercizi\lasd-p1\const.h
 
-1619127559 source:f:\university\laboratorio di algoritmi e strutture dati\esercizi\lasd-p1\helper.c
+1619170426 source:f:\university\laboratorio di algoritmi e strutture dati\esercizi\lasd-p1\helper.c
 	<stdio.h>
 	<stdlib.h>
 	<time.h>
@@ -101,12 +102,13 @@
 	"const.h"
 	"helper.h"
 
-1619127559 f:\university\laboratorio di algoritmi e strutture dati\esercizi\lasd-p1\helper.h
+1619171435 f:\university\laboratorio di algoritmi e strutture dati\esercizi\lasd-p1\helper.h
 	<stdbool.h>
+	"const.h"
 
 1618478083 f:\university\laboratorio di algoritmi e strutture dati\esercizi\lasd-p1\definition.h
 
-1619170106 source:f:\university\laboratorio di algoritmi e strutture dati\esercizi\lasd-p1\lab.c
+1619172501 source:f:\university\laboratorio di algoritmi e strutture dati\esercizi\lasd-p1\lab.c
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
@@ -116,7 +118,7 @@
 	"database.h"
 	"helper.h"
 
-1619129459 source:f:\university\laboratorio di algoritmi e strutture dati\esercizi\lasd-p1\main.c
+1619172518 source:f:\university\laboratorio di algoritmi e strutture dati\esercizi\lasd-p1\main.c
 	<stdio.h>
 	<string.h>
 	<malloc.h>
@@ -136,7 +138,7 @@
 	"structure.h"
 	"s_patient.h"
 
-1619168658 source:f:\university\laboratorio di algoritmi e strutture dati\esercizi\lasd-p1\patient.c
+1619172877 source:f:\university\laboratorio di algoritmi e strutture dati\esercizi\lasd-p1\patient.c
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
@@ -145,6 +147,7 @@
 	"patient.h"
 	"structure.h"
 	"s_patient.h"
+	"s_appointment.h"
 	"helper.h"
 
 1619128449 source:f:\university\laboratorio di algoritmi e strutture dati\esercizi\lasd-p1\ui.c
@@ -158,7 +161,7 @@
 	"helper.h"
 	"database.h"
 
-1619169721 source:f:\university\laboratorio di algoritmi e strutture dati\esercizi\lasd-p1\structure.c
+1619172823 source:f:\university\laboratorio di algoritmi e strutture dati\esercizi\lasd-p1\structure.c
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
@@ -194,22 +197,31 @@
 1619167807 f:\university\laboratorio di algoritmi e strutture dati\esercizi\lasd-p1\s_quarantine.h
 	"const.h"
 
-1619168485 f:\university\laboratorio di algoritmi e strutture dati\esercizi\lasd-p1\s_patient.h
+1619172897 f:\university\laboratorio di algoritmi e strutture dati\esercizi\lasd-p1\s_patient.h
 	"const.h"
 
-1619169721 source:f:\university\laboratorio di algoritmi e strutture dati\esercizi\lasd-p1\s_patient.c
+1619172871 source:f:\university\laboratorio di algoritmi e strutture dati\esercizi\lasd-p1\s_patient.c
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
 	"s_patient.h"
 	"const.h"
 
-1619169721 source:f:\university\laboratorio di algoritmi e strutture dati\esercizi\lasd-p1\s_employee.c
+1619172941 source:f:\university\laboratorio di algoritmi e strutture dati\esercizi\lasd-p1\s_employee.c
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
 	"s_employee.h"
 
-1619169721 f:\university\laboratorio di algoritmi e strutture dati\esercizi\lasd-p1\s_employee.h
+1619172941 f:\university\laboratorio di algoritmi e strutture dati\esercizi\lasd-p1\s_employee.h
 	"const.h"
+
+1619172157 f:\university\laboratorio di algoritmi e strutture dati\esercizi\lasd-p1\s_appointment.h
+	"const.h"
+
+1619172724 source:f:\university\laboratorio di algoritmi e strutture dati\esercizi\lasd-p1\s_appointment.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	"s_appointment.h"
 

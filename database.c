@@ -60,20 +60,21 @@ Employee loadEmployeeList() {
 
 
 /* GESTIONE DB APPUNTAMENTI */
-void saveAppointment(Appointment app) {
+void saveAppointment(Appointment apNode) {
+    if (apNode != NULL) {
     FILE * appointmentDB;
     appointmentDB = fopen(APPOINTMENT_DB, "a");
     if (appointmentDB != NULL) {
-        if (fprintf(appointmentDB, "%s\t%d\t", app->fiscalCode, app->slot) < 0) {
+        if (fprintf(appointmentDB, "%s\t%d\t", apNode->fiscalCode, apNode->slot) < 0) {
             // TODO: Handle error in writing
         }
 
-        if (strcmp(app->symptoms, "") == 0) {
+        if (strcmp(apNode->symptoms, "") == 0) {
             if (fprintf(appointmentDB, "(null)\n") < 0) {
                 //TODO: Handle error in writing
             }
         } else {
-            if (fprintf(appointmentDB, "%s\n", app->symptoms) < 0) {
+            if (fprintf(appointmentDB, "%s\n", apNode->symptoms) < 0) {
                 //TODO: Handle error in writing
             }
         }
@@ -82,63 +83,73 @@ void saveAppointment(Appointment app) {
         printf ("SAVE: The DB could not be opened.\n");
     }
     fclose(appointmentDB);
+    }
 }
+
 Appointment loadAppointmentList() {
-    Appointment appList = newAppointmentList();
+    Appointment apList = appointmentNewList();
     FILE * appointmentDB = fopen(APPOINTMENT_DB, "r");
     if (appointmentDB != NULL) {
-        Appointment synthomaticList = newAppointmentList();
-        Appointment asynthomaticList = newAppointmentList();
+        Appointment symptomaticList = appointmentNewList();
+        Appointment asymptomaticList = appointmentNewList();
         char fiscalCode[FISCALCODE_SIZE];
         char *scansymptoms = NULL;
         int scanSlot;
 
         while (!feof(appointmentDB)) {
             if (fscanf(appointmentDB, "%s\t%d\t", fiscalCode, &scanSlot) != EOF) {
+                timeSlot slot = (timeSlot) scanSlot;
+
                 scansymptoms = getSymptoms(appointmentDB);
                 if (scansymptoms != NULL) {
-                    timeSlot slot = (timeSlot) scanSlot;
-                    if (strcmp(scansymptoms, "(null)") == 0) {
-                        asynthomaticList = appointmentInsert(asynthomaticList, fiscalCode, slot, NULL);
-                    }
 
-                    else {
-                        synthomaticList = appointmentInsert(synthomaticList, fiscalCode, slot, scansymptoms);
-                    }
+                    if (strcmp(scansymptoms, "(null)") == 0)
+                        asymptomaticList = appointmentTailInsert(asymptomaticList, fiscalCode, slot, NULL);
+
+                    else symptomaticList = appointmentTailInsert(symptomaticList, fiscalCode, slot, scansymptoms);
                 }
+
+                else asymptomaticList = appointmentTailInsert(asymptomaticList, fiscalCode, slot, NULL);
             }
         }
-        appList = appointmentAppend(synthomaticList, asynthomaticList);
+
+        apList = appointmentAppendToList(symptomaticList, asymptomaticList);
         fclose(appointmentDB);
     }
     else {
         //TODO: Handle file opening error
     }
-    return appList;
+    return apList;
 }
-void saveAppointmentListBody(Appointment appList, FILE * appointmentDB) {
+
+void saveAppointmentListBody(Appointment apList, FILE * appointmentDB) {
     if (appointmentDB != NULL) {
-        if (appList != NULL) {
-            if (fprintf(appointmentDB, "%s\t%d\t%s\n", appList->fiscalCode, appList->slot, appList->symptoms) < 0) {
+        if (apList != NULL) {
+            if (fprintf(appointmentDB, "%s\t%d\t%s\n", apList->fiscalCode, apList->slot, apList->symptoms) < 0) {
             // TODO: Handle error in writing
             }
             else {
-                saveAppointmentListBody(appList->next, appointmentDB);
+                saveAppointmentListBody(apList->next, appointmentDB);
             }
         }
     }
 }
-void saveAppointmentList(Appointment appList) {
-    FILE * appointmentDB = fopen(APPOINTMENT_DB, "w");
-    if (appointmentDB != NULL) {
-        saveAppointmentListBody(appList, appointmentDB);
-        fclose(appointmentDB);
-    }
-    else {
+
+void saveAppointmentList(Appointment apList) {
+    if (apList != NULL) {
+        FILE * appointmentDB = fopen(APPOINTMENT_DB, "w");
+        if (appointmentDB != NULL) {
+            saveAppointmentListBody(apList, appointmentDB);
+            fclose(appointmentDB);
+        }
+        else {
         //TODO: Handle error file opening
+        }
     }
 
+
 }
+
 void dropAppointmentDB() {
     FILE * appointmentDB = fopen(APPOINTMENT_DB, "w");
     if (appointmentDB != NULL) {

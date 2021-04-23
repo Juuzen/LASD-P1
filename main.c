@@ -13,6 +13,7 @@
 
 int main() {
 
+    /*
     Appointment appList = loadAppointmentList();
     TestReservation test = newTestReservation();
 
@@ -23,6 +24,6 @@ int main() {
     printTestReservation(test);
     deleteTestReservation(test);
     deleteAppointmentList(appList);
-
+    */
     return 0;
 }

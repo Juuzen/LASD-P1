@@ -15,25 +15,27 @@ bool labLoginCheck(Employee emList, int id, char password[]) {
         else return labLoginCheck(emList->next, id, password);
     }
 }
-void labConfirmAppointments(TestReservation *reservation, Appointment *appList) {
-    labPopulateReservations(reservation, (*appList));
 
-    deleteAppointmentList((*appList));
-    (*appList) = NULL;
+void labConfirmAppointments(TestReservation *reservation, Appointment *apList) {
+    labPopulateReservations(reservation, (*apList));
+
+    appointmentFreeList((*apList));
+    (*apList) = NULL;
 
     dropAppointmentDB();
 }
-void labPopulateReservations(TestReservation *reservation, Appointment appList) {
+
+void labPopulateReservations(TestReservation *reservation, Appointment apList) {
     if ((*reservation) == NULL) {
         (*reservation) = newTestReservation();
     }
 
-    if (appList != NULL) {
-        if (!isTimeSlotFull((*reservation), appList->slot)) {
-            addReservation(reservation, cloneAppointment(appList));
+    if (apList != NULL) {
+        if (!isTimeSlotFull((*reservation), apList->slot)) {
+            addReservation(reservation, appointmentCloneNode(apList));
         }
 
-        labPopulateReservations(reservation, appList->next);
+        labPopulateReservations(reservation, apList->next);
     }
 }
 
@@ -78,10 +80,11 @@ void labShowTestHistoryUi(int currentDay) {
             break;
     }
 }
+
 void labManageAppointmentRequestsUi(TestReservation *test) {
 
-    Appointment appList = loadAppointmentList();
-    if (appList == NULL) {
+    Appointment apList = loadAppointmentList();
+    if (apList == NULL) {
         clearScreen();
         printf("There are no requests so far.\n");
         pause("Press ENTER key to go back...");
@@ -92,13 +95,13 @@ void labManageAppointmentRequestsUi(TestReservation *test) {
         do {
             clearScreen();
             printf("Here are the appointment request up to now:\n");
-            printAppointmentList(appList);
+            appointmentPrintList(apList);
             printf("Do you want to start the confirmation process? [y/n] ");
             fflush(stdin);
             scanf("%c", &input);
             fflush(stdin);
             if ((input == 'y') || (input == 'Y')) {
-                labConfirmAppointments(test, &appList);
+                labConfirmAppointments(test, &apList);
                 printf("Reservations made. You can check them by choosing option 3 in main menu.\n");
                 pause("Press ENTER key to go back...");
             }
@@ -148,7 +151,7 @@ void labAddReservationUi(TestReservation *test) {
             printf("Your symptoms: ");
             symptoms = getSymptoms(stdin);
 
-            Appointment manualApp = newAppointmentNode(fiscalCode, slot, symptoms);
+            Appointment manualApp = appointmentNewNode(fiscalCode, slot, symptoms);
             addReservation(test, manualApp);
             printf("Reservation created! Exit the program to process it.\n");
             pause("Press ENTER key to go back...");
@@ -180,15 +183,15 @@ void labRemoveReservationUi(TestReservation *test) {
         switch (slot) {
             case MORNING:
                 printf("Reservation for the morning slot:\n");
-                printAppointmentList((*test)->morning);
+                appointmentPrintList((*test)->morning);
                 break;
             case AFTERNOON:
                 printf("Reservation for the afternoon slot:\n");
-                printAppointmentList((*test)->afternoon);
+                appointmentPrintList((*test)->afternoon);
                 break;
             case EVENING:
                 printf("Reservation for the evening slot:\n");
-                printAppointmentList((*test)->evening);
+                appointmentPrintList((*test)->evening);
                 break;
             default:
                 break;
@@ -199,13 +202,13 @@ void labRemoveReservationUi(TestReservation *test) {
 
         switch (slot) {
             case MORNING:
-                (*test)->morning = deleteAppointmentByFiscalCode((*test)->morning, fiscalCode);
+                (*test)->morning = appointmentDeleteByFiscalCode((*test)->morning, fiscalCode);
                 break;
             case AFTERNOON:
-                (*test)->afternoon = deleteAppointmentByFiscalCode((*test)->afternoon, fiscalCode);
+                (*test)->afternoon = appointmentDeleteByFiscalCode((*test)->afternoon, fiscalCode);
                 break;
             case EVENING:
-                (*test)->evening = deleteAppointmentByFiscalCode((*test)->evening, fiscalCode);
+                (*test)->evening = appointmentDeleteByFiscalCode((*test)->evening, fiscalCode);
                 break;
             default:
                 break;
@@ -286,7 +289,7 @@ void labLoginUi(TestReservation *test) {
             }
         }
     } while (running);
-    employeeDeleteList(emList);
+    employeeFreeList(emList);
 }
 void labMainMenuUi(TestReservation *test) {
     int userChoice = -1;

@@ -15,8 +15,8 @@ typedef patient* Patient;
 Patient patientNewList(); //TODO: deprecare
 Patient patientNewNode(char fiscalCode[], char password[]);
 Patient patientTailInsert(Patient ptList, char fiscalCode[], char password[]);
-void patientDeleteNode(Patient ptNode);
-void patientDeleteList(Patient ptList);
+void patientFreeNode(Patient ptNode);
+void patientFreeList(Patient ptList);
 void patientPrintNode(Patient ptNode);
 void patientPrintList(Patient ptList);
 

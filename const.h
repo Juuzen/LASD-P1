@@ -24,4 +24,6 @@
 #define TESTRESULT_DB "testresult_db.txt"
 #define QUARANTINE_DB "quarantine_db.txt"
 
+typedef enum timeSlot { MORNING, AFTERNOON, EVENING } timeSlot;
+
 #endif // const_h

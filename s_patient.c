@@ -27,7 +27,7 @@ Patient patientTailInsert(Patient ptList, char fiscalCode[], char password[]) {
     }
 }
 
-void patientDeleteNode(Patient ptNode) {
+void patientFreeNode(Patient ptNode) {
     if (ptNode != NULL) {
         memset(ptNode->fiscalCode, '\0', sizeof(ptNode->fiscalCode));
         memset(ptNode->password, '\0', sizeof(ptNode->password));
@@ -36,10 +36,10 @@ void patientDeleteNode(Patient ptNode) {
     }
 }
 
-void patientDeleteList(Patient ptList) {
+void patientFreeList(Patient ptList) {
     if (ptList != NULL) {
-        patientDeleteList(ptList->next);
-        patientDeleteNode(ptList);
+        patientFreeList(ptList->next);
+        patientFreeNode(ptList);
     }
 }
 

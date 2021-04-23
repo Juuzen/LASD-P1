@@ -59,6 +59,19 @@ int getCurrentDay() {
     }
 }
 
+const char* getTimeSlot(timeSlot slot) {
+    switch (slot) {
+        case MORNING:
+            return "MORNING";
+        case AFTERNOON:
+            return "AFTERNOON";
+        case EVENING:
+            return "EVENING";
+        default:
+            return "";
+    }
+}
+
 char * getSymptoms(FILE * file) {
     if (file != NULL) {
         int i = 0;
