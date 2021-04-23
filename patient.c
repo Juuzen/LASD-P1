@@ -117,9 +117,9 @@ void patientAppointmentRequestUi(Appointment apList, char fiscalCode[]) {
 
 }
 
-void patientShowReservationUi(TestReservation *test, char fiscalCode[]) {
+void patientShowReservationUi(Reservation *res, char fiscalCode[]) {
     clearScreen();
-    Appointment app = searchAppointmentByFiscalCode((*test), fiscalCode);
+    Appointment app = searchReservationByFiscalCode((*res), fiscalCode);
     if (app == NULL) printf("You have no reservations at the moment.\n");
 
     else {
@@ -160,7 +160,7 @@ void patientDeleteAppointmentUi(Appointment* apList, char fiscalCode[]) {
     }
 }
 
-void patientAccountUi(TestReservation *test, char fiscalCode[]) {
+void patientAccountUi(Reservation *res, char fiscalCode[]) {
     int userChoice = -1;
     bool running = true;
     Appointment appList = loadAppointmentList();
@@ -185,7 +185,7 @@ void patientAccountUi(TestReservation *test, char fiscalCode[]) {
                 patientAppointmentRequestUi(appList, fiscalCode);
                 break;
             case 2:
-                patientShowReservationUi(test, fiscalCode);
+                patientShowReservationUi(res, fiscalCode);
                 break;
             case 3:
                 patientDeleteAppointmentUi(&appList, fiscalCode);
@@ -207,7 +207,7 @@ void patientAccountUi(TestReservation *test, char fiscalCode[]) {
     appointmentFreeList(appList);
 }
 
-void patientLoginUi(TestReservation *test, Patient ptList) {
+void patientLoginUi(Reservation *res, Patient ptList) {
 
     int userChoice = -1;
     bool running = true;
@@ -225,7 +225,7 @@ void patientLoginUi(TestReservation *test, Patient ptList) {
 
         if (patientloginCheck(ptList, fiscalCode, password)) {
             //login authorized
-            patientAccountUi(test, fiscalCode);
+            patientAccountUi(res, fiscalCode);
             running = false;
         }
         else {
@@ -300,7 +300,7 @@ void patientRegisterUi(Patient ptList) {
     } while (running);
 }
 
-void patientMainMenuUi(TestReservation *test) {
+void patientMainMenuUi(Reservation *res) {
     int userChoice = -1;
     bool running = true;
     Patient ptList = loadPatientList();
@@ -319,7 +319,7 @@ void patientMainMenuUi(TestReservation *test) {
 
         switch(userChoice) {
             case 1:
-                patientLoginUi(test, ptList);
+                patientLoginUi(res, ptList);
                 break;
             case 2:
                 patientRegisterUi(ptList);

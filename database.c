@@ -177,42 +177,47 @@ TestResult loadTestResults() {
 
     return rsList;
 }
-void saveTestResultListBody(Appointment appList, FILE * testResultDB, int currentDay) {
-    if (testResultDB != NULL) {
-        if (appList != NULL) {
-            if (fprintf(testResultDB, "%s\t", appList->fiscalCode) < 0) {
 
+void saveTestResultListBody(Appointment apList, FILE * testResultDB, int currentDay) {
+    if (testResultDB != NULL) {
+        if (apList != NULL) {
+            if (fprintf(testResultDB, "%s\t", apList->fiscalCode) < 0) {
+                //TODO: Gestire errore in scrittura
             }
             else {
                 char response[RESPONSE_SIZE];
                 if (generateTestResult()) strcpy(response, "POSITIVE");
                 else strcpy(response, "NEGATIVE");
-                if (fprintf(testResultDB, "%s\t", response) < 0) {
 
+                if (fprintf(testResultDB, "%s\t", response) < 0) {
+                    //TODO: Gestire errore in scrittura
                 }
                 else {
                     if (fprintf(testResultDB, "%d\n", currentDay) < 0) {
-
+                        //TODO: Gestire errore in scrittura
                     }
                     else {
-                        saveTestResultListBody(appList->next, testResultDB, currentDay);
+                        saveTestResultListBody(apList->next, testResultDB, currentDay);
                     }
                 }
             }
         }
     }
 }
-void saveTestResultList(TestReservation testList) {
-    FILE * testResultDB = fopen(TESTRESULT_DB, "a");
-    if (testResultDB != NULL) {
-        saveTestResultListBody(testList->morning, testResultDB, testList->currentDay);
-        saveTestResultListBody(testList->afternoon, testResultDB, testList->currentDay);
-        saveTestResultListBody(testList->evening, testResultDB, testList->currentDay);
-        fclose(testResultDB);
-    }
 
-    else {
-        //TODO: Handle error in opening file
+void saveTestResultList(Reservation res) {
+    if (res != NULL) {
+        FILE * testResultDB = fopen(TESTRESULT_DB, "a");
+        if (testResultDB != NULL) {
+            saveTestResultListBody(res->morning, testResultDB, res->currentDay);
+            saveTestResultListBody(res->afternoon, testResultDB, res->currentDay);
+            saveTestResultListBody(res->evening, testResultDB, res->currentDay);
+            fclose(testResultDB);
+        }
+
+        else {
+            //TODO: Handle error in opening file
+        }
     }
 }
 

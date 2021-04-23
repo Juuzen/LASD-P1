@@ -1,9 +1,9 @@
 #ifndef project_h
 #define project_h
-#include "structure.h"
+#include "s_reservation.h"
 
 void projectRun();
-void mainUi(TestReservation *test);
+void mainUi(Reservation *res);
 
 #endif // ui_h
 

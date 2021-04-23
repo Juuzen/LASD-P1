@@ -17,6 +17,7 @@
 #define PASSWORD_SIZE 21
 #define SYMPTOMS_SIZE 400
 #define RESPONSE_SIZE 9
+#define SLOT_CAPABILITY 2
 
 #define PATIENT_DB "patient_db.txt"
 #define EMPLOYEE_DB "employee_db.txt"

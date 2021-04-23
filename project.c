@@ -10,17 +10,17 @@
 
 void projectRun() {
     //Bootstrap
-    TestReservation test = newTestReservation();
+    Reservation res = newReservation();
 
     // Avvio programma
-    mainUi(&test);
+    mainUi(&res);
 
     // Operazioni conclusive prima della chiusura del programma
-    saveTestResultList(test);
-    deleteTestReservation(test);
+    saveTestResultList(res);
+    freeReservation(res);
 }
 
-void mainUi(TestReservation *test) {
+void mainUi(Reservation *res) {
     int userChoice = -1;
     bool running = true;
 
@@ -39,10 +39,10 @@ void mainUi(TestReservation *test) {
 
         switch(userChoice) {
             case 1:
-                patientMainMenuUi(test);
+                patientMainMenuUi(res);
                 break;
             case 2:
-                labLoginUi(test);
+                labLoginUi(res);
                 break;
             case 3:
                 printf("I'm now halting.\n");

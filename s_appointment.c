@@ -105,3 +105,7 @@ Appointment appointmentDeleteByFiscalCode(Appointment apList, char fiscalCode[])
     }
 }
 
+int appointmentListCount(Appointment appList) {
+    if (appList == NULL) return 0;
+    else return 1 + appointmentListCount(appList->next);
+}

@@ -6,21 +6,9 @@
 
 
 // GESTIONE TEST FISSATI
-struct testReservation {
-    Appointment morning;
-    Appointment afternoon;
-    Appointment evening;
-    int currentDay;
-};
-typedef struct testReservation* TestReservation;
 
-TestReservation newTestReservation();
-void deleteTestReservation(TestReservation reservation);
-void printTestReservation(TestReservation reservation);
-int appointmentListCount(Appointment appList);
-bool isTimeSlotFull(TestReservation reservation, timeSlot slot);
-Appointment searchAppointmentByFiscalCode(TestReservation reservation, char fiscalCode[]);
-void addReservation(TestReservation *reservation, Appointment app);
+
+
 
 // GESTIONE ESITI TEST
 struct testResult {

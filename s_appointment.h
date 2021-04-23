@@ -27,6 +27,6 @@ void appointmentPrintNode (Appointment apNode);
 void appointmentPrintList (Appointment apList);
 Appointment appointmentFindByFiscalCode (Appointment apList, char fiscalCode[]);
 Appointment appointmentDeleteByFiscalCode (Appointment apList, char fiscalCode[]);
-
+int appointmentListCount(Appointment apList);
 
 #endif // s_appointment_h

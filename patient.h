@@ -15,11 +15,11 @@ void patientDeleteAppointment(Appointment* appList, char fiscalCode[]);
 /* FUNZIONI UI */
 void patientShowTestResultsUi(char fiscalCode[]);
 void patientAppointmentRequestUi(Appointment appList, char fiscalCode[]);
-void patientShowReservationUi(TestReservation *test, char fiscalCode[]);
+void patientShowReservationUi(Reservation *res, char fiscalCode[]);
 void patientDeleteAppointmentUi(Appointment* appList, char fiscalCode[]);
-void patientAccountUi(TestReservation *test, char fiscalCode[]);
-void patientLoginUi(TestReservation *test, Patient ptList);
+void patientAccountUi(Reservation *res, char fiscalCode[]);
+void patientLoginUi(Reservation *res, Patient ptList);
 void patientRegisterUi(Patient ptList);
-void patientMainMenuUi(TestReservation *test);
+void patientMainMenuUi(Reservation *res);
 
 #endif // patient_h

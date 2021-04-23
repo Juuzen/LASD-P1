@@ -3,6 +3,8 @@
 #include "structure.h"
 #include "s_patient.h"
 #include "s_employee.h"
+#include "s_appointment.h"
+#include "s_reservation.h"
 #include "s_quarantine.h"
 
 
@@ -27,7 +29,7 @@ void dropAppointmentDB();
 /* DB RISULTATI TEST */
 TestResult loadTestResults();
 void saveTestResultListBody(Appointment appList, FILE * testResultDB, int currentDay);
-void saveTestResultList(TestReservation testList);
+void saveTestResultList(Reservation res);
 
 
 /* DB QUARANTENA */
