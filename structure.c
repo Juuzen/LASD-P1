@@ -6,42 +6,7 @@
 #include "database.h"
 #include "helper.h"
 
-Patient newPatientList() {
-    Patient pt = NULL;
-    return pt;
-}
-Patient newPatientNode(char fiscalCode[], char password[]) {
-    Patient pt = (Patient) calloc(1, sizeof(patient));
-    pt->next = NULL;
-    strncpy(pt->fiscalCode, fiscalCode, FISCALCODE_SIZE + 1);
-    strncpy(pt->password, password, PASSWORD_SIZE + 1);
-    // TODO: Assicurarsi che alla fine delle stringhe vi sia la terminazione
-    return pt;
-}
-Patient patientInsert(Patient ptList, char fiscalCode[], char password[]) {
-    if (ptList == NULL) {
-        return newPatientNode(fiscalCode, password);
-    }
-    else {
-        ptList->next = patientInsert(ptList->next, fiscalCode, password);
-        return ptList;
-    }
-}
-void deletePatientList(Patient ptList) {
-    if (ptList != NULL) {
-        deletePatientList(ptList->next);
-        memset(ptList->fiscalCode, '\0', sizeof(ptList->fiscalCode));
-        memset(ptList->password, '\0', sizeof(ptList->password));
-        ptList->next = NULL;
-        free(ptList);
-    }
-}
-void printPatientList(Patient ptList) {
-    if (ptList != NULL) {
-        printf("%s | %s\n", ptList->fiscalCode, ptList->password);
-        printPatientList(ptList->next);
-    }
-}
+
 
 // GESTIONE APPUNTAMENTI
 
@@ -154,48 +119,6 @@ Appointment deleteAppointmentByFiscalCode(Appointment appList, char fiscalCode[]
 
 // GESTIONE LAVORATORI
 
-LabWorker newLabWorkerList() {
-    LabWorker list = NULL;
-    return list;
-}
-LabWorker newLabWorkerNode(int workerId, char password[]) {
-    LabWorker worker = (LabWorker) calloc(1, sizeof(struct labWorker));
-    if (worker != NULL) {
-        worker->id = workerId;
-        strcpy(worker->password, password);
-        worker->next = NULL;
-    }
-
-    return worker;
-}
-void deleteLabWorkerNode(LabWorker worker) {
-    if (worker != NULL) {
-        worker->id = 0;
-        memset(worker->password, '\0', sizeof(worker->password));
-        worker->next = NULL;
-
-        free(worker);
-    }
-}
-void deleteLabWorkerList(LabWorker wkList) {
-    if (wkList != NULL) {
-        deleteLabWorkerList(wkList->next);
-        deleteLabWorkerNode(wkList);
-    }
-}
-LabWorker labWorkerInsert(LabWorker wkList, int workerId, char password[]) {
-    if (wkList == NULL) return newLabWorkerNode(workerId, password);
-    else {
-        wkList->next = labWorkerInsert(wkList->next, workerId, password);
-        return wkList;
-    }
-}
-void printLabWorkers(LabWorker wkList) {
-    if (wkList != NULL) {
-        printf("%d - %s\n", wkList->id, wkList->password);
-        printLabWorkers(wkList->next);
-    }
-}
 
 // GESTIONE TEST RESERVATIONS
 TestReservation newTestReservation() {

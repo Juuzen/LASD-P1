@@ -2,16 +2,17 @@
 #include <stdlib.h>
 #include <string.h>
 #include "lab.h"
+#include "s_employee.h"
 #include "structure.h"
 #include "database.h"
 #include "helper.h"
 
 /* FUNZIONI AUSILIARIE */
-bool labLoginCheck(LabWorker wkList, int workerId, char password[]) {
-    if (wkList == NULL) return false;
+bool labLoginCheck(Employee emList, int id, char password[]) {
+    if (emList == NULL) return false;
     else {
-        if ((wkList->id == workerId) && (strcmp(wkList->password, password) == 0)) return true;
-        else return labLoginCheck(wkList->next, workerId, password);
+        if ((emList->id == id) && (strcmp(emList->password, password) == 0)) return true;
+        else return labLoginCheck(emList->next, id, password);
     }
 }
 void labConfirmAppointments(TestReservation *reservation, Appointment *appList) {
@@ -244,18 +245,18 @@ void labHandleReservationUi(TestReservation *test) {
 void labLoginUi(TestReservation *test) {
     int userChoice = -1;
     bool running = true;
-    int workerId;
+    int id;
     char password[PASSWORD_SIZE];
-    LabWorker wkList = loadLabWorkers();
+    Employee emList = loadEmployeeList();
     do {
         clearScreen();
         printf("Please provide your worker ID: ");
-        scanf("%d", &workerId); //FIXME: Controllo sull'input (hint: adattare getChoice?)
+        scanf("%d", &id); //FIXME: Controllo sull'input (hint: adattare getChoice?)
         fflush(stdin);
         printf("Please provide your password: ");
         scanf("%20s", password); //TODO: masked scanf
         fflush(stdin);
-        if ( labLoginCheck(wkList, workerId, password) ) {
+        if ( labLoginCheck(emList, id, password) ) {
             //login authorized
             labMainMenuUi(test);
             running = false;
@@ -285,6 +286,7 @@ void labLoginUi(TestReservation *test) {
             }
         }
     } while (running);
+    employeeDeleteList(emList);
 }
 void labMainMenuUi(TestReservation *test) {
     int userChoice = -1;

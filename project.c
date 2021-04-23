@@ -13,7 +13,7 @@ void projectRun() {
     TestReservation test = newTestReservation();
 
     // Avvio programma
-    mainUi(&test); //TODO: Deve essere propagato test per riferimento fino al laboratorio
+    mainUi(&test);
 
     // Operazioni conclusive prima della chiusura del programma
     saveTestResultList(test);

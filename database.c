@@ -5,6 +5,8 @@
 #include "database.h"
 #include "const.h"
 #include "structure.h"
+#include "s_patient.h"
+#include "s_quarantine.h"
 #include "helper.h"
 
 /* GESTIONE DB PAZIENTI */
@@ -20,14 +22,14 @@ void savePatient(char fiscalCode[], char password[]) {
     fclose(patientDB);
 }
 Patient loadPatientList() {
-    Patient ptList = newPatientList();
+    Patient ptList = patientNewList();
     FILE * patient_db = fopen(PATIENT_DB, "r");
     if (patient_db != NULL) {
         char fiscalCode[FISCALCODE_SIZE];
         char password[PASSWORD_SIZE];
         while ((fscanf(patient_db, "%s %s", fiscalCode, password)) != EOF) {
 
-            ptList = patientInsert(ptList, fiscalCode, password);
+            ptList = patientTailInsert(ptList, fiscalCode, password);
         }
     } else {
         printf("LOAD: The DB could not be opened.\n");
@@ -39,21 +41,21 @@ Patient loadPatientList() {
 
 
 /* GESTIONE DB LAVORATORI LABORATORIO */
-LabWorker loadLabWorkers() {
-    LabWorker wkList = newLabWorkerList();
-    FILE * labWorkerDB = fopen(LABWORKER_DB, "r");
-    if (labWorkerDB != NULL) {
-        int workerId;
+Employee loadEmployeeList() {
+    Employee emList = employeeNewList();
+    FILE * employeeDB = fopen(EMPLOYEE_DB, "r");
+    if (employeeDB != NULL) {
+        int id;
         char password[PASSWORD_SIZE];
 
-        while (!feof(labWorkerDB)) {
-            if(fscanf(labWorkerDB, "%d\t%s\n", &workerId, password) != EOF) {
-                wkList = labWorkerInsert(wkList, workerId, password);
+        while (!feof(employeeDB)) {
+            if(fscanf(employeeDB, "%d\t%s\n", &id, password) != EOF) {
+                emList = employeeTailInsert(emList, id, password);
             }
         }
-        fclose(labWorkerDB);
+        fclose(employeeDB);
     }
-    return wkList;
+    return emList;
 }
 
 
@@ -201,4 +203,15 @@ void saveTestResultList(TestReservation testList) {
     else {
         //TODO: Handle error in opening file
     }
+}
+
+
+/* DB QUARANTENA */
+Quarantine loadQuarantineList() {
+    Quarantine list = NULL;
+    FILE * quarantineDB = fopen(QUARANTINE_DB, "r");
+    if (quarantineDB != NULL) {
+
+    }
+    return list;
 }

@@ -1,17 +1,22 @@
 #ifndef database_h
 #define database_h
 #include "structure.h"
+#include "s_patient.h"
+#include "s_employee.h"
+#include "s_quarantine.h"
 
-/* GESTIONE DB PAZIENTI */
+
+
+/* DB PAZIENTI */
 void savePatient(char fiscalCode[], char password[]);
 Patient loadPatientList();
 
 
-/* GESTIONE DB LAVORATORI LABORATORIO */
-LabWorker loadLabWorkers();
+/* DB LAVORATORI LABORATORIO */
+Employee loadEmployeeList();
 
 
-/* GESTIONE DB APPUNTAMENTI */
+/* DB APPUNTAMENTI */
 void saveAppointment(Appointment app);
 Appointment loadAppointmentList();
 void saveAppointmentListBody(Appointment appList, FILE * appointmentDB);
@@ -19,9 +24,13 @@ void saveAppointmentList(Appointment appList);
 void dropAppointmentDB();
 
 
-/* GESTIONE DB RISULTATI TEST */
+/* DB RISULTATI TEST */
 TestResult loadTestResults();
 void saveTestResultListBody(Appointment appList, FILE * testResultDB, int currentDay);
 void saveTestResultList(TestReservation testList);
+
+
+/* DB QUARANTENA */
+Quarantine loadQuarantineList();
 
 #endif // database_h

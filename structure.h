@@ -3,21 +3,6 @@
 #include <stdbool.h>
 #include "const.h"
 
-/* STRUTTURA DATI PAZIENTI */
-
-typedef struct patient {
-    char fiscalCode[FISCALCODE_SIZE];
-    char password[PASSWORD_SIZE];
-    struct patient* next;
-} patient;
-typedef patient* Patient;
-
-Patient newPatientList();
-Patient newPatientNode(char fiscalCode[], char password[]);
-Patient patientInsert(Patient ptList, char fiscalCode[], char password[]);
-void deletePatientList(Patient ptList);
-void printPatientList(Patient ptList); //debug
-
 // GESTIONE CODA APPUNTAMENTI
 typedef enum timeSlot { MORNING, AFTERNOON, EVENING } timeSlot;
 
@@ -44,19 +29,9 @@ Appointment findAppointmentByFiscalCode(Appointment appList, char fiscalCode[]);
 Appointment deleteAppointmentByFiscalCode(Appointment appList, char fiscalCode[]);
 
 // GESTIONE LAVORATORI LABORATORIO
-struct labWorker {
-    int id;
-    char password[PASSWORD_SIZE];
-    struct labWorker* next;
-};
-typedef struct labWorker* LabWorker;
 
-LabWorker newLabWorkerList();
-LabWorker newLabWorkerNode(int workerId, char password[]);
-void deleteLabWorkerNode(LabWorker worker);
-void deleteLabWorkerList(LabWorker wkList);
-LabWorker labWorkerInsert(LabWorker wkList, int workerId, char password[]);
-void printLabWorkers(LabWorker wkList);
+
+
 
 // GESTIONE TEST FISSATI
 struct testReservation {

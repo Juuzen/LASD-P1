@@ -2,6 +2,7 @@
 #define patient_h
 #include <stdbool.h>
 #include "structure.h"
+#include "s_patient.h"
 
 /* FUNZIONI AUSILIARIE */
 bool loginCheck(Patient ptList, char fiscalCode[], char password[]);

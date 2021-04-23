@@ -1,8 +1,10 @@
 #ifndef lab_h
+#define lab_h
+#include "s_employee.h"
 #include "structure.h"
 
 /* FUNZIONI AUSILIARIE */
-bool labLoginCheck(LabWorker wkList, int workerId, char password[]);
+bool labLoginCheck(Employee emList, int id, char password[]);
 void labConfirmAppointments(TestReservation *reservation, Appointment *appList);
 void labPopulateReservations(TestReservation *reservation, Appointment appList);
 
