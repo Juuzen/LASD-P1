@@ -5,7 +5,7 @@
 #include "patient.h"
 #include "lab.h"
 #include "helper.h"
-#include "structure.h"
+
 
 #include <string.h>
 #include <malloc.h>

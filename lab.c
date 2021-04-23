@@ -3,7 +3,7 @@
 #include <string.h>
 #include "lab.h"
 #include "s_employee.h"
-#include "structure.h"
+#include "s_result.h"
 #include "database.h"
 #include "helper.h"
 
@@ -58,7 +58,7 @@ void labShowTestHistoryUi(int currentDay) {
     switch (userChoice) {
         case 1:
             // By default, chronological order is used
-            printTestResultList(rsList, true);
+            testResultPrintList(rsList, true);
             pause("Press ENTER to go back...");
             break;
         case 2:
@@ -70,8 +70,9 @@ void labShowTestHistoryUi(int currentDay) {
             } while (userChoice == -1);
             clearScreen();
             printf("DAY %d:\n", userChoice);
+
             // By default, chronological order is used
-            printTestResultsByDay(rsList, userChoice, true);
+            testResultPrintByDay (rsList, userChoice, true);
             pause("Press ENTER to go back...");
             break;
         case 3:

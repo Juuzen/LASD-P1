@@ -4,9 +4,9 @@
 #include <stdbool.h>
 #include "database.h"
 #include "patient.h"
-#include "structure.h"
 #include "s_patient.h"
 #include "s_appointment.h"
+#include "s_result.h"
 #include "helper.h"
 
 /* FUNZIONI AUSILIARIE */
@@ -77,7 +77,7 @@ void patientShowTestResultsUi(char fiscalCode[]) {
     else {
         printf("Here are your test results:\n");
         // by default, anti-chronological order is used
-        printTestResultByFiscalCode(rsList, fiscalCode, false);
+        testResultPrintByFiscalCode(rsList, fiscalCode, false);
         pause("Press ENTER to go back...");
     }
 }

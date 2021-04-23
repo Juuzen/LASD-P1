@@ -3,7 +3,7 @@
 #include "s_employee.h"
 #include "s_appointment.h"
 #include "s_reservation.h"
-#include "structure.h"
+
 
 /* FUNZIONI AUSILIARIE */
 bool labLoginCheck(Employee emList, int id, char password[]);

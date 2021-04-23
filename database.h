@@ -1,10 +1,11 @@
 #ifndef database_h
 #define database_h
-#include "structure.h"
+
 #include "s_patient.h"
 #include "s_employee.h"
 #include "s_appointment.h"
 #include "s_reservation.h"
+#include "s_result.h"
 #include "s_quarantine.h"
 
 

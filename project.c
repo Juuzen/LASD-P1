@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include "project.h"
-#include "structure.h"
+
 #include "patient.h"
 #include "lab.h"
 #include "helper.h"

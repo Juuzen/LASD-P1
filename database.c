@@ -4,7 +4,7 @@
 #include <string.h>
 #include "database.h"
 #include "const.h"
-#include "structure.h"
+
 #include "s_patient.h"
 #include "s_quarantine.h"
 #include "helper.h"
@@ -160,7 +160,7 @@ void dropAppointmentDB() {
 
 /* GESTIONE DB RISULTATI TEST */
 TestResult loadTestResults() {
-    TestResult rsList = newTestResultList();
+    TestResult rsList = testResultNewList();
     FILE * testResultDB = fopen(TESTRESULT_DB, "r");
     if (testResultDB != NULL) {
         char fiscalCode[FISCALCODE_SIZE];
@@ -169,7 +169,7 @@ TestResult loadTestResults() {
 
         while (!feof(testResultDB)) {
             if(fscanf(testResultDB, "%s\t%s\t%d\n", fiscalCode, response, &day) != EOF) {
-                rsList = testResultInsert(rsList, fiscalCode, response, day);
+                rsList = testResultTailInsert(rsList, fiscalCode, response, day);
             }
         }
         fclose(testResultDB);
