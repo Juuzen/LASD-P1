@@ -69,7 +69,7 @@
 	<stdbool.h>
 	"structure.h"
 
-1619176264 source:f:\university\laboratorio di algoritmi e strutture dati\esercizi\lasd-p1\database.c
+1619177172 source:f:\university\laboratorio di algoritmi e strutture dati\esercizi\lasd-p1\database.c
 	<stdio.h>
 	<stdlib.h>
 	<stdbool.h>
@@ -202,17 +202,18 @@
 	<string.h>
 	"s_employee.h"
 
-1619172941 f:\university\laboratorio di algoritmi e strutture dati\esercizi\lasd-p1\s_employee.h
+1619177513 f:\university\laboratorio di algoritmi e strutture dati\esercizi\lasd-p1\s_employee.h
 	"const.h"
 
 1619174009 f:\university\laboratorio di algoritmi e strutture dati\esercizi\lasd-p1\s_appointment.h
 	"const.h"
 
-1619174009 source:f:\university\laboratorio di algoritmi e strutture dati\esercizi\lasd-p1\s_appointment.c
+1619177188 source:f:\university\laboratorio di algoritmi e strutture dati\esercizi\lasd-p1\s_appointment.c
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
 	"s_appointment.h"
+	"helper.h"
 
 1619174448 f:\university\laboratorio di algoritmi e strutture dati\esercizi\lasd-p1\s_reservation.h
 	<stdbool.h>
@@ -231,7 +232,7 @@
 	<stdbool.h>
 	"const.h"
 
-1619175977 source:f:\university\laboratorio di algoritmi e strutture dati\esercizi\lasd-p1\s_result.c
+1619177172 source:f:\university\laboratorio di algoritmi e strutture dati\esercizi\lasd-p1\s_result.c
 	<stdio.h>
 	<stdlib.h>
 	<string.h>

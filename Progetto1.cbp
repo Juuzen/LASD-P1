@@ -55,10 +55,30 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="project.h" />
-		<Unit filename="structure.c">
+		<Unit filename="s_appointment.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="structure.h" />
+		<Unit filename="s_appointment.h" />
+		<Unit filename="s_employee.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="s_employee.h" />
+		<Unit filename="s_patient.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="s_patient.h" />
+		<Unit filename="s_quarantine.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="s_quarantine.h" />
+		<Unit filename="s_reservation.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="s_reservation.h" />
+		<Unit filename="s_result.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="s_result.h" />
 		<Extensions>
 			<lib_finder disable_auto="1" />
 		</Extensions>

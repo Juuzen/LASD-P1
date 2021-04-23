@@ -18,8 +18,6 @@ Employee employeeNewNode(int id, char password[]);
 void employeeFreeNode(Employee emNode);
 void employeeFreeList(Employee emList);
 Employee employeeTailInsert(Employee emList, int id, char password[]);
-void employeePrintNode(Employee emNode);
-void employeePrintList(Employee emList);
 
 
 #endif // s_employee_h

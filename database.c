@@ -9,6 +9,7 @@
 #include "s_quarantine.h"
 #include "helper.h"
 
+
 /* GESTIONE DB PAZIENTI */
 void savePatient(char fiscalCode[], char password[]) {
     FILE * patientDB;

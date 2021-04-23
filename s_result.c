@@ -10,6 +10,7 @@ TestResult testResultNewList() {
 }
 
 /* Restituisce, se possibile, un elemento TestResult con i valori passati in ingresso */
+/* Altrimenti, restituisce NULL */
 TestResult testResultNewNode(char fiscalCode[], char response[], int day) {
     TestResult rsNode = (TestResult) calloc(1, sizeof(struct testResult));
     if (rsNode != NULL) {
@@ -33,7 +34,7 @@ void testResultFreeNode(TestResult rsNode) {
     }
 }
 
-/* Dealloca una intera lista di elementi TestResult*/
+/* Dealloca una intera lista di elementi TestResult */
 void testResultFreeList(TestResult rsList) {
     if (rsList != NULL) {
         testResultFreeList(rsList->next);
