@@ -80,7 +80,8 @@ void appointmentPrintNode(Appointment apNode) {
         printf("Fiscal Code: %s\n", apNode->fiscalCode);
         printf("Time slot: %s\n", getTimeSlot(apNode->slot));
         printf("Symptoms: ");
-        printf((apNode->symptoms == NULL) ? "///" : apNode->symptoms);
+        if (apNode->symptoms == NULL) printf("///")
+        else printf("%s", apNode->symptoms);
         printf("\n\n");
     }
 }

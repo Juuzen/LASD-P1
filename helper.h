@@ -5,7 +5,7 @@
 
 void clearScreen();
 char* maskedInput();
-void pause(char message[]);
+void printMessage(char message[]);
 bool generateTestResult();
 int getEmployeeId(char message[]);
 int getCurrentDay();

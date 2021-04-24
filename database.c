@@ -12,20 +12,20 @@
 
 /* GESTIONE DB PAZIENTI */
 
-/* Scrive su file (in modalità append) i campi di un elemento Patient */
+/* Scrive su file (in modalitï¿½ append) i campi di un elemento Patient */
 void savePatient(char fiscalCode[], char password[]) {
     FILE * patientDB;
     patientDB = fopen(PATIENT_DB, "a");
     if (patientDB != NULL) {
         if (fprintf(patientDB, "%s\t%s\n", fiscalCode, password) < 0) {
             printf("SAVEPATIENT: ");
-            pause(ERR_WRITING);
+            printMessage(ERR_WRITING);
         }
         fclose(patientDB);
     }
     else {
         printf("SAVEPATIENT: ");
-        pause(ERR_FILEACCESS);
+        printMessage(ERR_FILEACCESS);
     }
 
 }
@@ -44,13 +44,13 @@ Patient loadPatientList() {
             }
             else {
                 printf("LOADPATIENTLIST: ");
-                pause(ERR_READING);
+                printMessage(ERR_READING);
             }
         }
         fclose(patientDB);
     } else {
         printf("LOADPATIENTLIST: ");
-        pause(ERR_FILEACCESS);
+        printMessage(ERR_FILEACCESS);
     }
 
     return ptList;
@@ -73,14 +73,14 @@ Employee loadEmployeeList() {
             }
             else {
                 printf("LOADEMPLOYEELIST: ");
-                pause(ERR_READING);
+                printMessage(ERR_READING);
             }
         }
         fclose(employeeDB);
     }
     else {
         printf("LOADEMPLOYEELIST: ");
-        pause(ERR_FILEACCESS);
+        printMessage(ERR_FILEACCESS);
     }
     return emList;
 }
@@ -88,7 +88,7 @@ Employee loadEmployeeList() {
 
 /* GESTIONE DB APPUNTAMENTI */
 
-/* Salva su file (in modalità append) i campi di un elemento Appointment */
+/* Salva su file (in modalitï¿½ append) i campi di un elemento Appointment */
 void saveAppointment(Appointment apNode, FILE * file) {
     if (apNode != NULL) {
         if (file == NULL) {
@@ -98,25 +98,25 @@ void saveAppointment(Appointment apNode, FILE * file) {
         if (file != NULL) {
             if (fprintf(file, "%s\t%d\t", apNode->fiscalCode, apNode->slot) < 0) {
                 printf("SAVEAPPOINTMENT: ");
-                pause(ERR_WRITING);
+                printMessage(ERR_WRITING);
             }
 
             if (strcmp(apNode->symptoms, "") == 0) {
                 if (fprintf(file, "(null)\n") < 0) {
                     printf("SAVEAPPOINTMENT: ");
-                    pause(ERR_WRITING);
+                    printMessage(ERR_WRITING);
                 }
             } else {
                 if (fprintf(file, "%s\n", apNode->symptoms) < 0) {
                     printf("SAVEAPPOINTMENT: ");
-                    pause(ERR_WRITING);
+                    printMessage(ERR_WRITING);
                 }
             }
             fclose(file);
         }
 
         else {
-            pause("SAVEAPPOINTMENT: The database does not exist or could not be opened.");
+            printMessage("SAVEAPPOINTMENT: The database does not exist or could not be opened.");
         }
     }
 }
@@ -126,7 +126,7 @@ Appointment loadAppointmentList() {
     Appointment apList = appointmentNewList();
     FILE * appointmentDB = fopen(APPOINTMENT_DB, "r");
     if (appointmentDB != NULL) {
-        /* Per assicurare la priorità e la struttura FIFO, gli Appointment sono smistati in due liste durante la lettura da file */
+        /* Per assicurare la prioritï¿½ e la struttura FIFO, gli Appointment sono smistati in due liste durante la lettura da file */
         Appointment symptomaticList = appointmentNewList();
         Appointment asymptomaticList = appointmentNewList();
         char fiscalCode[FISCALCODE_SIZE];
@@ -150,7 +150,7 @@ Appointment loadAppointmentList() {
             }
             else {
                 printf("LOADAPPOINTMENTLIST: ");
-                pause(ERR_READING);
+                printMessage(ERR_READING);
             }
         }
 
@@ -160,7 +160,7 @@ Appointment loadAppointmentList() {
     }
     else {
         printf("LOADAPPOINTMENTLIST: ");
-        pause(ERR_FILEACCESS);
+        printMessage(ERR_FILEACCESS);
     }
     return apList;
 }
@@ -175,7 +175,7 @@ void saveAppointmentListBody(Appointment apList, FILE * appointmentDB) {
     }
     else {
         printf("SAVEAPPOINTMENTLIST: ");
-        pause(ERR_FILEACCESS);
+        printMessage(ERR_FILEACCESS);
     }
 }
 
@@ -189,7 +189,7 @@ void saveAppointmentList(Appointment apList) {
         }
         else {
             printf("SAVEAPPOINTMENTLIST: ");
-            pause(ERR_FILEACCESS);
+            printMessage(ERR_FILEACCESS);
         }
     }
 
@@ -204,7 +204,7 @@ void dropAppointmentDB() {
     }
     else {
         printf("DROPAPPOINTMENTDB: ");
-        pause(ERR_FILEACCESS);
+        printMessage(ERR_FILEACCESS);
     }
 }
 
@@ -226,14 +226,14 @@ TestResult loadTestResultList() {
             }
             else {
                 printf("LOADTESTRESULTLIST: ");
-                pause(ERR_READING);
+                printMessage(ERR_READING);
             }
         }
         fclose(testResultDB);
     }
     else {
         printf("LOADTESTRESULTLIST: ");
-        pause(ERR_FILEACCESS);
+        printMessage(ERR_FILEACCESS);
     }
 
     return rsList;
@@ -245,7 +245,7 @@ void saveTestResultListBody(Appointment apList, FILE * testResultDB, int current
         if (apList != NULL) {
             if (fprintf(testResultDB, "%s\t", apList->fiscalCode) < 0) {
                 printf("SAVETESTRESULTLIST: ");
-                pause(ERR_WRITING);
+                printMessage(ERR_WRITING);
             }
             else {
                 char response[RESPONSE_SIZE];
@@ -254,12 +254,12 @@ void saveTestResultListBody(Appointment apList, FILE * testResultDB, int current
 
                 if (fprintf(testResultDB, "%s\t", response) < 0) {
                     printf("SAVETESTRESULTLIST: ");
-                    pause(ERR_WRITING);
+                    printMessage(ERR_WRITING);
                 }
                 else {
                     if (fprintf(testResultDB, "%d\n", currentDay) < 0) {
                         printf("SAVETESTRESULTLIST: ");
-                        pause(ERR_WRITING);
+                        printMessage(ERR_WRITING);
                     }
                     else {
                         saveTestResultListBody(apList->next, testResultDB, currentDay);
@@ -270,11 +270,11 @@ void saveTestResultListBody(Appointment apList, FILE * testResultDB, int current
     }
     else {
         printf("SAVETESTRESULTLIST: ");
-        pause(ERR_FILEACCESS);
+        printMessage(ERR_FILEACCESS);
     }
 }
 
-/* Salva su file (in modalità append) un elemento Reservation convertendo ogni Appointment in un TestResult */
+/* Salva su file (in modalitï¿½ append) un elemento Reservation convertendo ogni Appointment in un TestResult */
 void saveTestResultList(Reservation res) {
 
     if (res != NULL) {
@@ -287,7 +287,7 @@ void saveTestResultList(Reservation res) {
     }
     else {
         printf("SAVETESTRESULTLIST: ");
-        pause(ERR_FILEACCESS);
+        printMessage(ERR_FILEACCESS);
     }
 }
 }
@@ -304,7 +304,7 @@ Quarantine loadQuarantineList() {
     }
     else {
         printf("LOADQUARANTINELIST: ");
-        pause(ERR_FILEACCESS);
+        printMessage(ERR_FILEACCESS);
     }
     return list;
 }
@@ -317,13 +317,13 @@ void saveQuarantineListBody(Quarantine qtList, FILE * file) {
             }
             else {
                 printf("SAVEQUARANTINELIST: ");
-                pause(ERR_WRITING);
+                printMessage(ERR_WRITING);
             }
         }
     }
     else {
         printf("SAVEQUARANTINELIST: ");
-        pause(ERR_FILEACCESS);
+        printMessage(ERR_FILEACCESS);
     }
 }
 
@@ -335,7 +335,7 @@ void saveQuarantineList(Quarantine qtList) {
         }
         else {
             printf("SAVEQUARANTINELIST: ");
-            pause(ERR_FILEACCESS);
+            printMessage(ERR_FILEACCESS);
         }
     }
 }

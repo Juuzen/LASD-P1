@@ -71,13 +71,13 @@ void patientShowTestResultsUi(char fiscalCode[]) {
     clearScreen();
     if (rsList == NULL) {
         printf("You took 0 tests up to this moment.\n");
-        pause(PAUSE_DEFAULT);
+        printMessage(PAUSE_DEFAULT);
     }
     else {
         printf("Here are your test results:\n");
         /* Di default, vengono stampati i test in senso anti-cronologico */
         testResultPrintByFiscalCode(rsList, fiscalCode, false);
-        pause(PAUSE_DEFAULT);
+        printMessage(PAUSE_DEFAULT);
     }
 }
 
@@ -87,7 +87,7 @@ void patientAppointmentRequestUi(Appointment apList, char fiscalCode[]) {
     if (found != NULL) {
         printf("You already have an appointment with the following informations:\n");
         appointmentPrintNode(found);
-        pause(PAUSE_DEFAULT);
+        printMessage(PAUSE_DEFAULT);
     }
     else {
         do {
@@ -110,7 +110,7 @@ void patientAppointmentRequestUi(Appointment apList, char fiscalCode[]) {
             bool response = patientRequestAppointment(&apList, fiscalCode, slot, symptoms);
             if (response) printf("Appointment requested!\n");
             else printf("There was a problem in requesting the appointment. Please try again later.\n");
-            pause(PAUSE_DEFAULT);
+            printMessage(PAUSE_DEFAULT);
         }
     }
 
@@ -125,7 +125,7 @@ void patientShowReservationUi(Reservation *res, char fiscalCode[]) {
         printf("Here is your test reservation:\n");
         appointmentPrintNode(app);
     }
-    pause(PAUSE_DEFAULT);
+    printMessage(PAUSE_DEFAULT);
 }
 
 void patientDeleteAppointmentUi(Appointment* apList, char fiscalCode[]) {
@@ -135,7 +135,7 @@ void patientDeleteAppointmentUi(Appointment* apList, char fiscalCode[]) {
 
     if (app == NULL) {
         printf("You have no appointments up to now.\n");
-        pause(PAUSE_DEFAULT);
+        printMessage(PAUSE_DEFAULT);
     }
     else {
         char input;
@@ -153,12 +153,12 @@ void patientDeleteAppointmentUi(Appointment* apList, char fiscalCode[]) {
 
             else if ((input == 'n') || (input == 'N')) {
                 printf("No changes will be made.\n");
-                pause(PAUSE_DEFAULT);
+                printMessage(PAUSE_DEFAULT);
             }
 
             else {
                 printf("Only 'y' or 'n' are permitted (case in-sensitive).\n");
-                pause(PAUSE_DEFAULT);
+                printMessage(PAUSE_DEFAULT);
             }
         } while ((input != 'y') && (input != 'Y') && (input != 'n') && (input != 'N'));
     }
@@ -275,7 +275,7 @@ void patientRegisterUi(Patient ptList) {
 
         if (patientRegister(&ptList, fiscalCode, password)) {
             printf("You are now registered to the platform!\n");
-            pause(PAUSE_DEFAULT);
+            printMessage(PAUSE_DEFAULT);
             running = false;
         }
         else {

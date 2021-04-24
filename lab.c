@@ -59,7 +59,7 @@ void labShowTestHistoryUi(int currentDay) {
         case 1:
             // By default, chronological order is used
             testResultPrintList(rsList, true);
-            pause("Press ENTER to go back...");
+            printMessage("Press ENTER to go back...");
             break;
         case 2:
             userChoice = -1;
@@ -73,7 +73,7 @@ void labShowTestHistoryUi(int currentDay) {
 
             // By default, chronological order is used
             testResultPrintByDay (rsList, userChoice, true);
-            pause("Press ENTER to go back...");
+            printMessage("Press ENTER to go back...");
             break;
         case 3:
             break;
@@ -88,7 +88,7 @@ void labManageAppointmentRequestsUi(Reservation *res) {
     if (apList == NULL) {
         clearScreen();
         printf("There are no requests so far.\n");
-        pause("Press ENTER key to go back...");
+        printMessage("Press ENTER key to go back...");
     }
 
     else {
@@ -104,17 +104,17 @@ void labManageAppointmentRequestsUi(Reservation *res) {
             if ((input == 'y') || (input == 'Y')) {
                 labConfirmAppointments(res, &apList);
                 printf("Reservations made. You can check them by choosing option 3 in main menu.\n");
-                pause("Press ENTER key to go back...");
+                printMessage("Press ENTER key to go back...");
             }
 
             else if ((input == 'n') || (input == 'N')) {
                 printf("The confirmation process is stopped. No changes have been made.\n");
-                pause("Press ENTER key to go back...");
+                printMessage("Press ENTER key to go back...");
             }
 
             else {
                 printf("Wrong input: only 'y' or 'n' are permitted (case insensitive).\n");
-                pause("Press ENTER key to try again...");
+                printMessage("Press ENTER key to try again...");
             }
         } while ((input != 'y') && (input != 'Y') && (input != 'n') && (input != 'N'));
     }
@@ -123,7 +123,7 @@ void labShowReservationUi(Reservation res) {
     clearScreen();
     printf("Here are the test reservations for the current day.\n");
     printReservation(res);
-    pause("Press ENTER key to go back...");
+    printMessage("Press ENTER key to go back...");
 }
 void labAddReservationUi(Reservation *res) {
     int userChoice = -1;
@@ -155,12 +155,12 @@ void labAddReservationUi(Reservation *res) {
             Appointment manualApp = appointmentNewNode(fiscalCode, slot, symptoms);
             addReservation(res, manualApp);
             printf("Reservation created! Exit the program to process it.\n");
-            pause("Press ENTER key to go back...");
+            printMessage("Press ENTER key to go back...");
         }
 
         else {
             printf("Reservations are at max capacity in this time slot.\n");
-            pause("Press ENTER key to go back...");
+            printMessage("Press ENTER key to go back...");
         }
     }
 }
@@ -216,7 +216,7 @@ void labRemoveReservationUi(Reservation *res) {
         }
 
         printf("Reservation removed. You can check reservation by choosing the option 3 in the main menu.\n");
-        pause("Press ENTER key to go back...");
+        printMessage("Press ENTER key to go back...");
     }
 }
 
@@ -329,7 +329,7 @@ void labMainMenuUi(Reservation *res) {
                 running = false;
                 break;
             default:
-                pause("Something went wrong...");
+                printMessage("Something went wrong...");
                 // FIXME: Handle shutdown
                 break;
         }
