@@ -53,7 +53,7 @@ bool patientRequestAppointment(Appointment* apList, char fiscalCode[], timeSlot 
     Appointment newApp = appointmentNewNode(fiscalCode, slot, symptoms);
     if (newApp != NULL) {
         *apList = appointmentAppendToList(*apList, newApp);
-        saveAppointment(newApp);
+        saveAppointment(newApp, NULL);
         response = true;
     }
     return response;
@@ -67,7 +67,7 @@ void patientDeleteAppointment(Appointment* apList, char fiscalCode[]) {
 
 /* FUNZIONI UI */
 void patientShowTestResultsUi(char fiscalCode[]) {
-    TestResult rsList = loadTestResults();
+    TestResult rsList = loadTestResultList();
     clearScreen();
     if (rsList == NULL) {
         //FIXME: Non c'è modo di capire se la lista è vuota perché non ci sono elementi o perché vi è stato un errore

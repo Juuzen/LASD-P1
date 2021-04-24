@@ -43,7 +43,7 @@ void labPopulateReservations(Reservation *res, Appointment apList) {
 /* FUNZIONI UI */
 void labShowTestHistoryUi(int currentDay) {
     int userChoice = -1;
-    TestResult rsList = loadTestResults();
+    TestResult rsList = loadTestResultList();
     do {
         clearScreen();
         printf("Please make a choice:\n\n");

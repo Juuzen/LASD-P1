@@ -11,17 +11,22 @@
 
 
 /* GESTIONE DB PAZIENTI */
+
+/* Scrive su file (in modalità append) i campi di un elemento Patient */
 void savePatient(char fiscalCode[], char password[]) {
     FILE * patientDB;
     patientDB = fopen(PATIENT_DB, "a");
     if (patientDB != NULL) {
+        //TODO: errore in scrittura
         fprintf(patientDB, "%s\t%s\n", fiscalCode, password);
     }
     else {
-        printf ("SAVE: The DB could not be opened.\n");
+        pause("SAVEPATIENT: The DB does not exist or could not be opened.");
     }
     fclose(patientDB);
 }
+
+/* Carica da file una lista di elementi Patient */
 Patient loadPatientList() {
     Patient ptList = patientNewList();
     FILE * patient_db = fopen(PATIENT_DB, "r");
@@ -32,16 +37,18 @@ Patient loadPatientList() {
 
             ptList = patientTailInsert(ptList, fiscalCode, password);
         }
+        fclose(patient_db);
     } else {
-        printf("LOAD: The DB could not be opened.\n");
-        //TODO: Handle file opening error
+        pause("LOADPATIENTLIST: The database does not exist or could not be opened.");
     }
-    fclose(patient_db);
+
     return ptList;
 }
 
 
 /* GESTIONE DB LAVORATORI LABORATORIO */
+
+/* Carica da file una lista di elementi Employee */
 Employee loadEmployeeList() {
     Employee emList = employeeNewList();
     FILE * employeeDB = fopen(EMPLOYEE_DB, "r");
@@ -56,41 +63,51 @@ Employee loadEmployeeList() {
         }
         fclose(employeeDB);
     }
+    else {
+        pause("LOADEMPLOYEELIST: The database does not exist or could not be opened.");
+    }
     return emList;
 }
 
 
 /* GESTIONE DB APPUNTAMENTI */
-void saveAppointment(Appointment apNode) {
+
+/* Salva su file (in modalità append) i campi di un elemento Appointment */
+void saveAppointment(Appointment apNode, FILE * file) {
     if (apNode != NULL) {
-    FILE * appointmentDB;
-    appointmentDB = fopen(APPOINTMENT_DB, "a");
-    if (appointmentDB != NULL) {
-        if (fprintf(appointmentDB, "%s\t%d\t", apNode->fiscalCode, apNode->slot) < 0) {
-            // TODO: Handle error in writing
+        if (file == NULL) {
+            file = fopen(APPOINTMENT_DB, "a");
         }
 
-        if (strcmp(apNode->symptoms, "") == 0) {
-            if (fprintf(appointmentDB, "(null)\n") < 0) {
-                //TODO: Handle error in writing
+        if (file != NULL) {
+            if (fprintf(file, "%s\t%d\t", apNode->fiscalCode, apNode->slot) < 0) {
+                pause("SAVEAPPOINTMENT: Error in writing the appointment.");
             }
-        } else {
-            if (fprintf(appointmentDB, "%s\n", apNode->symptoms) < 0) {
-                //TODO: Handle error in writing
+
+            if (strcmp(apNode->symptoms, "") == 0) {
+                if (fprintf(file, "(null)\n") < 0) {
+                    pause("SAVEAPPOINTMENT: Error in writing the appointment.");
+                }
+            } else {
+                if (fprintf(file, "%s\n", apNode->symptoms) < 0) {
+                    pause("SAVEAPPOINTMENT: Error in writing the appointment.");
+                }
             }
+            fclose(file);
         }
-    }
-    else {
-        printf ("SAVE: The DB could not be opened.\n");
-    }
-    fclose(appointmentDB);
+
+        else {
+            pause("SAVEAPPOINTMENT: The database does not exist or could not be opened.");
+        }
     }
 }
 
+/* Carica da file una lista di elementi Appointment */
 Appointment loadAppointmentList() {
     Appointment apList = appointmentNewList();
     FILE * appointmentDB = fopen(APPOINTMENT_DB, "r");
     if (appointmentDB != NULL) {
+        /* Per assicurare la priorità e la struttura FIFO, gli Appointment sono smistati in due liste durante la lettura da file */
         Appointment symptomaticList = appointmentNewList();
         Appointment asymptomaticList = appointmentNewList();
         char fiscalCode[FISCALCODE_SIZE];
@@ -112,30 +129,35 @@ Appointment loadAppointmentList() {
 
                 else asymptomaticList = appointmentTailInsert(asymptomaticList, fiscalCode, slot, NULL);
             }
+            else {
+                pause("LOADAPPOINTMENTLIST: Error in reading from file.");
+            }
         }
 
+        /* E poi concatenati e restituiti */
         apList = appointmentAppendToList(symptomaticList, asymptomaticList);
         fclose(appointmentDB);
     }
     else {
-        //TODO: Handle file opening error
+        pause("LOADAPPOINTMENTLIST: The database does not exist or could not be opened.");
     }
     return apList;
 }
 
+/* Funzione ricorsiva di appoggio utilizzata in saveAppointmentList*/
 void saveAppointmentListBody(Appointment apList, FILE * appointmentDB) {
     if (appointmentDB != NULL) {
         if (apList != NULL) {
-            if (fprintf(appointmentDB, "%s\t%d\t%s\n", apList->fiscalCode, apList->slot, apList->symptoms) < 0) {
-            // TODO: Handle error in writing
-            }
-            else {
-                saveAppointmentListBody(apList->next, appointmentDB);
-            }
+            saveAppointment(apList, appointmentDB);
+            saveAppointmentListBody(apList->next, appointmentDB);
         }
+    }
+    else {
+        pause("SAVEAPPOINTMENTLIST: The database does not exist or could not be opened.");
     }
 }
 
+/* Salva su file una lista di elementi Appointment */
 void saveAppointmentList(Appointment apList) {
     if (apList != NULL) {
         FILE * appointmentDB = fopen(APPOINTMENT_DB, "w");
@@ -144,23 +166,29 @@ void saveAppointmentList(Appointment apList) {
             fclose(appointmentDB);
         }
         else {
-        //TODO: Handle error file opening
+            pause("SAVEAPPOINTMENTLIST: The database does not exist or could not be opened.");
         }
     }
 
 
 }
 
+/* Elimina il contenuto del file appointment_db.txt */
 void dropAppointmentDB() {
     FILE * appointmentDB = fopen(APPOINTMENT_DB, "w");
     if (appointmentDB != NULL) {
         fclose(appointmentDB);
     }
+    else {
+        pause("DROPAPPOINTMENTDB: The database does not exist or could not be opened.");
+    }
 }
 
 
 /* GESTIONE DB RISULTATI TEST */
-TestResult loadTestResults() {
+
+/* Carica da file una lista di elementi TestResult */
+TestResult loadTestResultList() {
     TestResult rsList = testResultNewList();
     FILE * testResultDB = fopen(TESTRESULT_DB, "r");
     if (testResultDB != NULL) {
@@ -175,15 +203,19 @@ TestResult loadTestResults() {
         }
         fclose(testResultDB);
     }
+    else {
+        pause("LOADTESTRESULTLIST: The database does not exist or could not be opened.");
+    }
 
     return rsList;
 }
 
+/* Funzione ricorsiva di appoggio utilizzata in saveTestResultList */
 void saveTestResultListBody(Appointment apList, FILE * testResultDB, int currentDay) {
     if (testResultDB != NULL) {
         if (apList != NULL) {
             if (fprintf(testResultDB, "%s\t", apList->fiscalCode) < 0) {
-                //TODO: Gestire errore in scrittura
+                pause("SAVETESTRESULTLIST: Error in writing into the file.");
             }
             else {
                 char response[RESPONSE_SIZE];
@@ -191,11 +223,11 @@ void saveTestResultListBody(Appointment apList, FILE * testResultDB, int current
                 else strcpy(response, "NEGATIVE");
 
                 if (fprintf(testResultDB, "%s\t", response) < 0) {
-                    //TODO: Gestire errore in scrittura
+                    pause("SAVETESTRESULTLIST: Error in writing into the file.");
                 }
                 else {
                     if (fprintf(testResultDB, "%d\n", currentDay) < 0) {
-                        //TODO: Gestire errore in scrittura
+                        pause("SAVETESTRESULTLIST: Error in writing into the file.");
                     }
                     else {
                         saveTestResultListBody(apList->next, testResultDB, currentDay);
@@ -204,26 +236,32 @@ void saveTestResultListBody(Appointment apList, FILE * testResultDB, int current
             }
         }
     }
+    else {
+        pause("SAVETESTRESULTLIST: The database does not exist or could not be opened.");
+    }
 }
 
+/* Salva su file (in modalità append) un elemento Reservation convertendo ogni Appointment in un TestResult */
 void saveTestResultList(Reservation res) {
-    if (res != NULL) {
-        FILE * testResultDB = fopen(TESTRESULT_DB, "a");
-        if (testResultDB != NULL) {
-            saveTestResultListBody(res->morning, testResultDB, res->currentDay);
-            saveTestResultListBody(res->afternoon, testResultDB, res->currentDay);
-            saveTestResultListBody(res->evening, testResultDB, res->currentDay);
-            fclose(testResultDB);
-        }
 
-        else {
-            //TODO: Handle error in opening file
-        }
+    if (res != NULL) {
+    FILE * testResultDB = fopen(TESTRESULT_DB, "a");
+    if (testResultDB != NULL) {
+        saveTestResultListBody(res->morning, testResultDB, res->currentDay);
+        saveTestResultListBody(res->afternoon, testResultDB, res->currentDay);
+        saveTestResultListBody(res->evening, testResultDB, res->currentDay);
+        fclose(testResultDB);
     }
+    else {
+        pause("SAVETESTRESULTLIST: The database does not exist or could not be opened.");
+    }
+}
 }
 
 
 /* DB QUARANTENA */
+
+/* Carica da file una lista di elementi Quarantine */
 Quarantine loadQuarantineList() {
     Quarantine list = NULL;
     FILE * quarantineDB = fopen(QUARANTINE_DB, "r");

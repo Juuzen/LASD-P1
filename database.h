@@ -20,7 +20,7 @@ Employee loadEmployeeList();
 
 
 /* DB APPUNTAMENTI */
-void saveAppointment(Appointment app);
+void saveAppointment(Appointment apNode, FILE * file);
 Appointment loadAppointmentList();
 void saveAppointmentListBody(Appointment appList, FILE * appointmentDB);
 void saveAppointmentList(Appointment appList);
@@ -28,7 +28,7 @@ void dropAppointmentDB();
 
 
 /* DB RISULTATI TEST */
-TestResult loadTestResults();
+TestResult loadTestResultList();
 void saveTestResultListBody(Appointment appList, FILE * testResultDB, int currentDay);
 void saveTestResultList(Reservation res);
 
