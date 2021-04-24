@@ -3,34 +3,32 @@
 #include <time.h>
 #include <stdbool.h>
 
-#ifdef OS_WINDOWS
+
+#ifdef _WIN32
 #include <conio.h>
 #endif
 
-#ifdef OS_LINUX
-
+#ifdef __linux__
+#include <termios.h>
+#include <unistd.h>
 #endif
 
 #include "const.h"
 #include "helper.h"
 
 void clearScreen() {
-    #ifdef OS_WINDOWS
+    #ifdef _WIN32
     system("cls");
     #endif
 
-    #ifdef OS_LINUX
-    system("clear");
-    #endif
-
-    #ifdef OS_APPLE
+    #ifdef __linux__
     system("clear");
     #endif
 }
 
 char* maskedInput() {
     char* password = (char *) calloc(1, PASSWORD_SIZE * sizeof(char));
-    #ifdef OS_WINDOWS
+    #ifdef _WIN32
     char c;
 
     int i;
@@ -47,14 +45,23 @@ char* maskedInput() {
     password[i] = '\0';
     #endif // OS_WINDOWS
 
-    #ifdef OS_LINUX
-    char password[PASSWORD_SIZE];
+    #ifdef __linux__
+    struct termios tp, save;
+    if (tcgetattr(STDIN_FILENO, &tp) != -1) {
+        save = tp;
+        tp.c_lflag &= ~ECHO;
+        if (tcsetattr(STDIN_FILENO, TCSAFLUSH, &tp) != -1) {
+            scanf("%20s", password);
+
+            tcsetattr(STDIN_FILENO, TCSANOW, &save);
+        }
+    }
     #endif // OS_LINUX
 
     return password;
 }
 
-void pause(char message[]) {
+void printMessage(char message[]) {
     printf("%s\n", message);
     fflush(stdin);
     getchar();
@@ -80,7 +87,7 @@ int getEmployeeId(char message[]) {
         else {
             fflush(stdin);
             printf("Only numbers are permitted.\n");
-            pause("Press ENTER key to try again...");
+            printMessage("Press ENTER key to try again...");
         }
     } while (!correct);
     return choice;
@@ -147,7 +154,7 @@ char * getSymptoms(FILE * file) {
 
 void wrongChoice() {
     printf("Your choice is not correct! Please choose one of the numbers provided.\n");
-    pause("Press any key to continue...");
+    printMessage("Press any key to continue...");
 }
 
 int getChoice(int maxOptions) {
