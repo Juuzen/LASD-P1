@@ -17,29 +17,40 @@ void savePatient(char fiscalCode[], char password[]) {
     FILE * patientDB;
     patientDB = fopen(PATIENT_DB, "a");
     if (patientDB != NULL) {
-        //TODO: errore in scrittura
-        fprintf(patientDB, "%s\t%s\n", fiscalCode, password);
+        if (fprintf(patientDB, "%s\t%s\n", fiscalCode, password) < 0) {
+            printf("SAVEPATIENT: ");
+            pause(ERR_WRITING);
+        }
+        fclose(patientDB);
     }
     else {
-        pause("SAVEPATIENT: The DB does not exist or could not be opened.");
+        printf("SAVEPATIENT: ");
+        pause(ERR_FILEACCESS);
     }
-    fclose(patientDB);
+
 }
 
 /* Carica da file una lista di elementi Patient */
+
 Patient loadPatientList() {
     Patient ptList = patientNewList();
-    FILE * patient_db = fopen(PATIENT_DB, "r");
-    if (patient_db != NULL) {
+    FILE * patientDB = fopen(PATIENT_DB, "r");
+    if (patientDB != NULL) {
         char fiscalCode[FISCALCODE_SIZE];
         char password[PASSWORD_SIZE];
-        while ((fscanf(patient_db, "%s %s", fiscalCode, password)) != EOF) {
-
-            ptList = patientTailInsert(ptList, fiscalCode, password);
+        while (!feof(patientDB)) {
+            if (fscanf(patientDB, "%s %s", fiscalCode, password) != EOF) {
+                ptList = patientTailInsert(ptList, fiscalCode, password);
+            }
+            else {
+                printf("LOADPATIENTLIST: ");
+                pause(ERR_READING);
+            }
         }
-        fclose(patient_db);
+        fclose(patientDB);
     } else {
-        pause("LOADPATIENTLIST: The database does not exist or could not be opened.");
+        printf("LOADPATIENTLIST: ");
+        pause(ERR_FILEACCESS);
     }
 
     return ptList;
@@ -60,11 +71,16 @@ Employee loadEmployeeList() {
             if(fscanf(employeeDB, "%d\t%s\n", &id, password) != EOF) {
                 emList = employeeTailInsert(emList, id, password);
             }
+            else {
+                printf("LOADEMPLOYEELIST: ");
+                pause(ERR_READING);
+            }
         }
         fclose(employeeDB);
     }
     else {
-        pause("LOADEMPLOYEELIST: The database does not exist or could not be opened.");
+        printf("LOADEMPLOYEELIST: ");
+        pause(ERR_FILEACCESS);
     }
     return emList;
 }
@@ -81,16 +97,19 @@ void saveAppointment(Appointment apNode, FILE * file) {
 
         if (file != NULL) {
             if (fprintf(file, "%s\t%d\t", apNode->fiscalCode, apNode->slot) < 0) {
-                pause("SAVEAPPOINTMENT: Error in writing the appointment.");
+                printf("SAVEAPPOINTMENT: ");
+                pause(ERR_WRITING);
             }
 
             if (strcmp(apNode->symptoms, "") == 0) {
                 if (fprintf(file, "(null)\n") < 0) {
-                    pause("SAVEAPPOINTMENT: Error in writing the appointment.");
+                    printf("SAVEAPPOINTMENT: ");
+                    pause(ERR_WRITING);
                 }
             } else {
                 if (fprintf(file, "%s\n", apNode->symptoms) < 0) {
-                    pause("SAVEAPPOINTMENT: Error in writing the appointment.");
+                    printf("SAVEAPPOINTMENT: ");
+                    pause(ERR_WRITING);
                 }
             }
             fclose(file);
@@ -130,7 +149,8 @@ Appointment loadAppointmentList() {
                 else asymptomaticList = appointmentTailInsert(asymptomaticList, fiscalCode, slot, NULL);
             }
             else {
-                pause("LOADAPPOINTMENTLIST: Error in reading from file.");
+                printf("LOADAPPOINTMENTLIST: ");
+                pause(ERR_READING);
             }
         }
 
@@ -139,7 +159,8 @@ Appointment loadAppointmentList() {
         fclose(appointmentDB);
     }
     else {
-        pause("LOADAPPOINTMENTLIST: The database does not exist or could not be opened.");
+        printf("LOADAPPOINTMENTLIST: ");
+        pause(ERR_FILEACCESS);
     }
     return apList;
 }
@@ -153,7 +174,8 @@ void saveAppointmentListBody(Appointment apList, FILE * appointmentDB) {
         }
     }
     else {
-        pause("SAVEAPPOINTMENTLIST: The database does not exist or could not be opened.");
+        printf("SAVEAPPOINTMENTLIST: ");
+        pause(ERR_FILEACCESS);
     }
 }
 
@@ -166,7 +188,8 @@ void saveAppointmentList(Appointment apList) {
             fclose(appointmentDB);
         }
         else {
-            pause("SAVEAPPOINTMENTLIST: The database does not exist or could not be opened.");
+            printf("SAVEAPPOINTMENTLIST: ");
+            pause(ERR_FILEACCESS);
         }
     }
 
@@ -180,7 +203,8 @@ void dropAppointmentDB() {
         fclose(appointmentDB);
     }
     else {
-        pause("DROPAPPOINTMENTDB: The database does not exist or could not be opened.");
+        printf("DROPAPPOINTMENTDB: ");
+        pause(ERR_FILEACCESS);
     }
 }
 
@@ -200,11 +224,16 @@ TestResult loadTestResultList() {
             if(fscanf(testResultDB, "%s\t%s\t%d\n", fiscalCode, response, &day) != EOF) {
                 rsList = testResultTailInsert(rsList, fiscalCode, response, day);
             }
+            else {
+                printf("LOADTESTRESULTLIST: ");
+                pause(ERR_READING);
+            }
         }
         fclose(testResultDB);
     }
     else {
-        pause("LOADTESTRESULTLIST: The database does not exist or could not be opened.");
+        printf("LOADTESTRESULTLIST: ");
+        pause(ERR_FILEACCESS);
     }
 
     return rsList;
@@ -215,7 +244,8 @@ void saveTestResultListBody(Appointment apList, FILE * testResultDB, int current
     if (testResultDB != NULL) {
         if (apList != NULL) {
             if (fprintf(testResultDB, "%s\t", apList->fiscalCode) < 0) {
-                pause("SAVETESTRESULTLIST: Error in writing into the file.");
+                printf("SAVETESTRESULTLIST: ");
+                pause(ERR_WRITING);
             }
             else {
                 char response[RESPONSE_SIZE];
@@ -223,11 +253,13 @@ void saveTestResultListBody(Appointment apList, FILE * testResultDB, int current
                 else strcpy(response, "NEGATIVE");
 
                 if (fprintf(testResultDB, "%s\t", response) < 0) {
-                    pause("SAVETESTRESULTLIST: Error in writing into the file.");
+                    printf("SAVETESTRESULTLIST: ");
+                    pause(ERR_WRITING);
                 }
                 else {
                     if (fprintf(testResultDB, "%d\n", currentDay) < 0) {
-                        pause("SAVETESTRESULTLIST: Error in writing into the file.");
+                        printf("SAVETESTRESULTLIST: ");
+                        pause(ERR_WRITING);
                     }
                     else {
                         saveTestResultListBody(apList->next, testResultDB, currentDay);
@@ -237,7 +269,8 @@ void saveTestResultListBody(Appointment apList, FILE * testResultDB, int current
         }
     }
     else {
-        pause("SAVETESTRESULTLIST: The database does not exist or could not be opened.");
+        printf("SAVETESTRESULTLIST: ");
+        pause(ERR_FILEACCESS);
     }
 }
 
@@ -253,7 +286,8 @@ void saveTestResultList(Reservation res) {
         fclose(testResultDB);
     }
     else {
-        pause("SAVETESTRESULTLIST: The database does not exist or could not be opened.");
+        printf("SAVETESTRESULTLIST: ");
+        pause(ERR_FILEACCESS);
     }
 }
 }
@@ -263,10 +297,45 @@ void saveTestResultList(Reservation res) {
 
 /* Carica da file una lista di elementi Quarantine */
 Quarantine loadQuarantineList() {
-    Quarantine list = NULL;
+    Quarantine list = quarantineNewList();
     FILE * quarantineDB = fopen(QUARANTINE_DB, "r");
     if (quarantineDB != NULL) {
 
     }
+    else {
+        printf("LOADQUARANTINELIST: ");
+        pause(ERR_FILEACCESS);
+    }
     return list;
+}
+
+void saveQuarantineListBody(Quarantine qtList, FILE * file) {
+    if (file != NULL) {
+        if (qtList != NULL) {
+            if(fprintf(file, "%s\n", qtList->fiscalCode) > 0) {
+                saveQuarantineListBody(qtList->next, file);
+            }
+            else {
+                printf("SAVEQUARANTINELIST: ");
+                pause(ERR_WRITING);
+            }
+        }
+    }
+    else {
+        printf("SAVEQUARANTINELIST: ");
+        pause(ERR_FILEACCESS);
+    }
+}
+
+void saveQuarantineList(Quarantine qtList) {
+    if (qtList != NULL) {
+        FILE * quarantineDB = fopen(QUARANTINE_DB, "w");
+        if (quarantineDB != NULL) {
+            saveQuarantineListBody(qtList, quarantineDB);
+        }
+        else {
+            printf("SAVEQUARANTINELIST: ");
+            pause(ERR_FILEACCESS);
+        }
+    }
 }

@@ -25,6 +25,10 @@
 #define TESTRESULT_DB "testresult_db.txt"
 #define QUARANTINE_DB "quarantine_db.txt"
 
+#define ERR_READING "Error in reading from file."
+#define ERR_WRITING "Error in writing into the file."
+#define ERR_FILEACCESS "The database does not exist or could not be opened."
+
 typedef enum timeSlot { MORNING, AFTERNOON, EVENING } timeSlot;
 
 #endif // const_h
