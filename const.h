@@ -29,6 +29,8 @@
 #define ERR_WRITING "Error in writing into the file."
 #define ERR_FILEACCESS "The database does not exist or could not be opened."
 
+#define PAUSE_DEFAULT "Press ENTER key to go back..."
+
 typedef enum timeSlot { MORNING, AFTERNOON, EVENING } timeSlot;
 
 #endif // const_h

@@ -4,8 +4,10 @@
 #include "const.h"
 
 void clearScreen();
+char* maskedInput();
 void pause(char message[]);
 bool generateTestResult();
+int getEmployeeId(char message[]);
 int getCurrentDay();
 char *getSymptoms(FILE * file);
 const char* getTimeSlot(timeSlot slot);

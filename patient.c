@@ -70,15 +70,14 @@ void patientShowTestResultsUi(char fiscalCode[]) {
     TestResult rsList = loadTestResultList();
     clearScreen();
     if (rsList == NULL) {
-        //FIXME: Non c'è modo di capire se la lista è vuota perché non ci sono elementi o perché vi è stato un errore
-        printf("You made 0 tests up to this moment.\n");
-        pause("Press ENTER to go back...");
+        printf("You took 0 tests up to this moment.\n");
+        pause(PAUSE_DEFAULT);
     }
     else {
         printf("Here are your test results:\n");
-        // by default, anti-chronological order is used
+        /* Di default, vengono stampati i test in senso anti-cronologico */
         testResultPrintByFiscalCode(rsList, fiscalCode, false);
-        pause("Press ENTER to go back...");
+        pause(PAUSE_DEFAULT);
     }
 }
 
@@ -88,7 +87,7 @@ void patientAppointmentRequestUi(Appointment apList, char fiscalCode[]) {
     if (found != NULL) {
         printf("You already have an appointment with the following informations:\n");
         appointmentPrintNode(found);
-        pause("Press ENTER key to go back...");
+        pause(PAUSE_DEFAULT);
     }
     else {
         do {
@@ -111,7 +110,7 @@ void patientAppointmentRequestUi(Appointment apList, char fiscalCode[]) {
             bool response = patientRequestAppointment(&apList, fiscalCode, slot, symptoms);
             if (response) printf("Appointment requested!\n");
             else printf("There was a problem in requesting the appointment. Please try again later.\n");
-            pause("Press ENTER key to go back...");
+            pause(PAUSE_DEFAULT);
         }
     }
 
@@ -126,7 +125,7 @@ void patientShowReservationUi(Reservation *res, char fiscalCode[]) {
         printf("Here is your test reservation:\n");
         appointmentPrintNode(app);
     }
-    pause("Press ENTER key to go back...");
+    pause(PAUSE_DEFAULT);
 }
 
 void patientDeleteAppointmentUi(Appointment* apList, char fiscalCode[]) {
@@ -134,7 +133,10 @@ void patientDeleteAppointmentUi(Appointment* apList, char fiscalCode[]) {
     Appointment app = appointmentFindByFiscalCode(*apList, fiscalCode);
     appointmentPrintNode(app);
 
-    if (app == NULL) pause("You have no appointments.\nPress any key to go back...");
+    if (app == NULL) {
+        printf("You have no appointments up to now.\n");
+        pause(PAUSE_DEFAULT);
+    }
     else {
         char input;
         do {
@@ -150,11 +152,13 @@ void patientDeleteAppointmentUi(Appointment* apList, char fiscalCode[]) {
             }
 
             else if ((input == 'n') || (input == 'N')) {
-                pause("The appointment will not be deleted.\nPress any key to go back...");
+                printf("No changes will be made.\n");
+                pause(PAUSE_DEFAULT);
             }
 
             else {
-                pause("Wrong choice! Only 'y' or 'n' are permitted.\nPress any key to continue...");
+                printf("Only 'y' or 'n' are permitted (case in-sensitive).\n");
+                pause(PAUSE_DEFAULT);
             }
         } while ((input != 'y') && (input != 'Y') && (input != 'n') && (input != 'N'));
     }
@@ -270,8 +274,8 @@ void patientRegisterUi(Patient ptList) {
         fflush(stdin);
 
         if (patientRegister(&ptList, fiscalCode, password)) {
-            //registration complete
-            //TODO: add code for pausing the flow
+            printf("You are now registered to the platform!\n");
+            pause(PAUSE_DEFAULT);
             running = false;
         }
         else {

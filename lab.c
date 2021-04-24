@@ -256,8 +256,7 @@ void labLoginUi(Reservation *res) {
     Employee emList = loadEmployeeList();
     do {
         clearScreen();
-        printf("Please provide your worker ID: ");
-        scanf("%d", &id); //FIXME: Controllo sull'input (hint: adattare getChoice?)
+        id = getEmployeeId("Please provide your worker ID: ");
         fflush(stdin);
         printf("Please provide your password: ");
         scanf("%20s", password); //TODO: masked scanf

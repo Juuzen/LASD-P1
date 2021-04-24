@@ -17,7 +17,6 @@ Appointment appointmentNewNode(char fiscalCode[], timeSlot slot, char symptoms[]
 
     if (apNode != NULL) {
         strcpy(apNode->fiscalCode, fiscalCode);
-        // TODO: Controllare come viene generato symptoms
         if (symptoms != NULL) {
             apNode->symptoms = (char *) calloc(1, SYMPTOMS_SIZE * sizeof(char));
             strcpy(apNode->symptoms, symptoms);

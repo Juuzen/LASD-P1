@@ -2,6 +2,15 @@
 #include <stdlib.h>
 #include <time.h>
 #include <stdbool.h>
+
+#ifdef OS_WINDOWS
+#include <conio.h>
+#endif
+
+#ifdef OS_LINUX
+
+#endif
+
 #include "const.h"
 #include "helper.h"
 
@@ -19,16 +28,62 @@ void clearScreen() {
     #endif
 }
 
+char* maskedInput() {
+    char* password = (char *) calloc(1, PASSWORD_SIZE * sizeof(char));
+    #ifdef OS_WINDOWS
+    char c;
+
+    int i;
+    for (i = 0; i < PASSWORD_SIZE - 1; i++) {
+        c = getch();
+        if (c == 13) {
+            break;
+        }
+        else {
+            password[i] = c;
+            printf("%c", '*');
+        }
+    }
+    password[i] = '\0';
+    #endif // OS_WINDOWS
+
+    #ifdef OS_LINUX
+    char password[PASSWORD_SIZE];
+    #endif // OS_LINUX
+
+    return password;
+}
+
 void pause(char message[]) {
     printf("%s\n", message);
     fflush(stdin);
-    getchar(); //FIXME: Qualsiasi tasto premuto (ora accetta solo invio)
+    getchar();
     fflush(stdin);
 }
 
 bool generateTestResult() {
     srand(time(NULL));
     return rand() % 2;
+}
+
+int getEmployeeId(char message[]) {
+    bool correct = false;
+    int choice;
+
+    do {
+        clearScreen();
+        printf("%s", message);
+        fflush(stdin);
+        if (scanf("%d", &choice) == 1) {
+            correct = true;
+        }
+        else {
+            fflush(stdin);
+            printf("Only numbers are permitted.\n");
+            pause("Press ENTER key to try again...");
+        }
+    } while (!correct);
+    return choice;
 }
 
 int getCurrentDay() {
@@ -54,7 +109,6 @@ int getCurrentDay() {
         return lastDay;
     }
     else {
-        //FIXME: Gestire fopen quando il file non esiste (crearlo? restituire 1?)
         return 1;
     }
 }
