@@ -32,7 +32,7 @@ void employeeFreeNode(Employee emNode) {
     }
 }
 
-/* Dealloca una intera lista di elementi Appointment */
+/* Dealloca una intera lista di elementi Employee */
 void employeeFreeList(Employee emList) {
     if (emList != NULL) {
         employeeFreeList(emList->next);
@@ -40,7 +40,7 @@ void employeeFreeList(Employee emList) {
     }
 }
 
-/* Alloca un elemento Appointment e lo inserisce in coda ad apList */
+/* Alloca un elemento Employee e lo inserisce in coda ad emList */
 Employee employeeTailInsert(Employee emList, int id, char password[]) {
     if (emList == NULL) return employeeNewNode(id, password);
     else {

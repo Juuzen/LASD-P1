@@ -116,16 +116,10 @@
 	"database.h"
 	"helper.h"
 
-1619176273 source:f:\university\laboratorio di algoritmi e strutture dati\esercizi\lasd-p1\main.c
+1619257383 source:f:\university\laboratorio di algoritmi e strutture dati\esercizi\lasd-p1\main.c
 	<stdio.h>
+	<stdlib.h>
 	"project.h"
-	"database.h"
-	"patient.h"
-	"lab.h"
-	"helper.h"
-	<string.h>
-	<malloc.h>
-	<unistd.h>
 
 1619128525 f:\university\laboratorio di algoritmi e strutture dati\esercizi\lasd-p1\ui.h
 	"structure.h"
@@ -196,7 +190,7 @@
 	"s_patient.h"
 	"const.h"
 
-1619172941 source:f:\university\laboratorio di algoritmi e strutture dati\esercizi\lasd-p1\s_employee.c
+1619177513 source:f:\university\laboratorio di algoritmi e strutture dati\esercizi\lasd-p1\s_employee.c
 	<stdio.h>
 	<stdlib.h>
 	<string.h>

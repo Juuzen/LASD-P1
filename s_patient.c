@@ -4,11 +4,14 @@
 #include "s_patient.h"
 #include "const.h"
 
+/* Restituisce un puntatore Patient = NULL */
 Patient patientNewList() {
     Patient ptList = NULL;
     return ptList;
 }
 
+/* Restituisce, se possibile, un elemento Employee con i valori passati in ingresso */
+/* Altrimenti, restituisce NULL */
 Patient patientNewNode(char fiscalCode[], char password[]) {
     Patient ptNode = (Patient) calloc(1, sizeof(patient));
     if (ptNode != NULL) {
@@ -19,14 +22,7 @@ Patient patientNewNode(char fiscalCode[], char password[]) {
     return ptNode;
 }
 
-Patient patientTailInsert(Patient ptList, char fiscalCode[], char password[]) {
-    if (ptList == NULL) return patientNewNode(fiscalCode, password);
-    else {
-        ptList->next = patientTailInsert(ptList->next, fiscalCode, password);
-        return ptList;
-    }
-}
-
+/* Dealloca un elemento Patient, pulendo anche il suo contenuto */
 void patientFreeNode(Patient ptNode) {
     if (ptNode != NULL) {
         memset(ptNode->fiscalCode, '\0', sizeof(ptNode->fiscalCode));
@@ -36,6 +32,7 @@ void patientFreeNode(Patient ptNode) {
     }
 }
 
+/* Dealloca una intera lista di elementi Patient */
 void patientFreeList(Patient ptList) {
     if (ptList != NULL) {
         patientFreeList(ptList->next);
@@ -43,6 +40,17 @@ void patientFreeList(Patient ptList) {
     }
 }
 
+/* Alloca un elemento Patient e lo inserisce in coda a ptList */
+Patient patientTailInsert(Patient ptList, char fiscalCode[], char password[]) {
+    if (ptList == NULL) return patientNewNode(fiscalCode, password);
+    else {
+        ptList->next = patientTailInsert(ptList->next, fiscalCode, password);
+        return ptList;
+    }
+}
+
+
+/*
 void patientPrintNode (Patient ptNode) {
     if (ptNode != NULL) {
         printf("%s | %s\n", ptNode->fiscalCode, ptNode->password);
@@ -55,3 +63,4 @@ void patientPrintList(Patient ptList) {
         patientPrintList(ptList->next);
     }
 }
+*/

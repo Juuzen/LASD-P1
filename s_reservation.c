@@ -4,7 +4,10 @@
 #include "const.h"
 #include "s_reservation.h"
 #include "s_appointment.h"
+#include "helper.h"
 
+/* Restituisce, se possibile, un elemento Reservation con l'elemento currentDay settato al giorno corrente */
+/* Altrimenti, restituisce NULL */
 Reservation newReservation() {
     Reservation res = (Reservation) calloc(1, sizeof(struct reservation));
     res->morning = NULL;
@@ -14,6 +17,7 @@ Reservation newReservation() {
     return res;
 }
 
+/* Dealloca un elemento Reservation, pulendo anche il suo contenuto */
 void freeReservation(Reservation res) {
     if (res != NULL) {
         appointmentFreeList(res->morning);
@@ -27,6 +31,7 @@ void freeReservation(Reservation res) {
     }
 }
 
+/* Stampa su stdout un elemento Reservation */
 void printReservation(Reservation res) {
     if (res != NULL) {
         printf("DAY %d:\n", res->currentDay);
@@ -44,6 +49,8 @@ void printReservation(Reservation res) {
     }
 }
 
+/* Restituisce true se l'elemento Reservation non ha più posto nella fascia oraria passata in ingresso */
+/* Altrimenti restituisce false */
 bool isTimeSlotFull(Reservation res, timeSlot slot) {
     bool response = true;
     if (res != NULL) {
@@ -71,6 +78,8 @@ bool isTimeSlotFull(Reservation res, timeSlot slot) {
     return response;
 }
 
+/* Restituisce, se presente, l'elemento Appointment contenuto in res, che corrisponde al codice fiscale in ingresso */
+/* Altrimenti restituisce NULL */
 Appointment searchReservationByFiscalCode(Reservation res, char fiscalCode[]) {
     Appointment app = NULL;
     if (res != NULL) {
@@ -85,6 +94,7 @@ Appointment searchReservationByFiscalCode(Reservation res, char fiscalCode[]) {
     return app;
 }
 
+/* Aggiunge in coda un elemento Appointment a res, nella fascia oraria concordata */
 void addReservation(Reservation *res, Appointment app) {
     if ((*res) != NULL) {
         if (app != NULL) {
