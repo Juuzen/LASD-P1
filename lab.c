@@ -8,6 +8,8 @@
 #include "helper.h"
 
 /* FUNZIONI AUSILIARIE */
+
+/* Restituisce true se il login va a buon fine */
 bool labLoginCheck(Employee emList, int id, char password[]) {
     if (emList == NULL) return false;
     else {
@@ -16,15 +18,7 @@ bool labLoginCheck(Employee emList, int id, char password[]) {
     }
 }
 
-void labConfirmAppointments(Reservation *res, Appointment *apList) {
-    labPopulateReservations(res, (*apList));
-
-    appointmentFreeList((*apList));
-    (*apList) = NULL;
-
-    dropAppointmentDB();
-}
-
+/* Popola res sulla base degli appuntamenti contenuti in apList */
 void labPopulateReservations(Reservation *res, Appointment apList) {
     if ((*res) == NULL) {
         (*res) = newReservation();
@@ -39,8 +33,22 @@ void labPopulateReservations(Reservation *res, Appointment apList) {
     }
 }
 
+/* Processa i vari appuntamenti ricevuti e li inserisce in Reservation */
+void labConfirmAppointments(Reservation *res, Appointment *apList) {
+    labPopulateReservations(res, (*apList));
+
+    /* Una volta popolato res, quelli che non sono stati inclusi non lo saranno a prescindere per il giorno corrente
+       e possono essere cancellati */
+    appointmentFreeList((*apList));
+    (*apList) = NULL;
+
+    dropAppointmentDB();
+}
+
 
 /* FUNZIONI UI */
+
+/* Funzione di UI per il punto E della traccia */
 void labShowTestHistoryUi(int currentDay) {
     if (currentDay == 1) {
         clearScreen();
@@ -92,6 +100,7 @@ void labShowTestHistoryUi(int currentDay) {
     }
 }
 
+/* Funzione di UI per il punto F della traccia */
 void labManageAppointmentRequestsUi(Reservation *res) {
 
     Appointment apList = loadAppointmentList();
@@ -131,6 +140,7 @@ void labManageAppointmentRequestsUi(Reservation *res) {
     }
 }
 
+/* Funzione di UI per il pungo G della traccia */
 void labShowReservationUi(Reservation res) {
     clearScreen();
     printf("Here are the test reservations for the current day.\n");
@@ -138,6 +148,7 @@ void labShowReservationUi(Reservation res) {
     printMessage(PAUSE_DEFAULT);
 }
 
+/* Funzione di UI per aggiungere manualmente un appuntamento fissato */
 void labAddReservationUi(Reservation *res) {
     int userChoice = -1;
     do {
@@ -178,6 +189,7 @@ void labAddReservationUi(Reservation *res) {
     }
 }
 
+/* Funzione di UI per rimuovere manualmente un appuntamento fissato */
 void labRemoveReservationUi(Reservation *res) {
     int userChoice = -1;
     do {
@@ -242,6 +254,7 @@ void labRemoveReservationUi(Reservation *res) {
     }
 }
 
+/* Funzione di UI per il punto H della traccia */
 void labHandleReservationUi(Reservation *res) {
     int userChoice = -1;
     do {
@@ -270,6 +283,49 @@ void labHandleReservationUi(Reservation *res) {
     }
 }
 
+/* Funzione di UI per la pagina personale dell'impiegato */
+void labMainMenuUi(Reservation *res) {
+    int userChoice = -1;
+    bool running = true;
+
+    do {
+        do {
+            clearScreen();
+            printf("Welcome to the COVID-19 testing centre - Lab Area.\n");
+            printf("Please make a choice:\n\n");
+            printf("1. SHOW CARRIED OUT TESTS HISTORY\n");
+            printf("2. SHOW APPOINTMENT REQUESTS\n");
+            printf("3. SHOW TEST RESERVATIONS\n");
+            printf("4. ADD OR REMOVE A RESERVATION\n");
+            printf("5. GO BACK TO THE MAIN MENU\n");
+            printf("\nYour choice: ");
+
+            userChoice = getChoice(5);
+        } while (userChoice == -1);
+
+        switch(userChoice) {
+            case 1:
+                labShowTestHistoryUi((*res)->currentDay);
+                break;
+            case 2:
+                labManageAppointmentRequestsUi(res);
+                break;
+            case 3:
+                labShowReservationUi((*res));
+                break;
+            case 4:
+                labHandleReservationUi(res);
+                break;
+            case 5:
+                running = false;
+                break;
+            default:
+                break;
+        }
+    } while (running);
+}
+
+/* Funzione di UI per il login dell'impiegato */
 void labLoginUi(Reservation *res) {
     int userChoice = -1;
     bool running = true;
@@ -322,43 +378,3 @@ void labLoginUi(Reservation *res) {
     employeeFreeList(emList);
 }
 
-void labMainMenuUi(Reservation *res) {
-    int userChoice = -1;
-    bool running = true;
-
-    do {
-        do {
-            clearScreen();
-            printf("Welcome to the COVID-19 testing centre - Lab Area.\n");
-            printf("Please make a choice:\n\n");
-            printf("1. SHOW CARRIED OUT TESTS HISTORY\n");
-            printf("2. SHOW APPOINTMENT REQUESTS\n");
-            printf("3. SHOW TEST RESERVATIONS\n");
-            printf("4. ADD OR REMOVE A RESERVATION\n");
-            printf("5. GO BACK TO THE MAIN MENU\n");
-            printf("\nYour choice: ");
-
-            userChoice = getChoice(5);
-        } while (userChoice == -1);
-
-        switch(userChoice) {
-            case 1:
-                labShowTestHistoryUi((*res)->currentDay);
-                break;
-            case 2:
-                labManageAppointmentRequestsUi(res);
-                break;
-            case 3:
-                labShowReservationUi((*res));
-                break;
-            case 4:
-                labHandleReservationUi(res);
-                break;
-            case 5:
-                running = false;
-                break;
-            default:
-                break;
-        }
-    } while (running);
-}

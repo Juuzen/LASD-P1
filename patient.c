@@ -12,6 +12,7 @@
 
 /* FUNZIONI AUSILIARIE */
 
+/* Restituisce true se il login va a buon fine */
 bool patientloginCheck(Patient ptList, char fiscalCode[], char password[]) {
     if (ptList == NULL) {
         return false;
@@ -29,6 +30,7 @@ bool patientloginCheck(Patient ptList, char fiscalCode[], char password[]) {
     }
 }
 
+/* Restituisce true se il paziente è già presente nel database */
 bool isPatientRegistered(Patient ptList, char fiscalCode[]) {
     if (ptList == NULL) {
         return false;
@@ -39,6 +41,7 @@ bool isPatientRegistered(Patient ptList, char fiscalCode[]) {
     }
 }
 
+/* Restituisce true se il processo di registrazione è avvenuto con successo */
 bool patientRegister(Patient* ptList, char fiscalCode[], char password[]) {
     bool response = false;
     if (!isPatientRegistered(*ptList, fiscalCode)) {
@@ -50,6 +53,7 @@ bool patientRegister(Patient* ptList, char fiscalCode[], char password[]) {
     return response;
 }
 
+/* Restituisce true se il processo di richiesta di appuntamento è avvenuto con successo */
 bool patientRequestAppointment(Appointment* apList, char fiscalCode[], timeSlot slot, char symptoms[]) {
     bool response = false;
     Appointment newApp = appointmentNewNode(fiscalCode, slot, symptoms);
@@ -61,6 +65,7 @@ bool patientRequestAppointment(Appointment* apList, char fiscalCode[], timeSlot 
     return response;
 }
 
+/* Cancella la richiesta di appuntamento del paziente con determinato codice fiscale */
 void patientDeleteAppointment(Appointment* apList, char fiscalCode[]) {
     *apList = appointmentDeleteByFiscalCode(*apList, fiscalCode);
     saveAppointmentList(*apList);
@@ -68,33 +73,14 @@ void patientDeleteAppointment(Appointment* apList, char fiscalCode[]) {
 
 
 /* FUNZIONI UI */
-void patientShowTestResultsUi(char fiscalCode[], int currentDay) {
-    if (currentDay == 1) {
 
-    }
-    else {
-        TestResult rsList = loadTestResultList();
-        clearScreen();
-        if (rsList == NULL) {
-            printf("You took 0 tests up to this moment.\n");
 
-        }
-        else {
-            printf("Here are your test results:\n");
-            /* Di default, vengono stampati i test in senso anti-cronologico */
-            //testResultPrintByFiscalCode(rsList, fiscalCode, false);
-            TestResult filteredList = testResultFilterByFiscalCode(rsList, fiscalCode);
-            testResultPrintList(filteredList, false);
-            testResultFreeList(filteredList);
-        }
-        testResultFreeList(rsList);
-    }
-    printMessage(PAUSE_DEFAULT);
-}
 
+/* Funzione di UI per il punto A della traccia */
 void patientAppointmentRequestUi(Appointment apList, char fiscalCode[]) {
     int userChoice = -1;
     Appointment found = appointmentFindByFiscalCode(apList, fiscalCode);
+    clearScreen();
     if (found != NULL) {
         printf("You already have an appointment with the following informations:\n");
         appointmentPrintNode(found);
@@ -125,6 +111,7 @@ void patientAppointmentRequestUi(Appointment apList, char fiscalCode[]) {
     printMessage(PAUSE_DEFAULT);
 }
 
+/* Funzione di UI per il punto B della traccia */
 void patientShowReservationUi(Reservation *res, char fiscalCode[]) {
     clearScreen();
     Appointment app = searchReservationByFiscalCode((*res), fiscalCode);
@@ -137,6 +124,7 @@ void patientShowReservationUi(Reservation *res, char fiscalCode[]) {
     printMessage(PAUSE_DEFAULT);
 }
 
+/* Funzione di UI per il punto C della traccia */
 void patientDeleteAppointmentUi(Appointment* apList, char fiscalCode[]) {
     clearScreen();
     Appointment app = appointmentFindByFiscalCode(*apList, fiscalCode);
@@ -173,6 +161,32 @@ void patientDeleteAppointmentUi(Appointment* apList, char fiscalCode[]) {
     }
 }
 
+/* Funzione di UI per il punto D della traccia */
+void patientShowTestResultsUi(char fiscalCode[], int currentDay) {
+    if (currentDay == 1) {
+
+    }
+    else {
+        TestResult rsList = loadTestResultList();
+        clearScreen();
+        if (rsList == NULL) {
+            printf("You took 0 tests up to this moment.\n");
+
+        }
+        else {
+            printf("Here are your test results:\n");
+            /* Di default, vengono stampati i test in senso anti-cronologico */
+            //testResultPrintByFiscalCode(rsList, fiscalCode, false);
+            TestResult filteredList = testResultFilterByFiscalCode(rsList, fiscalCode);
+            testResultPrintList(filteredList, false);
+            testResultFreeList(filteredList);
+        }
+        testResultFreeList(rsList);
+    }
+    printMessage(PAUSE_DEFAULT);
+}
+
+/* Funzione di UI per la pagina personale del paziente */
 void patientAccountUi(Reservation *res, char fiscalCode[], bool quarantined) {
     int userChoice = -1;
     bool running = true;
@@ -223,6 +237,7 @@ void patientAccountUi(Reservation *res, char fiscalCode[], bool quarantined) {
     appointmentFreeList(appList);
 }
 
+/* Funzione di UI per la pagina di login del paziente */
 void patientLoginUi(Reservation *res, Patient ptList, Quarantine qtList) {
 
     int userChoice = -1;
@@ -269,6 +284,7 @@ void patientLoginUi(Reservation *res, Patient ptList, Quarantine qtList) {
     } while (running);
 }
 
+/* Funzione di UI per la pagina di registrazione del paziente */
 void patientRegisterUi(Patient *ptList) {
     int userChoice = -1;
     bool running = true;
@@ -311,6 +327,7 @@ void patientRegisterUi(Patient *ptList) {
     } while (running);
 }
 
+/* Funzione di UI per la pagina principale del paziente */
 void patientMainMenuUi(Reservation *res, Quarantine qtList) {
     int userChoice = -1;
     bool running = true;
