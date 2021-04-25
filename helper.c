@@ -14,6 +14,14 @@
 
 #include "const.h"
 #include "helper.h"
+#include "s_employee.h"
+
+/* Restituisce una lista pregenerata di elementi Employee */
+Employee loadSampleEmployeeList() {
+    Employee emList = employeeNewList();
+    emList = employeeTailInsert(emList, 1000, "proj-lasd1");
+    return emList;
+}
 
 /* Ripulisce lo schermo, permettendo una più facile visualizzazione delle informazioni */
 void clearScreen() {
@@ -108,35 +116,35 @@ int getEmployeeId(char message[]) {
 /* Ritorna il giorno corrente, ricavando quello precedente leggendo da file */
 /* Se il file non esiste ancora, restituisce il giorno 1 */
 int getCurrentDay() {
+    int currentDay = 1;
     FILE * fp = fopen(TESTRESULT_DB, "r");
 
     if (fp != NULL) {
-        /* Ci si sposta alla fine del file */
-        fseek(fp, -1, SEEK_END);
-        char c;
-        do {
-            /* Ci si sposta -2 per poter leggere il carattere immediatamente precedente */
-            /* -2 + 1 = -1 */
-            fseek(fp, -2, SEEK_CUR);
-            c = fgetc(fp);
+        if (ftell(fp) != 0) {
+            /* Ci si sposta alla fine del file */
+            fseek(fp, 0, SEEK_END);
+            char c;
+            do {
+                /* Ci si sposta -2 per poter leggere il carattere immediatamente precedente */
+                /* 1 - 2 = -1 */
+                c = fgetc(fp);
+                fseek(fp, -2, SEEK_CUR);
 
-        } while (c != '\t');
+            } while ((c != '\t') || ftell(fp) > 0);
 
-        /* A questo punto può essere letto il valore del giorno*/
-        int lastDay;
-        if (fscanf(fp, "%d", &lastDay) > 0) {
-            lastDay += 1;
+            /* A questo punto può essere letto il valore del giorno*/
+            if (fscanf(fp, "%d", &currentDay) > 0) {
+                currentDay += 1;
+            }
+            else {
+                printf("GETCURRENTDAY: ");
+                printMessage(ERR_READING);
+            }
         }
-        else {
-            printf("GETCURRENTDAY: ");
-            printMessage(ERR_READING);
-        }
+
         fclose(fp);
-        return lastDay;
     }
-    else {
-        return 1;
-    }
+    return currentDay;
 }
 
 /* Ritorna una stringa sulla base della fascia oraria ricevuta in ingresso */

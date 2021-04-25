@@ -21,7 +21,7 @@ void patientShowReservationUi(Reservation *res, char fiscalCode[]);
 void patientDeleteAppointmentUi(Appointment* appList, char fiscalCode[]);
 void patientAccountUi(Reservation *res, char fiscalCode[], bool quarantined);
 void patientLoginUi(Reservation *res, Patient ptList, Quarantine qtList);
-void patientRegisterUi(Patient ptList);
+void patientRegisterUi(Patient *ptList);
 void patientMainMenuUi(Reservation *res, Quarantine qtList);
 
 #endif // patient_h

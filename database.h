@@ -17,7 +17,8 @@ Patient loadPatientList();
 
 /* DB LAVORATORI LABORATORIO */
 Employee loadEmployeeList();
-
+void saveEmployeeListBody(Employee emList, FILE* file);
+void saveEmployeeList(Employee emList);
 
 /* DB APPUNTAMENTI */
 void saveAppointment(Appointment apNode, FILE * file);

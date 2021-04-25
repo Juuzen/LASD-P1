@@ -180,7 +180,7 @@ void patientAccountUi(Reservation *res, char fiscalCode[], bool quarantined) {
             }
             printf("Please make a choice:\n\n");
             printf("1. REQUEST A COVID TEST APPOINTMENT\n");
-            printf("2. CHECK YOUR APPOINTMENTS\n");
+            printf("2. CHECK YOUR RESERVATION\n");
             printf("3. CANCEL AN APPOINTMENT\n");
             printf("4. SHOW THE RESULTS FOR PREVIOUS TESTS\n");
             printf("5. GO BACK\n");
@@ -221,15 +221,14 @@ void patientLoginUi(Reservation *res, Patient ptList, Quarantine qtList) {
     int userChoice = -1;
     bool running = true;
     char fiscalCode[FISCALCODE_SIZE];
-    char password[PASSWORD_SIZE];
+    char *password;
     do {
         clearScreen();
         printf("Please provide your fiscal code: ");
         scanf("%16s", fiscalCode);
         fflush(stdin);
-        printf("Please provide your password: ");
-        //TODO: masked scanf
-        scanf("%20s", password);
+        printf("Please provide your password (the echoing is turned off): ");
+        password = maskedInput();
         fflush(stdin);
 
         if (patientloginCheck(ptList, fiscalCode, password)) {
@@ -263,7 +262,7 @@ void patientLoginUi(Reservation *res, Patient ptList, Quarantine qtList) {
     } while (running);
 }
 
-void patientRegisterUi(Patient ptList) {
+void patientRegisterUi(Patient *ptList) {
     int userChoice = -1;
     bool running = true;
     char fiscalCode[FISCALCODE_SIZE];
@@ -277,7 +276,7 @@ void patientRegisterUi(Patient ptList) {
         password = maskedInput();
         fflush(stdin);
 
-        if (patientRegister(&ptList, fiscalCode, password)) {
+        if (patientRegister(ptList, fiscalCode, password)) {
             printf("You are now registered to the platform!\n");
             printMessage(PAUSE_DEFAULT);
             running = false;
@@ -330,7 +329,7 @@ void patientMainMenuUi(Reservation *res, Quarantine qtList) {
                 patientLoginUi(res, ptList, qtList);
                 break;
             case 2:
-                patientRegisterUi(ptList);
+                patientRegisterUi(&ptList);
                 break;
             case 3:
                 printf("I'm now halting.\n");

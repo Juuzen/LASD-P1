@@ -2,7 +2,9 @@
 #define helper_h
 #include <stdbool.h>
 #include "const.h"
+#include "s_employee.h"
 
+Employee loadSampleEmployeeList();
 void clearScreen();
 char* maskedInput();
 void printMessage(char message[]);

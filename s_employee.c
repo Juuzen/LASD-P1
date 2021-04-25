@@ -49,3 +49,15 @@ Employee employeeTailInsert(Employee emList, int id, char password[]) {
     }
 }
 
+void employeePrintNode(Employee emNode) {
+    if (emNode != NULL) {
+        printf("%d - %s\n", emNode->id, emNode->password);
+    }
+}
+
+void employeePrintList(Employee emList) {
+    if (emList != NULL) {
+        employeePrintNode(emList);
+        employeePrintList(emList->next);
+    }
+}

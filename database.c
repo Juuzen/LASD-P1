@@ -4,10 +4,11 @@
 #include <string.h>
 #include "database.h"
 #include "const.h"
+#include "helper.h"
 
 #include "s_patient.h"
 #include "s_quarantine.h"
-#include "helper.h"
+
 
 
 /* GESTIONE DB PAZIENTI */
@@ -56,20 +57,57 @@ Employee loadEmployeeList() {
     Employee emList = employeeNewList();
     FILE * employeeDB = fopen(EMPLOYEE_DB, "r");
     if (employeeDB != NULL) {
-        int id;
-        char password[PASSWORD_SIZE];
-
-        while (!feof(employeeDB)) {
-            if(fscanf(employeeDB, "%d\t%s\n", &id, password) != EOF) {
-                emList = employeeTailInsert(emList, id, password);
-            }
+        if (ftell(employeeDB) == 0) {
+            fclose(employeeDB);
+            emList = loadSampleEmployeeList();
+            saveEmployeeList(emList);
         }
-        fclose(employeeDB);
+        else {
+            int id;
+            char password[PASSWORD_SIZE];
+
+            while (!feof(employeeDB)) {
+                if(fscanf(employeeDB, "%d\t%s\n", &id, password) != EOF) {
+                    emList = employeeTailInsert(emList, id, password);
+                }
+            }
+            fclose(employeeDB);
+        }
+    }
+    else {
+        emList = loadSampleEmployeeList();
+        saveEmployeeList(emList);
     }
 
     return emList;
 }
 
+void saveEmployeeListBody(Employee emList, FILE * file) {
+    if (emList != NULL) {
+        if (file != NULL) {
+            if (fprintf(file, "%d\t%s\n", emList->id, emList->password) > 0) {
+                saveEmployeeListBody(emList->next, file);
+            }
+            else {
+                printf("SAVEEMPLOYEELIST: ");
+                printMessage(ERR_WRITING);
+            }
+        }
+    }
+}
+
+void saveEmployeeList(Employee emList) {
+    if (emList != NULL) {
+        FILE * employeeDB = fopen(EMPLOYEE_DB, "w");
+        if (employeeDB != NULL) {
+            fclose(employeeDB);
+        }
+        else {
+            printf("SAVEEMPLOYEELIST: ");
+            printMessage(ERR_WRITING);
+        }
+    }
+}
 
 /* GESTIONE DB APPUNTAMENTI */
 
@@ -257,18 +295,18 @@ void saveTestResultListBody(Appointment apList, FILE * testResultDB, int current
 /* Salva su file (in mod. append) un elemento Reservation convertendo ogni Appointment in un TestResult */
 void saveTestResultList(Reservation res, Quarantine *qtList) {
     if (res != NULL) {
-    FILE * testResultDB = fopen(TESTRESULT_DB, "a");
-    if (testResultDB != NULL) {
-        saveTestResultListBody(res->morning, testResultDB, res->currentDay, qtList);
-        saveTestResultListBody(res->afternoon, testResultDB, res->currentDay, qtList);
-        saveTestResultListBody(res->evening, testResultDB, res->currentDay, qtList);
-        fclose(testResultDB);
+        FILE * testResultDB = fopen(TESTRESULT_DB, "a");
+        if (testResultDB != NULL) {
+            saveTestResultListBody(res->morning, testResultDB, res->currentDay, qtList);
+            saveTestResultListBody(res->afternoon, testResultDB, res->currentDay, qtList);
+            saveTestResultListBody(res->evening, testResultDB, res->currentDay, qtList);
+            fclose(testResultDB);
+        }
+        else {
+            printf("SAVETESTRESULTLIST: ");
+            printMessage(ERR_FILEACCESS);
+        }
     }
-    else {
-        printf("SAVETESTRESULTLIST: ");
-        printMessage(ERR_FILEACCESS);
-    }
-}
 }
 
 

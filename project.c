@@ -9,6 +9,8 @@
 #include "helper.h"
 #include "database.h"
 
+#include "s_employee.h"
+
 void projectRun() {
     //Bootstrap
     srand(time(NULL));
@@ -28,7 +30,6 @@ void projectRun() {
 void mainUi(Reservation *res, Quarantine qtList) {
     int userChoice = -1;
     bool running = true;
-
     do {
         do {
             clearScreen();

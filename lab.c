@@ -252,14 +252,16 @@ void labLoginUi(Reservation *res) {
     int userChoice = -1;
     bool running = true;
     int id;
-    char password[PASSWORD_SIZE];
+    char *password;
     Employee emList = loadEmployeeList();
+    employeePrintList(emList);
+    printMessage(PAUSE_DEFAULT);
     do {
         clearScreen();
         id = getEmployeeId("Please provide your worker ID: ");
         fflush(stdin);
-        printf("Please provide your password: ");
-        scanf("%20s", password); //TODO: masked scanf
+        printf("Please provide your password (the echoing is turned off): ");
+        password = maskedInput();
         fflush(stdin);
         if ( labLoginCheck(emList, id, password) ) {
             //login authorized
@@ -293,6 +295,7 @@ void labLoginUi(Reservation *res) {
     } while (running);
     employeeFreeList(emList);
 }
+
 void labMainMenuUi(Reservation *res) {
     int userChoice = -1;
     bool running = true;
