@@ -12,7 +12,7 @@ typedef patient* Patient;
 
 
 /* FUNZIONI SULLA STRUTTURA DATI */
-Patient patientNewList(); //TODO: deprecare
+Patient patientNewList();
 Patient patientNewNode(char fiscalCode[], char password[]);
 Patient patientTailInsert(Patient ptList, char fiscalCode[], char password[]);
 void patientFreeNode(Patient ptNode);

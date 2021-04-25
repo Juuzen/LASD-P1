@@ -97,22 +97,21 @@ void saveEmployeeListBody(Employee emList, FILE * file) {
 }
 
 void saveEmployeeList(Employee emList) {
-    if (emList != NULL) {
-        FILE * employeeDB = fopen(EMPLOYEE_DB, "w");
-        if (employeeDB != NULL) {
-            saveEmployeeListBody(emList, employeeDB);
-            fclose(employeeDB);
-        }
-        else {
-            printf("SAVEEMPLOYEELIST: ");
-            printMessage(ERR_WRITING);
-        }
+    FILE * employeeDB = fopen(EMPLOYEE_DB, "w");
+    if (employeeDB != NULL) {
+        saveEmployeeListBody(emList, employeeDB);
+        fclose(employeeDB);
+    }
+    else {
+        printf("SAVEEMPLOYEELIST: ");
+        printMessage(ERR_WRITING);
     }
 }
 
+
 /* GESTIONE DB APPUNTAMENTI */
 
-/* Salva su file (in modalit� append) i campi di un elemento Appointment */
+/* Salva su file (in mod. append) i campi di un elemento Appointment */
 void saveAppointment(Appointment apNode, FILE * file) {
     if (apNode != NULL) {
         if (file == NULL) {
@@ -121,18 +120,18 @@ void saveAppointment(Appointment apNode, FILE * file) {
 
         if (file != NULL) {
             if (fprintf(file, "%s\t%d\t", apNode->fiscalCode, apNode->slot) < 0) {
-                printf("SAVEAPPOINTMENT: ");
+                printf("SAVEAPPOINTMENT (1): ");
                 printMessage(ERR_WRITING);
             }
 
             if (strcmp(apNode->symptoms, "") == 0) {
                 if (fprintf(file, "(null)\n") < 0) {
-                    printf("SAVEAPPOINTMENT: ");
+                    printf("SAVEAPPOINTMENT (2): ");
                     printMessage(ERR_WRITING);
                 }
             } else {
                 if (fprintf(file, "%s\n", apNode->symptoms) < 0) {
-                    printf("SAVEAPPOINTMENT: ");
+                    printf("SAVEAPPOINTMENT (3): ");
                     printMessage(ERR_WRITING);
                 }
             }
@@ -198,19 +197,15 @@ void saveAppointmentListBody(Appointment apList, FILE * appointmentDB) {
 
 /* Salva su file una lista di elementi Appointment */
 void saveAppointmentList(Appointment apList) {
-    if (apList != NULL) {
-        FILE * appointmentDB = fopen(APPOINTMENT_DB, "w");
-        if (appointmentDB != NULL) {
-            saveAppointmentListBody(apList, appointmentDB);
-            fclose(appointmentDB);
-        }
-        else {
-            printf("SAVEAPPOINTMENTLIST: ");
-            printMessage(ERR_FILEACCESS);
-        }
+    FILE * appointmentDB = fopen(APPOINTMENT_DB, "w");
+    if (appointmentDB != NULL) {
+        saveAppointmentListBody(apList, appointmentDB);
+        fclose(appointmentDB);
     }
-
-
+    else {
+        printf("SAVEAPPOINTMENTLIST: ");
+        printMessage(ERR_FILEACCESS);
+    }
 }
 
 /* Elimina il contenuto del file appointment_db.txt */
@@ -295,20 +290,19 @@ void saveTestResultListBody(Appointment apList, FILE * testResultDB, int current
 
 /* Salva su file (in mod. append) un elemento Reservation convertendo ogni Appointment in un TestResult */
 void saveTestResultList(Reservation res, Quarantine *qtList) {
-    if (res != NULL) {
-        FILE * testResultDB = fopen(TESTRESULT_DB, "a");
-        if (testResultDB != NULL) {
-            saveTestResultListBody(res->morning, testResultDB, res->currentDay, qtList);
-            saveTestResultListBody(res->afternoon, testResultDB, res->currentDay, qtList);
-            saveTestResultListBody(res->evening, testResultDB, res->currentDay, qtList);
-            fclose(testResultDB);
-        }
-        else {
-            printf("SAVETESTRESULTLIST: ");
-            printMessage(ERR_FILEACCESS);
-        }
+    FILE * testResultDB = fopen(TESTRESULT_DB, "a");
+    if (testResultDB != NULL) {
+        saveTestResultListBody(res->morning, testResultDB, res->currentDay, qtList);
+        saveTestResultListBody(res->afternoon, testResultDB, res->currentDay, qtList);
+        saveTestResultListBody(res->evening, testResultDB, res->currentDay, qtList);
+        fclose(testResultDB);
+    }
+    else {
+        printf("SAVETESTRESULTLIST: ");
+        printMessage(ERR_FILEACCESS);
     }
 }
+
 
 
 /* DB QUARANTENA */
@@ -351,14 +345,13 @@ void saveQuarantineListBody(Quarantine qtList, FILE * file) {
 
 /* Salva su file una lista di elementi Quarantine */
 void saveQuarantineList(Quarantine qtList) {
-    if (qtList != NULL) {
-        FILE * quarantineDB = fopen(QUARANTINE_DB, "w");
-        if (quarantineDB != NULL) {
-            saveQuarantineListBody(qtList, quarantineDB);
-        }
-        else {
-            printf("SAVEQUARANTINELIST: ");
-            printMessage(ERR_FILEACCESS);
-        }
+    FILE * quarantineDB = fopen(QUARANTINE_DB, "w");
+    if (quarantineDB != NULL) {
+        saveQuarantineListBody(qtList, quarantineDB);
+    }
+    else {
+        printf("SAVEQUARANTINELIST: ");
+        printMessage(ERR_FILEACCESS);
     }
 }
+

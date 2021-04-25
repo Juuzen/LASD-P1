@@ -15,7 +15,7 @@ void patientDeleteAppointment(Appointment* appList, char fiscalCode[]);
 
 /* FUNZIONI UI */
 void patientShowTestResultsUi(char fiscalCode[], int currentDay);
-void patientAppointmentRequestUi(Appointment appList, char fiscalCode[]);
+void patientAppointmentRequestUi(Appointment *apList, char fiscalCode[]);
 void patientShowReservationUi(Reservation *res, char fiscalCode[]);
 void patientDeleteAppointmentUi(Appointment* appList, char fiscalCode[]);
 void patientAccountUi(Reservation *res, char fiscalCode[], bool quarantined);

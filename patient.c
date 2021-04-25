@@ -74,9 +74,9 @@ void patientDeleteAppointment(Appointment* apList, char fiscalCode[]) {
 /* FUNZIONI UI */
 
 /* Funzione di UI per il punto A della traccia */
-void patientAppointmentRequestUi(Appointment apList, char fiscalCode[]) {
+void patientAppointmentRequestUi(Appointment *apList, char fiscalCode[]) {
     int userChoice = -1;
-    Appointment found = appointmentFindByFiscalCode(apList, fiscalCode);
+    Appointment found = appointmentFindByFiscalCode(*apList, fiscalCode);
     clearScreen();
     if (found != NULL) {
         printf("You already have an appointment with the following informations:\n");
@@ -102,7 +102,7 @@ void patientAppointmentRequestUi(Appointment apList, char fiscalCode[]) {
             printf("Your symptoms: ");
             char * symptoms = getSymptoms(stdin);
 
-            bool response = patientRequestAppointment(&apList, fiscalCode, slot, symptoms);
+            bool response = patientRequestAppointment(apList, fiscalCode, slot, symptoms);
             if (response) printf("Appointment requested!\n");
             else printf("There was a problem in requesting the appointment. Please try again later.\n");
         }
@@ -191,7 +191,7 @@ void patientShowTestResultsUi(char fiscalCode[], int currentDay) {
 void patientAccountUi(Reservation *res, char fiscalCode[], bool quarantined) {
     int userChoice = -1;
     bool running = true;
-    Appointment appList = loadAppointmentList();
+    Appointment apList = loadAppointmentList();
 
     do {
         do {
@@ -213,13 +213,13 @@ void patientAccountUi(Reservation *res, char fiscalCode[], bool quarantined) {
 
         switch(userChoice) {
             case 1:
-                patientAppointmentRequestUi(appList, fiscalCode);
+                patientAppointmentRequestUi(&apList, fiscalCode);
                 break;
             case 2:
                 patientShowReservationUi(res, fiscalCode);
                 break;
             case 3:
-                patientDeleteAppointmentUi(&appList, fiscalCode);
+                patientDeleteAppointmentUi(&apList, fiscalCode);
                 break;
             case 4:
                 patientShowTestResultsUi(fiscalCode, (*res)->currentDay);
@@ -232,7 +232,7 @@ void patientAccountUi(Reservation *res, char fiscalCode[], bool quarantined) {
         }
     } while (running);
 
-    appointmentFreeList(appList);
+    appointmentFreeList(apList);
 }
 
 /* Funzione di UI per la pagina di login del paziente */
@@ -336,6 +336,7 @@ void patientMainMenuUi(Reservation *res, Quarantine qtList) {
         switch(userChoice) {
             case 1:
                 patientLoginUi(res, ptList, qtList);
+                running = false;
                 break;
             case 2:
                 patientRegisterUi(&ptList);

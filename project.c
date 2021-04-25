@@ -33,7 +33,7 @@ void mainUi(Reservation *res, Quarantine qtList) {
     do {
         do {
             clearScreen();
-            printf ("Welcome to the COVID-19 testing centre. Please make a choice:\n\n");
+            printf ("Welcome to the COVID-19 testing centre, day %d. Please make a choice:\n\n", (*res)->currentDay);
             printf ("1. ENTER PATIENT AREA;\n");
             printf ("2. ENTER LAB AREA;\n");
             printf ("3. EXIT THE PROGRAM\n");
@@ -51,12 +51,12 @@ void mainUi(Reservation *res, Quarantine qtList) {
                 labLoginUi(res);
                 break;
             case 3:
-                printf("I'm now halting.\n");
+                printf("The program will now close, and reservation will be processed.\n");
+                printf("You can find the result on program launch.\n");
+                printf("Have a nice day!\n");
                 running = false;
                 break;
             default:
-                printf("Something went wrong...\n");
-                // FIXME: Handle shutdown
                 break;
         }
     } while (running);

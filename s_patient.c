@@ -49,18 +49,17 @@ Patient patientTailInsert(Patient ptList, char fiscalCode[], char password[]) {
     }
 }
 
-
-/*
+/* Stampa su stdout un elemento Patient*/
 void patientPrintNode (Patient ptNode) {
     if (ptNode != NULL) {
         printf("%s | %s\n", ptNode->fiscalCode, ptNode->password);
     }
 }
 
+/* Stampa su stdout una lista di elementi Patient */
 void patientPrintList(Patient ptList) {
     if (ptList != NULL) {
         patientPrintNode(ptList);
         patientPrintList(ptList->next);
     }
 }
-*/
