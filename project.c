@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <time.h>
 #include "project.h"
 
 #include "patient.h"
@@ -10,6 +11,7 @@
 
 void projectRun() {
     //Bootstrap
+    srand(time(NULL));
     Reservation res = newReservation();
 
     // Avvio programma

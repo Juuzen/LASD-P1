@@ -3,7 +3,6 @@
 #include <time.h>
 #include <stdbool.h>
 
-
 #ifdef _WIN32
 #include <conio.h>
 #endif
@@ -16,51 +15,61 @@
 #include "const.h"
 #include "helper.h"
 
+/* Ripulisce lo schermo, permettendo una più facile visualizzazione delle informazioni */
 void clearScreen() {
     #ifdef _WIN32
+    /* Istruzioni per sistema operativo Windows */
     system("cls");
     #endif
 
     #ifdef __linux__
+    /* Istruzioni per sistema operativo Linux */
     system("clear");
     #endif
 }
 
+/* Prende in input una stringa, mascherando l'output corrispettivo di ciò che è stato immesso */
 char* maskedInput() {
     char* password = (char *) calloc(1, PASSWORD_SIZE * sizeof(char));
     #ifdef _WIN32
+    /* Istruzioni per sistema operativo Windows */
     char c;
 
     int i;
     for (i = 0; i < PASSWORD_SIZE - 1; i++) {
+        /* Prende un carattere da stdout senza buffer */
         c = getch();
-        if (c == 13) {
-            break;
-        }
-        else {
-            password[i] = c;
-            printf("%c", '*');
-        }
+        /* 13 = carriage return */
+        if (c == 13) break;
+        else password[i] = c;
     }
     password[i] = '\0';
-    #endif // OS_WINDOWS
+    #endif
 
     #ifdef __linux__
+    /* Istruzioni per sistema operativo Linux */
     struct termios tp, save;
+    /* Se possibile, salva i dati relativi al terminale in tp*/
     if (tcgetattr(STDIN_FILENO, &tp) != -1) {
+        /* Salva le precedenti impostazioni */
         save = tp;
+        /* Imposta il flag ECHO a 0 (nessun input verrà propagato su stdout) */
         tp.c_lflag &= ~ECHO;
+        /* Se possibile, salva le nuove impostazioni */
         if (tcsetattr(STDIN_FILENO, TCSAFLUSH, &tp) != -1) {
+            /* Effettua la lettura da input */
             scanf("%20s", password);
-
+            /* Ripristina le precedenti impostazioni */
             tcsetattr(STDIN_FILENO, TCSANOW, &save);
         }
     }
-    #endif // OS_LINUX
+    #endif
 
     return password;
 }
 
+/* Stampa su stdout un messaggio passato in input, mettendo in pausa il proseguimento dell'applicativo */
+/* Per procedere basta premere il tasto INVIO */
 void printMessage(char message[]) {
     printf("%s\n", message);
     fflush(stdin);
@@ -68,11 +77,13 @@ void printMessage(char message[]) {
     fflush(stdin);
 }
 
+/* Funzione fittizia per generare gli esiti dei test COVID-19 */
 bool generateTestResult() {
-    srand(time(NULL));
     return rand() % 2;
 }
 
+/* Riceve da input un numero intero, assicurandosene la correttezza (eg: no caratteri) */
+/* In caso negativo, stampa un messaggio su stdout e ripete */
 int getEmployeeId(char message[]) {
     bool correct = false;
     int choice;
@@ -93,24 +104,31 @@ int getEmployeeId(char message[]) {
     return choice;
 }
 
+/* Ritorna il giorno corrente, ricavando quello precedente leggendo da file */
+/* Se il file non esiste ancora, restituisce il giorno 1 */
 int getCurrentDay() {
     FILE * fp = fopen(TESTRESULT_DB, "r");
 
     if (fp != NULL) {
+        /* Ci si sposta alla fine del file */
         fseek(fp, -1, SEEK_END);
         char c;
         do {
+            /* Ci si sposta -2 per poter leggere il carattere immediatamente precedente */
+            /* -2 + 1 = -1 */
             fseek(fp, -2, SEEK_CUR);
             c = fgetc(fp);
 
         } while (c != '\t');
 
+        /* A questo punto può essere letto il valore del giorno*/
         int lastDay;
         if (fscanf(fp, "%d", &lastDay) > 0) {
             lastDay += 1;
         }
         else {
-            //TODO: Gestire errore in lettura del giorno
+            printf("GETCURRENTDAY: ");
+            printMessage(ERR_READING);
         }
         fclose(fp);
         return lastDay;
@@ -120,6 +138,7 @@ int getCurrentDay() {
     }
 }
 
+/* Ritorna una stringa sulla base della fascia oraria ricevuta in ingresso */
 const char* getTimeSlot(timeSlot slot) {
     switch (slot) {
         case MORNING:
@@ -133,6 +152,8 @@ const char* getTimeSlot(timeSlot slot) {
     }
 }
 
+/* Ritorna una stringa letta da input, comprensiva di whitespace e altri caratteri speciali */
+/* L'eccezione è '\n' */
 char * getSymptoms(FILE * file) {
     if (file != NULL) {
         int i = 0;
@@ -157,6 +178,7 @@ void wrongChoice() {
     printMessage("Press any key to continue...");
 }
 
+/* Ritorna un intero letto da input, corretto sia nel tipo che nel range (0 - maxOptions) */
 int getChoice(int maxOptions) {
     int tmp, choice = -1;
     fflush(stdin);
