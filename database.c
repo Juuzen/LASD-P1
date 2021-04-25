@@ -82,6 +82,7 @@ Employee loadEmployeeList() {
     return emList;
 }
 
+/* Funzione ricorsiva di appoggio utilizzata in saveEmployeeList */
 void saveEmployeeListBody(Employee emList, FILE * file) {
     if (emList != NULL) {
         if (file != NULL) {
@@ -96,6 +97,7 @@ void saveEmployeeListBody(Employee emList, FILE * file) {
     }
 }
 
+/* Salva su file una lista di elementi Employee */
 void saveEmployeeList(Employee emList) {
     FILE * employeeDB = fopen(EMPLOYEE_DB, "w");
     if (employeeDB != NULL) {
@@ -181,7 +183,7 @@ Appointment loadAppointmentList() {
     return apList;
 }
 
-/* Funzione ricorsiva di appoggio utilizzata in saveAppointmentList*/
+/* Funzione ricorsiva di appoggio utilizzata in saveAppointmentList */
 void saveAppointmentListBody(Appointment apList, FILE * appointmentDB) {
     if (appointmentDB != NULL) {
         if (apList != NULL) {
