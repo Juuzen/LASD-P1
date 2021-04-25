@@ -43,6 +43,7 @@ void labPopulateReservations(Reservation *res, Appointment apList) {
 /* FUNZIONI UI */
 void labShowTestHistoryUi(int currentDay) {
     if (currentDay == 1) {
+        clearScreen();
         printf("There are no test result up to now. You can choose this option from day 2 onward.\n");
         printMessage(PAUSE_DEFAULT);
     }
@@ -59,7 +60,7 @@ void labShowTestHistoryUi(int currentDay) {
 
             userChoice = getChoice(3);
         } while (userChoice == -1);
-
+        printf ("\n");
         switch (userChoice) {
             case 1:
                 // By default, chronological order is used
@@ -154,7 +155,7 @@ void labAddReservationUi(Reservation *res) {
 
             printf("Please provide the fiscal code of the patient: ");
             scanf("%17s", fiscalCode);
-
+            fflush(stdin);
             printf("If you have any symptoms, please provide a concise explanation (max %d characters);\n", SYMPTOMS_SIZE);
             printf("Otherwise just press ENTER KEY to go further.\n");
             printf("Your symptoms: ");
@@ -192,40 +193,48 @@ void labRemoveReservationUi(Reservation *res) {
         clearScreen();
         switch (slot) {
             case MORNING:
-                printf("Reservation for the morning slot:\n");
-                appointmentPrintList((*res)->morning);
+                if ((*res)->morning == NULL) printf("There are no reservation for this time slot.\n");
+
+                else {
+                    printf("Reservation for the morning slot:\n");
+                    appointmentPrintList((*res)->morning);
+                    printf("\nPlease provide the fiscal code of the patient: ");
+                    scanf("%17s", fiscalCode);
+                    (*res)->morning = appointmentDeleteByFiscalCode((*res)->morning, fiscalCode);
+                    printf("Reservation removed. You can check reservation by choosing the option 3 in the main menu.\n");
+                }
                 break;
+
             case AFTERNOON:
-                printf("Reservation for the afternoon slot:\n");
-                appointmentPrintList((*res)->afternoon);
+                if ((*res)->afternoon == NULL) printf("There are no reservation for this time slot.\n");
+
+                else {
+                    printf("Reservation for the afternoon slot:\n");
+                    appointmentPrintList((*res)->afternoon);
+                    printf("\nPlease provide the fiscal code of the patient: ");
+                    scanf("%17s", fiscalCode);
+                    (*res)->afternoon = appointmentDeleteByFiscalCode((*res)->afternoon, fiscalCode);
+                    printf("Reservation removed. You can check reservation by choosing the option 3 in the main menu.\n");
+                }
                 break;
+
             case EVENING:
-                printf("Reservation for the evening slot:\n");
-                appointmentPrintList((*res)->evening);
+                if ((*res)->evening == NULL) printf("There are no reservation for this time slot.\n");
+                else {
+                    printf("Reservation for the evening slot:\n");
+                    appointmentPrintList((*res)->evening);
+                    printf("\nPlease provide the fiscal code of the patient: ");
+                    scanf("%17s", fiscalCode);
+                    (*res)->evening = appointmentDeleteByFiscalCode((*res)->evening, fiscalCode);
+                    printf("Reservation removed. You can check reservation by choosing the option 3 in the main menu.\n");
+                }
                 break;
+
             default:
                 break;
         }
 
-        printf("\nPlease provide the fiscal code of the patient: ");
-        scanf("%17s", fiscalCode);
-
-        switch (slot) {
-            case MORNING:
-                (*res)->morning = appointmentDeleteByFiscalCode((*res)->morning, fiscalCode);
-                break;
-            case AFTERNOON:
-                (*res)->afternoon = appointmentDeleteByFiscalCode((*res)->afternoon, fiscalCode);
-                break;
-            case EVENING:
-                (*res)->evening = appointmentDeleteByFiscalCode((*res)->evening, fiscalCode);
-                break;
-            default:
-                break;
-        }
-
-        printf("Reservation removed. You can check reservation by choosing the option 3 in the main menu.\n");
-        printMessage("Press ENTER key to go back...");
+        printMessage(PAUSE_DEFAULT);
     }
 }
 
@@ -338,7 +347,7 @@ void labMainMenuUi(Reservation *res) {
                 labShowReservationUi((*res));
                 break;
             case 4:
-                //labManageReservationsUi();
+                labHandleReservationUi(res);
                 break;
             case 5:
                 running = false;
