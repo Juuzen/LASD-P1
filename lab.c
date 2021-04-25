@@ -42,43 +42,49 @@ void labPopulateReservations(Reservation *res, Appointment apList) {
 
 /* FUNZIONI UI */
 void labShowTestHistoryUi(int currentDay) {
-    int userChoice = -1;
-    TestResult rsList = loadTestResultList();
-    do {
-        clearScreen();
-        printf("Please make a choice:\n\n");
-        printf("1. SHOW ALL TEST RESULTS\n");
-        printf("2. SHOW TEST RESULTS WITH SPECIFIC DAY\n");
-        printf("3. GO BACK\n");
-        printf("\nYour choice: ");
-
-        userChoice = getChoice(3);
-    } while (userChoice == -1);
-
-    switch (userChoice) {
-        case 1:
-            // By default, chronological order is used
-            testResultPrintList(rsList, true);
-            printMessage("Press ENTER to go back...");
-            break;
-        case 2:
-            userChoice = -1;
-            do {
-                clearScreen();
-                printf("Choose a day (range: 1-%d): ", currentDay - 1);
-                userChoice = getChoice(currentDay - 1);
-            } while (userChoice == -1);
+    if (currentDay == 1) {
+        printf("There are no test result up to now. You can choose this option from day 2 onward.\n");
+        printMessage(PAUSE_DEFAULT);
+    }
+    else {
+        int userChoice = -1;
+        TestResult rsList = loadTestResultList();
+        do {
             clearScreen();
-            printf("DAY %d:\n", userChoice);
+            printf("Please make a choice:\n\n");
+            printf("1. SHOW ALL TEST RESULTS\n");
+            printf("2. SHOW TEST RESULTS WITH SPECIFIC DAY\n");
+            printf("3. GO BACK\n");
+            printf("\nYour choice: ");
 
-            // By default, chronological order is used
-            testResultPrintByDay (rsList, userChoice, true);
-            printMessage("Press ENTER to go back...");
-            break;
-        case 3:
-            break;
-        default:
-            break;
+            userChoice = getChoice(3);
+        } while (userChoice == -1);
+
+        switch (userChoice) {
+            case 1:
+                // By default, chronological order is used
+                testResultPrintList(rsList, true);
+                printMessage("Press ENTER to go back...");
+                break;
+            case 2:
+                userChoice = -1;
+                do {
+                    clearScreen();
+                    printf("Choose a day (range: 1-%d): ", currentDay - 1);
+                    userChoice = getChoice(currentDay - 1);
+                } while (userChoice == -1);
+                clearScreen();
+                printf("DAY %d:\n", userChoice);
+
+                // By default, chronological order is used
+                testResultPrintByDay (rsList, userChoice, true);
+                printMessage("Press ENTER to go back...");
+                break;
+            case 3:
+                break;
+            default:
+                break;
+        }
     }
 }
 
@@ -119,12 +125,14 @@ void labManageAppointmentRequestsUi(Reservation *res) {
         } while ((input != 'y') && (input != 'Y') && (input != 'n') && (input != 'N'));
     }
 }
+
 void labShowReservationUi(Reservation res) {
     clearScreen();
     printf("Here are the test reservations for the current day.\n");
     printReservation(res);
     printMessage("Press ENTER key to go back...");
 }
+
 void labAddReservationUi(Reservation *res) {
     int userChoice = -1;
     do {
@@ -164,6 +172,7 @@ void labAddReservationUi(Reservation *res) {
         }
     }
 }
+
 void labRemoveReservationUi(Reservation *res) {
     int userChoice = -1;
     do {
@@ -254,8 +263,11 @@ void labLoginUi(Reservation *res) {
     int id;
     char *password;
     Employee emList = loadEmployeeList();
-    employeePrintList(emList);
-    printMessage(PAUSE_DEFAULT);
+    clearScreen();
+    printf("For testing purposes, you can login with those credentials:\n");
+    printf("ID: 1000\n");
+    printf("Password: progetto\n");
+    printMessage("Press ENTER key to continue...");
     do {
         clearScreen();
         id = getEmployeeId("Please provide your worker ID: ");

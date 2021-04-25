@@ -19,7 +19,7 @@
 /* Restituisce una lista pregenerata di elementi Employee */
 Employee loadSampleEmployeeList() {
     Employee emList = employeeNewList();
-    emList = employeeTailInsert(emList, 1000, "proj-lasd1");
+    emList = employeeTailInsert(emList, 1000, "progetto");
     return emList;
 }
 
