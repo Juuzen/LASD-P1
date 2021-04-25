@@ -1,2 +1,6 @@
 
 *.txt
+
+bin/Debug/
+
+obj/Debug/
