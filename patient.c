@@ -267,15 +267,14 @@ void patientRegisterUi(Patient ptList) {
     int userChoice = -1;
     bool running = true;
     char fiscalCode[FISCALCODE_SIZE];
-    char password[PASSWORD_SIZE];
+    char * password;
     do {
         clearScreen();
         printf("Please provide your fiscal code: ");
         scanf("%16s", fiscalCode);
         fflush(stdin);
         printf("Please choose a password: ");
-        //masked scanf
-        scanf("%20s", password);
+        password = maskedInput();
         fflush(stdin);
 
         if (patientRegister(&ptList, fiscalCode, password)) {
