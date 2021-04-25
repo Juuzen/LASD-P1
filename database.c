@@ -100,6 +100,7 @@ void saveEmployeeList(Employee emList) {
     if (emList != NULL) {
         FILE * employeeDB = fopen(EMPLOYEE_DB, "w");
         if (employeeDB != NULL) {
+            saveEmployeeListBody(emList, employeeDB);
             fclose(employeeDB);
         }
         else {

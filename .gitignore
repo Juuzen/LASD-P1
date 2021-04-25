@@ -4,3 +4,5 @@
 bin/Debug/
 
 obj/Debug/
+
+*.depend
