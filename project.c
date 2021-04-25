@@ -13,16 +13,19 @@ void projectRun() {
     //Bootstrap
     srand(time(NULL));
     Reservation res = newReservation();
+    Quarantine qtList = loadQuarantineList();
 
     // Avvio programma
-    mainUi(&res);
+    mainUi(&res, qtList);
 
     // Operazioni conclusive prima della chiusura del programma
-    saveTestResultList(res);
+    saveTestResultList(res, &qtList);
+    saveQuarantineList(qtList);
     freeReservation(res);
+    quarantineFreeList(qtList);
 }
 
-void mainUi(Reservation *res) {
+void mainUi(Reservation *res, Quarantine qtList) {
     int userChoice = -1;
     bool running = true;
 
@@ -41,7 +44,7 @@ void mainUi(Reservation *res) {
 
         switch(userChoice) {
             case 1:
-                patientMainMenuUi(res);
+                patientMainMenuUi(res, qtList);
                 break;
             case 2:
                 labLoginUi(res);

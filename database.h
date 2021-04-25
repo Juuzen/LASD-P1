@@ -29,11 +29,12 @@ void dropAppointmentDB();
 
 /* DB RISULTATI TEST */
 TestResult loadTestResultList();
-void saveTestResultListBody(Appointment appList, FILE * testResultDB, int currentDay);
-void saveTestResultList(Reservation res);
+void saveTestResultListBody(Appointment appList, FILE * testResultDB, int currentDay, Quarantine *qtList);
+void saveTestResultList(Reservation res, Quarantine *qtList);
 
 
 /* DB QUARANTENA */
 Quarantine loadQuarantineList();
-
+void saveQuarantineListBody(Quarantine qtList, FILE * file);
+void saveQuarantineList(Quarantine qtList);
 #endif // database_h

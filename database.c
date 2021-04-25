@@ -31,7 +31,6 @@ void savePatient(char fiscalCode[], char password[]) {
 }
 
 /* Carica da file una lista di elementi Patient */
-
 Patient loadPatientList() {
     Patient ptList = patientNewList();
     FILE * patientDB = fopen(PATIENT_DB, "r");
@@ -42,15 +41,8 @@ Patient loadPatientList() {
             if (fscanf(patientDB, "%s %s", fiscalCode, password) != EOF) {
                 ptList = patientTailInsert(ptList, fiscalCode, password);
             }
-            else {
-                printf("LOADPATIENTLIST: ");
-                printMessage(ERR_READING);
-            }
         }
         fclose(patientDB);
-    } else {
-        printf("LOADPATIENTLIST: ");
-        printMessage(ERR_FILEACCESS);
     }
 
     return ptList;
@@ -71,17 +63,10 @@ Employee loadEmployeeList() {
             if(fscanf(employeeDB, "%d\t%s\n", &id, password) != EOF) {
                 emList = employeeTailInsert(emList, id, password);
             }
-            else {
-                printf("LOADEMPLOYEELIST: ");
-                printMessage(ERR_READING);
-            }
         }
         fclose(employeeDB);
     }
-    else {
-        printf("LOADEMPLOYEELIST: ");
-        printMessage(ERR_FILEACCESS);
-    }
+
     return emList;
 }
 
@@ -148,20 +133,13 @@ Appointment loadAppointmentList() {
 
                 else asymptomaticList = appointmentTailInsert(asymptomaticList, fiscalCode, slot, NULL);
             }
-            else {
-                printf("LOADAPPOINTMENTLIST: ");
-                printMessage(ERR_READING);
-            }
         }
 
         /* E poi concatenati e restituiti */
         apList = appointmentAppendToList(symptomaticList, asymptomaticList);
         fclose(appointmentDB);
     }
-    else {
-        printf("LOADAPPOINTMENTLIST: ");
-        printMessage(ERR_FILEACCESS);
-    }
+
     return apList;
 }
 
@@ -231,16 +209,12 @@ TestResult loadTestResultList() {
         }
         fclose(testResultDB);
     }
-    else {
-        printf("LOADTESTRESULTLIST: ");
-        printMessage(ERR_FILEACCESS);
-    }
 
     return rsList;
 }
 
 /* Funzione ricorsiva di appoggio utilizzata in saveTestResultList */
-void saveTestResultListBody(Appointment apList, FILE * testResultDB, int currentDay) {
+void saveTestResultListBody(Appointment apList, FILE * testResultDB, int currentDay, Quarantine *qtList) {
     if (testResultDB != NULL) {
         if (apList != NULL) {
             if (fprintf(testResultDB, "%s\t", apList->fiscalCode) < 0) {
@@ -249,8 +223,14 @@ void saveTestResultListBody(Appointment apList, FILE * testResultDB, int current
             }
             else {
                 char response[RESPONSE_SIZE];
-                if (generateTestResult()) strcpy(response, "POSITIVE");
-                else strcpy(response, "NEGATIVE");
+                if (generateTestResult()) {
+                    (*qtList) = quarantineTailInsert((*qtList), apList->fiscalCode);
+                    strcpy(response, "POSITIVE");
+                }
+                else{
+                    (*qtList) = quarantineDeleteNodeByFiscalCode((*qtList), apList->fiscalCode);
+                    strcpy(response, "NEGATIVE");
+                }
 
                 if (fprintf(testResultDB, "%s\t", response) < 0) {
                     printf("SAVETESTRESULTLIST: ");
@@ -262,7 +242,7 @@ void saveTestResultListBody(Appointment apList, FILE * testResultDB, int current
                         printMessage(ERR_WRITING);
                     }
                     else {
-                        saveTestResultListBody(apList->next, testResultDB, currentDay);
+                        saveTestResultListBody(apList->next, testResultDB, currentDay, qtList);
                     }
                 }
             }
@@ -274,15 +254,14 @@ void saveTestResultListBody(Appointment apList, FILE * testResultDB, int current
     }
 }
 
-/* Salva su file (in modalit� append) un elemento Reservation convertendo ogni Appointment in un TestResult */
-void saveTestResultList(Reservation res) {
-
+/* Salva su file (in mod. append) un elemento Reservation convertendo ogni Appointment in un TestResult */
+void saveTestResultList(Reservation res, Quarantine *qtList) {
     if (res != NULL) {
     FILE * testResultDB = fopen(TESTRESULT_DB, "a");
     if (testResultDB != NULL) {
-        saveTestResultListBody(res->morning, testResultDB, res->currentDay);
-        saveTestResultListBody(res->afternoon, testResultDB, res->currentDay);
-        saveTestResultListBody(res->evening, testResultDB, res->currentDay);
+        saveTestResultListBody(res->morning, testResultDB, res->currentDay, qtList);
+        saveTestResultListBody(res->afternoon, testResultDB, res->currentDay, qtList);
+        saveTestResultListBody(res->evening, testResultDB, res->currentDay, qtList);
         fclose(testResultDB);
     }
     else {
@@ -297,18 +276,22 @@ void saveTestResultList(Reservation res) {
 
 /* Carica da file una lista di elementi Quarantine */
 Quarantine loadQuarantineList() {
-    Quarantine list = quarantineNewList();
+    Quarantine qtList = quarantineNewList();
     FILE * quarantineDB = fopen(QUARANTINE_DB, "r");
     if (quarantineDB != NULL) {
+        char fiscalCode[FISCALCODE_SIZE];
+        while (!feof(quarantineDB)) {
+            if (fscanf(quarantineDB, "%s", fiscalCode) != EOF) {
+                qtList = quarantineTailInsert(qtList, fiscalCode);
+            }
+        }
+        fclose(quarantineDB);
+    }
 
-    }
-    else {
-        printf("LOADQUARANTINELIST: ");
-        printMessage(ERR_FILEACCESS);
-    }
-    return list;
+    return qtList;
 }
 
+/* Funzione ricorsiva di appoggio utilizzata in saveQuarantineList */
 void saveQuarantineListBody(Quarantine qtList, FILE * file) {
     if (file != NULL) {
         if (qtList != NULL) {
@@ -327,6 +310,7 @@ void saveQuarantineListBody(Quarantine qtList, FILE * file) {
     }
 }
 
+/* Salva su file una lista di elementi Quarantine */
 void saveQuarantineList(Quarantine qtList) {
     if (qtList != NULL) {
         FILE * quarantineDB = fopen(QUARANTINE_DB, "w");

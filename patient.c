@@ -7,9 +7,11 @@
 #include "s_patient.h"
 #include "s_appointment.h"
 #include "s_result.h"
+#include "s_quarantine.h"
 #include "helper.h"
 
 /* FUNZIONI AUSILIARIE */
+
 bool patientloginCheck(Patient ptList, char fiscalCode[], char password[]) {
     if (ptList == NULL) {
         return false;
@@ -164,7 +166,7 @@ void patientDeleteAppointmentUi(Appointment* apList, char fiscalCode[]) {
     }
 }
 
-void patientAccountUi(Reservation *res, char fiscalCode[]) {
+void patientAccountUi(Reservation *res, char fiscalCode[], bool quarantined) {
     int userChoice = -1;
     bool running = true;
     Appointment appList = loadAppointmentList();
@@ -173,6 +175,9 @@ void patientAccountUi(Reservation *res, char fiscalCode[]) {
         do {
             clearScreen();
             printf("Welcome %s.\n", fiscalCode);
+            if(quarantined) {
+                printf ("YOUR LAST TEST WAS POSITIVE, IT'S STRONGLY SUGGESTED TO TAKE ANOTHER APPOINTMENT.\n");
+            }
             printf("Please make a choice:\n\n");
             printf("1. REQUEST A COVID TEST APPOINTMENT\n");
             printf("2. CHECK YOUR APPOINTMENTS\n");
@@ -211,7 +216,7 @@ void patientAccountUi(Reservation *res, char fiscalCode[]) {
     appointmentFreeList(appList);
 }
 
-void patientLoginUi(Reservation *res, Patient ptList) {
+void patientLoginUi(Reservation *res, Patient ptList, Quarantine qtList) {
 
     int userChoice = -1;
     bool running = true;
@@ -229,7 +234,7 @@ void patientLoginUi(Reservation *res, Patient ptList) {
 
         if (patientloginCheck(ptList, fiscalCode, password)) {
             //login authorized
-            patientAccountUi(res, fiscalCode);
+            patientAccountUi(res, fiscalCode, quarantineFindPatientByFiscalCode(qtList, fiscalCode));
             running = false;
         }
         else {
@@ -304,7 +309,7 @@ void patientRegisterUi(Patient ptList) {
     } while (running);
 }
 
-void patientMainMenuUi(Reservation *res) {
+void patientMainMenuUi(Reservation *res, Quarantine qtList) {
     int userChoice = -1;
     bool running = true;
     Patient ptList = loadPatientList();
@@ -323,7 +328,7 @@ void patientMainMenuUi(Reservation *res) {
 
         switch(userChoice) {
             case 1:
-                patientLoginUi(res, ptList);
+                patientLoginUi(res, ptList, qtList);
                 break;
             case 2:
                 patientRegisterUi(ptList);

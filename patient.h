@@ -3,8 +3,10 @@
 #include <stdbool.h>
 
 #include "s_patient.h"
+#include "s_quarantine.h"
 
 /* FUNZIONI AUSILIARIE */
+bool isPatientInQuarantine(Quarantine qtList, char fiscalCode[]);
 bool loginCheck(Patient ptList, char fiscalCode[], char password[]);
 bool isPatientRegistered(Patient ptList, char fiscalCode[]);
 bool patientRegister(Patient* ptList, char fiscalCode[], char password[]);
@@ -17,9 +19,9 @@ void patientShowTestResultsUi(char fiscalCode[]);
 void patientAppointmentRequestUi(Appointment appList, char fiscalCode[]);
 void patientShowReservationUi(Reservation *res, char fiscalCode[]);
 void patientDeleteAppointmentUi(Appointment* appList, char fiscalCode[]);
-void patientAccountUi(Reservation *res, char fiscalCode[]);
-void patientLoginUi(Reservation *res, Patient ptList);
+void patientAccountUi(Reservation *res, char fiscalCode[], bool quarantined);
+void patientLoginUi(Reservation *res, Patient ptList, Quarantine qtList);
 void patientRegisterUi(Patient ptList);
-void patientMainMenuUi(Reservation *res);
+void patientMainMenuUi(Reservation *res, Quarantine qtList);
 
 #endif // patient_h
