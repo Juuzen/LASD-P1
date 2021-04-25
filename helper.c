@@ -116,35 +116,35 @@ int getEmployeeId(char message[]) {
 /* Ritorna il giorno corrente, ricavando quello precedente leggendo da file */
 /* Se il file non esiste ancora, restituisce il giorno 1 */
 int getCurrentDay() {
-    int currentDay = 1;
-    FILE * fp = fopen(TESTRESULT_DB, "r");
-
-    if (fp != NULL) {
-        if (ftell(fp) != 0) {
-            /* Ci si sposta alla fine del file */
-            fseek(fp, 0, SEEK_END);
-            char c;
-            do {
-                /* Ci si sposta -2 per poter leggere il carattere immediatamente precedente */
-                /* 1 - 2 = -1 */
-                c = fgetc(fp);
-                fseek(fp, -2, SEEK_CUR);
-
-            } while ((c != '\t') || ftell(fp) > 0);
-
-            /* A questo punto può essere letto il valore del giorno*/
-            if (fscanf(fp, "%d", &currentDay) > 0) {
-                currentDay += 1;
-            }
-            else {
-                printf("GETCURRENTDAY: ");
-                printMessage(ERR_READING);
-            }
+    int scan, lastDay = 0;
+    char c;
+    FILE *file = fopen(TESTRESULT_DB, "r");
+    if (file != NULL) {
+        fseek(file, 0, SEEK_END);
+        if (ftell(file) == 0){
+            //FILE VUOTO
         }
+        else {
+            fseek(file, -3, SEEK_CUR);
+            do {
+                scan = fgetc(file);
+                c = (char) scan;
+                if (c != '\t') {
+                    fseek(file, -2, SEEK_CUR);
+                }
+            } while (c != '\t');
 
-        fclose(fp);
+            fscanf(file, "%d", &lastDay);
+        }
+        fclose(file);
     }
-    return currentDay;
+
+    else {
+        // FILE NON ESISTE
+        file = fopen(TESTRESULT_DB, "w");
+        fclose(file);
+    }
+    return lastDay + 1;
 }
 
 /* Ritorna una stringa sulla base della fascia oraria ricevuta in ingresso */
