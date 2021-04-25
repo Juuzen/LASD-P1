@@ -68,19 +68,28 @@ void patientDeleteAppointment(Appointment* apList, char fiscalCode[]) {
 
 
 /* FUNZIONI UI */
-void patientShowTestResultsUi(char fiscalCode[]) {
-    TestResult rsList = loadTestResultList();
-    clearScreen();
-    if (rsList == NULL) {
-        printf("You took 0 tests up to this moment.\n");
-        printMessage(PAUSE_DEFAULT);
+void patientShowTestResultsUi(char fiscalCode[], int currentDay) {
+    if (currentDay == 1) {
+
     }
     else {
-        printf("Here are your test results:\n");
-        /* Di default, vengono stampati i test in senso anti-cronologico */
-        testResultPrintByFiscalCode(rsList, fiscalCode, false);
-        printMessage(PAUSE_DEFAULT);
+        TestResult rsList = loadTestResultList();
+        clearScreen();
+        if (rsList == NULL) {
+            printf("You took 0 tests up to this moment.\n");
+
+        }
+        else {
+            printf("Here are your test results:\n");
+            /* Di default, vengono stampati i test in senso anti-cronologico */
+            //testResultPrintByFiscalCode(rsList, fiscalCode, false);
+            TestResult filteredList = testResultFilterByFiscalCode(rsList, fiscalCode);
+            testResultPrintList(filteredList, false);
+            testResultFreeList(filteredList);
+        }
+        testResultFreeList(rsList);
     }
+    printMessage(PAUSE_DEFAULT);
 }
 
 void patientAppointmentRequestUi(Appointment apList, char fiscalCode[]) {
@@ -89,7 +98,6 @@ void patientAppointmentRequestUi(Appointment apList, char fiscalCode[]) {
     if (found != NULL) {
         printf("You already have an appointment with the following informations:\n");
         appointmentPrintNode(found);
-        printMessage(PAUSE_DEFAULT);
     }
     else {
         do {
@@ -112,10 +120,9 @@ void patientAppointmentRequestUi(Appointment apList, char fiscalCode[]) {
             bool response = patientRequestAppointment(&apList, fiscalCode, slot, symptoms);
             if (response) printf("Appointment requested!\n");
             else printf("There was a problem in requesting the appointment. Please try again later.\n");
-            printMessage(PAUSE_DEFAULT);
         }
     }
-
+    printMessage(PAUSE_DEFAULT);
 }
 
 void patientShowReservationUi(Reservation *res, char fiscalCode[]) {
@@ -200,7 +207,7 @@ void patientAccountUi(Reservation *res, char fiscalCode[], bool quarantined) {
                 patientDeleteAppointmentUi(&appList, fiscalCode);
                 break;
             case 4:
-                patientShowTestResultsUi(fiscalCode);
+                patientShowTestResultsUi(fiscalCode, (*res)->currentDay);
                 break;
             case 5:
                 printf("I'm now halting.\n");
@@ -283,8 +290,6 @@ void patientRegisterUi(Patient *ptList) {
         }
         else {
             do {
-                //that fiscal code was already present in db
-                //you can choose to stop and go back
                 printf("A person with fiscal code %s was already present.\n", fiscalCode);
                 printf("What do you want to do? Please make a choice:\n");
                 printf("1. REPEAT THE REGISTRATION PROCESS\n");
@@ -301,7 +306,6 @@ void patientRegisterUi(Patient *ptList) {
                     break;
                 default:
                     break;
-                    // TODO: Handle error
             }
         }
     } while (running);
@@ -332,12 +336,9 @@ void patientMainMenuUi(Reservation *res, Quarantine qtList) {
                 patientRegisterUi(&ptList);
                 break;
             case 3:
-                printf("I'm now halting.\n");
                 running = false;
                 break;
             default:
-                printf("Something went wrong...\n");
-                // FIXME: Handle shutdown
                 break;
         }
     } while (running);

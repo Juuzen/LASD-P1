@@ -76,44 +76,28 @@ void testResultPrintList(TestResult rsList, bool chronoOrder) {
     }
 }
 
-/* Stampa su stdout una lista di elementi TestResult, in maniera (anti)cronologica sulla base di chronoOrder*/
-/* Stampa solo gli elementi il cui campo day corrisponde al valore in ingresso */
-void testResultPrintByDay (TestResult rsList, int day, bool chronoOrder) {
-    if (rsList != NULL) {
-        if (!chronoOrder) {
-            // In questa maniera viene stampato in maniera anti-cronologica (più recente -> meno recente)
-            testResultPrintByDay(rsList->next, day, chronoOrder);
-        }
-
+/* Restituisce una lista di elementi TestResult filtrata sulla base del parametro in ingresso */
+TestResult testResultFilterByDay (TestResult rsList, int day) {
+    if (rsList == NULL) return NULL;
+    else {
         if (rsList->day == day) {
-            printf("Patient: %s - %s\n", rsList->fiscalCode, rsList->response);
+            TestResult node = testResultNewNode(rsList->fiscalCode, rsList->response, rsList->day);
+            node->next = testResultFilterByDay(rsList->next, day);
+            return node;
         }
-
-        if (chronoOrder) {
-            // In questa maniera viene stampato in maniera cronologica (meno recente -> più recente)
-            testResultPrintByDay(rsList->next, day, chronoOrder);
-        }
+        else return testResultFilterByDay(rsList->next, day);
     }
 }
 
-/* Stampa su stdout una lista di elementi TestResult, in maniera (anti)cronologica sulla base di chronoOrder*/
-/* Stampa solo gli elementi il cui campo fiscalCode corrisponde al valore in ingresso */
-void testResultPrintByFiscalCode (TestResult rsList, char fiscalCode[], bool chronoOrder) {
-    if (rsList != NULL) {
-        if (!chronoOrder) {
-            // In questa maniera viene stampato in maniera anti-cronologica (più recente -> meno recente)
-            testResultPrintByFiscalCode(rsList->next, fiscalCode, chronoOrder);
+/* Restituisce una lista di elementi TestResult filtrata sulla base del parametro in ingresso */
+TestResult testResultFilterByFiscalCode (TestResult rsList, char fiscalCode[]) {
+    if (rsList == NULL) return NULL;
+    else {
+        if (strcmp(rsList->fiscalCode, fiscalCode) == 0) {
+            TestResult node = testResultNewNode(rsList->fiscalCode, rsList->response, rsList->day);
+            node->next = testResultFilterByFiscalCode(rsList->next, fiscalCode);
+            return node;
         }
-
-        if ((strcmp(rsList->fiscalCode, fiscalCode)) == 0) {
-            printf("DAY %d - %s\n", rsList->day, rsList->response);
-        }
-
-        if (chronoOrder) {
-            // In questa maniera viene stampato in maniera cronologica (meno recente -> più recente)
-            testResultPrintByFiscalCode(rsList->next, fiscalCode, chronoOrder);
-        }
-
+        else return testResultFilterByFiscalCode(rsList->next, fiscalCode);
     }
 }
-

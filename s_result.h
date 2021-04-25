@@ -24,8 +24,7 @@ void testResultFreeList(TestResult rsList);
 TestResult testResultTailInsert (TestResult rsList, char fiscalCode[], char response[], int day);
 void testResultPrintNode(TestResult rsNode);
 void testResultPrintList(TestResult rsList, bool chronoOrder);
-void testResultPrintByDay(TestResult rsList, int day, bool chronoOrder);
-void testResultPrintByFiscalCode(TestResult rsList, char fiscalCode[], bool chronoOrder);
-
+TestResult testResultFilterByDay (TestResult rsList, int day);
+TestResult testResultFilterByFiscalCode (TestResult rsList, char fiscalCode[]);
 
 #endif // s_result_h
