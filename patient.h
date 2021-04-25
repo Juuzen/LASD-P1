@@ -6,7 +6,6 @@
 #include "s_quarantine.h"
 
 /* FUNZIONI AUSILIARIE */
-bool isPatientInQuarantine(Quarantine qtList, char fiscalCode[]);
 bool loginCheck(Patient ptList, char fiscalCode[], char password[]);
 bool isPatientRegistered(Patient ptList, char fiscalCode[]);
 bool patientRegister(Patient* ptList, char fiscalCode[], char password[]);

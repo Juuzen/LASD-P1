@@ -14,9 +14,8 @@
 
 /* Restituisce true se il login va a buon fine */
 bool patientloginCheck(Patient ptList, char fiscalCode[], char password[]) {
-    if (ptList == NULL) {
-        return false;
-    }
+    if (ptList == NULL) return false;
+
     else {
         if (strcmp(ptList->fiscalCode, fiscalCode) == 0) {
             if (strcmp(ptList->password, password) == 0) {
@@ -32,12 +31,11 @@ bool patientloginCheck(Patient ptList, char fiscalCode[], char password[]) {
 
 /* Restituisce true se il paziente è già presente nel database */
 bool isPatientRegistered(Patient ptList, char fiscalCode[]) {
-    if (ptList == NULL) {
-        return false;
-    }
+    if (ptList == NULL) return false;
 
     else {
-        return ((strcmp(ptList->fiscalCode, fiscalCode)) == 0) ? true : isPatientRegistered(ptList->next, fiscalCode);
+        if (strcmp(ptList->fiscalCode, fiscalCode) == 0) return true;
+        else return isPatientRegistered(ptList->next, fiscalCode);
     }
 }
 
@@ -45,6 +43,7 @@ bool isPatientRegistered(Patient ptList, char fiscalCode[]) {
 bool patientRegister(Patient* ptList, char fiscalCode[], char password[]) {
     bool response = false;
     if (!isPatientRegistered(*ptList, fiscalCode)) {
+        /* Se non è presente nel database, lo salva */
         *ptList = patientTailInsert(*ptList, fiscalCode, password);
         savePatient(fiscalCode, password);
         response = true;
@@ -74,8 +73,6 @@ void patientDeleteAppointment(Appointment* apList, char fiscalCode[]) {
 
 /* FUNZIONI UI */
 
-
-
 /* Funzione di UI per il punto A della traccia */
 void patientAppointmentRequestUi(Appointment apList, char fiscalCode[]) {
     int userChoice = -1;
@@ -100,7 +97,9 @@ void patientAppointmentRequestUi(Appointment apList, char fiscalCode[]) {
         if (userChoice != 4) {
             timeSlot slot = (timeSlot) --userChoice;
 
-            printf("If you have any symptoms, please provide a concise explanation (max %d characters):\n", SYMPTOMS_SIZE);
+            printf("If you have any symptoms, please provide a concise explanation (max %d characters);\n", SYMPTOMS_SIZE);
+            printf("Otherwise just press ENTER KEY to go further.\n");
+            printf("Your symptoms: ");
             char * symptoms = getSymptoms(stdin);
 
             bool response = patientRequestAppointment(&apList, fiscalCode, slot, symptoms);
@@ -128,12 +127,9 @@ void patientShowReservationUi(Reservation *res, char fiscalCode[]) {
 void patientDeleteAppointmentUi(Appointment* apList, char fiscalCode[]) {
     clearScreen();
     Appointment app = appointmentFindByFiscalCode(*apList, fiscalCode);
-    appointmentPrintNode(app);
 
-    if (app == NULL) {
-        printf("You have no appointments up to now.\n");
-        printMessage(PAUSE_DEFAULT);
-    }
+    if (app == NULL) printf("You have no appointments up to now.\n");
+
     else {
         char input;
         do {
@@ -146,11 +142,11 @@ void patientDeleteAppointmentUi(Appointment* apList, char fiscalCode[]) {
             fflush(stdin);
             if ((input == 'y') || (input == 'Y')) {
                 patientDeleteAppointment(apList, fiscalCode);
+                printf("The appointment is now canceled.\n");
             }
 
             else if ((input == 'n') || (input == 'N')) {
                 printf("No changes will be made.\n");
-                printMessage(PAUSE_DEFAULT);
             }
 
             else {
@@ -159,27 +155,32 @@ void patientDeleteAppointmentUi(Appointment* apList, char fiscalCode[]) {
             }
         } while ((input != 'y') && (input != 'Y') && (input != 'n') && (input != 'N'));
     }
+    printMessage(PAUSE_DEFAULT);
 }
 
 /* Funzione di UI per il punto D della traccia */
 void patientShowTestResultsUi(char fiscalCode[], int currentDay) {
+    clearScreen();
     if (currentDay == 1) {
-
+        printf("You can choose this options from day 2 onwards.\n");
     }
     else {
         TestResult rsList = loadTestResultList();
         clearScreen();
-        if (rsList == NULL) {
-            printf("You took 0 tests up to this moment.\n");
+        /* Se non sono stati ancora effettuati test */
+        if (rsList == NULL) printf("You took 0 tests up to this moment.\n");
 
-        }
         else {
-            printf("Here are your test results:\n");
-            /* Di default, vengono stampati i test in senso anti-cronologico */
-            //testResultPrintByFiscalCode(rsList, fiscalCode, false);
+            /* Ricaviamo i test effettuati dal paziente */
             TestResult filteredList = testResultFilterByFiscalCode(rsList, fiscalCode);
-            testResultPrintList(filteredList, false);
-            testResultFreeList(filteredList);
+            if (filteredList == NULL) printf("You took 0 tests up to this moment.\n");
+
+            else {
+                printf("Here are your test results:\n");
+                /* Di default, vengono stampati i test in senso anti-cronologico */
+                testResultPrintList(filteredList, false);
+                testResultFreeList(filteredList);
+            }
         }
         testResultFreeList(rsList);
     }
@@ -224,12 +225,9 @@ void patientAccountUi(Reservation *res, char fiscalCode[], bool quarantined) {
                 patientShowTestResultsUi(fiscalCode, (*res)->currentDay);
                 break;
             case 5:
-                printf("I'm now halting.\n");
                 running = false;
                 break;
             default:
-                printf("Something went wrong...\n");
-                // FIXME: Handle shutdown
                 break;
         }
     } while (running);
@@ -254,14 +252,13 @@ void patientLoginUi(Reservation *res, Patient ptList, Quarantine qtList) {
         fflush(stdin);
 
         if (patientloginCheck(ptList, fiscalCode, password)) {
-            //login authorized
+            /* Accesso autorizzato */
             patientAccountUi(res, fiscalCode, quarantineFindPatientByFiscalCode(qtList, fiscalCode));
             running = false;
         }
         else {
             do {
-                //credentials are not correct
-                //you can choose to stop and go back
+                /* Credenziali non corrette */
                 printf("Your fiscal code and/or password is incorrect.\n");
                 printf("What do you want to do? Please make a choice:\n");
                 printf("1. TRY AGAIN\n");
@@ -270,16 +267,7 @@ void patientLoginUi(Reservation *res, Patient ptList, Quarantine qtList) {
                 userChoice = getChoice(2);
             } while (userChoice == -1);
 
-            switch (userChoice) {
-                case 1:
-                    break;
-                case 2:
-                    running = false;
-                    break;
-                default:
-                    break;
-                    // TODO: Handle error
-            }
+            if (userChoice == 2) running = false;
         }
     } while (running);
 }

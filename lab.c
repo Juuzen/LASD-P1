@@ -345,14 +345,13 @@ void labLoginUi(Reservation *res) {
         password = maskedInput();
         fflush(stdin);
         if ( labLoginCheck(emList, id, password) ) {
-            //login authorized
+            /* Login autorizzato */
             labMainMenuUi(res);
             running = false;
         }
         else {
             do {
-                //credentials are not correct
-                //you can choose to stop and go back
+                /* Le credenziali non sono corrette */
                 printf("Your credentials are incorrect.\n");
                 printf("Please make a choice:\n");
                 printf("1. TRY AGAIN\n");
@@ -361,17 +360,7 @@ void labLoginUi(Reservation *res) {
                 userChoice = getChoice(2);
             } while (userChoice == -1);
 
-            switch (userChoice) {
-                // TODO: Delete if useless
-                case 1:
-                    break;
-                case 2:
-                    running = false;
-                    break;
-                default:
-                    break;
-                    // TODO: Handle error
-            }
+            if (userChoice == 2) running = false;
         }
     } while (running);
 
