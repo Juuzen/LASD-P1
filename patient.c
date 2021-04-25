@@ -273,7 +273,7 @@ void patientRegisterUi(Patient ptList) {
         printf("Please provide your fiscal code: ");
         scanf("%16s", fiscalCode);
         fflush(stdin);
-        printf("Please choose a password: ");
+        printf("Please choose a password (the echoing is turned off): ");
         password = maskedInput();
         fflush(stdin);
 

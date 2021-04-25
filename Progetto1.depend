@@ -132,7 +132,7 @@
 	"s_patient.h"
 	"s_quarantine.h"
 
-1619349073 source:f:\university\laboratorio di algoritmi e strutture dati\esercizi\lasd-p1\patient.c
+1619350087 source:f:\university\laboratorio di algoritmi e strutture dati\esercizi\lasd-p1\patient.c
 	<stdio.h>
 	<stdlib.h>
 	<string.h>

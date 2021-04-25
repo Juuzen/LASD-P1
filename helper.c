@@ -44,6 +44,7 @@ char* maskedInput() {
         else password[i] = c;
     }
     password[i] = '\0';
+    printf("\n");
     #endif
 
     #ifdef __linux__
