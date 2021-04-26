@@ -117,9 +117,8 @@ void labManageAppointmentRequestsUi(Reservation *res) {
             printf("Here are the appointment request up to now:\n");
             appointmentPrintList(apList);
             printf("Do you want to start the confirmation process? [y/n] ");
-            fflush(stdin);
             scanf("%c", &input);
-            fflush(stdin);
+            flushStdin();
             if ((input == 'y') || (input == 'Y')) {
                 labConfirmAppointments(res, &apList);
                 printf("Reservations made. You can check them by choosing option 3 in main menu.\n");
@@ -170,7 +169,7 @@ void labAddReservationUi(Reservation *res) {
 
             printf("Please provide the fiscal code of the patient: ");
             scanf("%17s", fiscalCode);
-            fflush(stdin);
+            flushStdin();
             printf("If you have any symptoms, please provide a concise explanation (max %d characters);\n", SYMPTOMS_SIZE);
             printf("Otherwise just press ENTER KEY to go further.\n");
             printf("Your symptoms: ");
@@ -340,10 +339,8 @@ void labLoginUi(Reservation *res) {
     do {
         clearScreen();
         id = getEmployeeId("Please provide your worker ID: ");
-        fflush(stdin);
         printf("Please provide your password (the echoing is turned off): ");
         password = maskedInput();
-        fflush(stdin);
         if ( labLoginCheck(emList, id, password) ) {
             /* Login autorizzato */
             labMainMenuUi(res);

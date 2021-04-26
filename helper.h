@@ -15,6 +15,7 @@ char *getSymptoms(FILE * file);
 const char* getTimeSlot(timeSlot slot);
 void wrongChoice();
 int getChoice(int maxOptions);
+void flushStdin();
 
 #endif // helper_h
 

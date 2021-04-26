@@ -23,7 +23,7 @@ Employee loadSampleEmployeeList() {
     return emList;
 }
 
-/* Ripulisce lo schermo, permettendo una più facile visualizzazione delle informazioni */
+/* Ripulisce lo schermo, permettendo una piï¿½ facile visualizzazione delle informazioni */
 void clearScreen() {
     #ifdef _WIN32
     /* Istruzioni per sistema operativo Windows */
@@ -36,7 +36,7 @@ void clearScreen() {
     #endif
 }
 
-/* Prende in input una stringa, mascherando l'output corrispettivo di ciò che è stato immesso */
+/* Prende in input una stringa, mascherando l'output corrispettivo di ciï¿½ che ï¿½ stato immesso */
 char* maskedInput() {
     char* password = (char *) calloc(1, PASSWORD_SIZE * sizeof(char));
     #ifdef _WIN32
@@ -62,12 +62,13 @@ char* maskedInput() {
     if (tcgetattr(STDIN_FILENO, &tp) != -1) {
         /* Salva le precedenti impostazioni */
         save = tp;
-        /* Imposta il flag ECHO a 0 (nessun input verrà propagato su stdout) */
+        /* Imposta il flag ECHO a 0 (nessun input verrï¿½ propagato su stdout) */
         tp.c_lflag &= ~ECHO;
         /* Se possibile, salva le nuove impostazioni */
         if (tcsetattr(STDIN_FILENO, TCSAFLUSH, &tp) != -1) {
             /* Effettua la lettura da input */
             scanf("%20s", password);
+            flushStdin();
             /* Ripristina le precedenti impostazioni */
             tcsetattr(STDIN_FILENO, TCSANOW, &save);
         }
@@ -81,9 +82,7 @@ char* maskedInput() {
 /* Per procedere basta premere il tasto INVIO */
 void printMessage(char message[]) {
     printf("%s\n", message);
-    fflush(stdin);
-    getchar();
-    fflush(stdin);
+    flushStdin();
 }
 
 /* Funzione fittizia per generare gli esiti dei test COVID-19 */
@@ -100,12 +99,12 @@ int getEmployeeId(char message[]) {
     do {
         clearScreen();
         printf("%s", message);
-        fflush(stdin);
         if (scanf("%d", &choice) == 1) {
+            flushStdin();
             correct = true;
         }
         else {
-            fflush(stdin);
+            flushStdin();
             printf("Only numbers are permitted.\n");
             printMessage("Press ENTER key to try again...");
         }
@@ -162,7 +161,7 @@ const char* getTimeSlot(timeSlot slot) {
 }
 
 /* Ritorna una stringa letta da input, comprensiva di whitespace e altri caratteri speciali */
-/* L'eccezione è '\n' */
+/* L'eccezione ï¿½ '\n' */
 char * getSymptoms(FILE * file) {
     if (file != NULL) {
         int i = 0;
@@ -190,17 +189,23 @@ void wrongChoice() {
 /* Ritorna un intero letto da input, corretto sia nel tipo che nel range (0 - maxOptions) */
 int getChoice(int maxOptions) {
     int tmp, choice = -1;
-    fflush(stdin);
     if ((scanf("%d", &tmp)) == 1) {
-        fflush(stdin);
+        flushStdin();
         if ((tmp > 0) && (tmp <= maxOptions)) {
             choice = tmp;
         }
         else wrongChoice();
     }
     else {
-        fflush(stdin);
+        flushStdin();
         wrongChoice();
     }
     return choice;
+}
+
+void flushStdin() {
+    int c;
+    do {
+        c = getchar();
+    } while (c != '\n' && c != EOF);
 }

@@ -29,7 +29,7 @@ bool patientloginCheck(Patient ptList, char fiscalCode[], char password[]) {
     }
 }
 
-/* Restituisce true se il paziente è già presente nel database */
+/* Restituisce true se il paziente ï¿½ giï¿½ presente nel database */
 bool isPatientRegistered(Patient ptList, char fiscalCode[]) {
     if (ptList == NULL) return false;
 
@@ -39,11 +39,11 @@ bool isPatientRegistered(Patient ptList, char fiscalCode[]) {
     }
 }
 
-/* Restituisce true se il processo di registrazione è avvenuto con successo */
+/* Restituisce true se il processo di registrazione ï¿½ avvenuto con successo */
 bool patientRegister(Patient* ptList, char fiscalCode[], char password[]) {
     bool response = false;
     if (!isPatientRegistered(*ptList, fiscalCode)) {
-        /* Se non è presente nel database, lo salva */
+        /* Se non ï¿½ presente nel database, lo salva */
         *ptList = patientTailInsert(*ptList, fiscalCode, password);
         savePatient(fiscalCode, password);
         response = true;
@@ -52,7 +52,7 @@ bool patientRegister(Patient* ptList, char fiscalCode[], char password[]) {
     return response;
 }
 
-/* Restituisce true se il processo di richiesta di appuntamento è avvenuto con successo */
+/* Restituisce true se il processo di richiesta di appuntamento ï¿½ avvenuto con successo */
 bool patientRequestAppointment(Appointment* apList, char fiscalCode[], timeSlot slot, char symptoms[]) {
     bool response = false;
     Appointment newApp = appointmentNewNode(fiscalCode, slot, symptoms);
@@ -93,7 +93,6 @@ void patientAppointmentRequestUi(Appointment *apList, char fiscalCode[]) {
             printf("Your choice: ");
             userChoice = getChoice(4);
         } while (userChoice == -1);
-        fflush(stdin);
         if (userChoice != 4) {
             timeSlot slot = (timeSlot) --userChoice;
 
@@ -137,9 +136,8 @@ void patientDeleteAppointmentUi(Appointment* apList, char fiscalCode[]) {
             printf("Here is you appointment informations:\n");
             appointmentPrintNode(app);
             printf("Do you want to delete this appointment? [y/n] ");
-            fflush(stdin);
             scanf("%c", &input);
-            fflush(stdin);
+            flushStdin();
             if ((input == 'y') || (input == 'Y')) {
                 patientDeleteAppointment(apList, fiscalCode);
                 printf("The appointment is now canceled.\n");
@@ -246,10 +244,9 @@ void patientLoginUi(Reservation *res, Patient ptList, Quarantine qtList) {
         clearScreen();
         printf("Please provide your fiscal code: ");
         scanf("%16s", fiscalCode);
-        fflush(stdin);
+        flushStdin();
         printf("Please provide your password (the echoing is turned off): ");
         password = maskedInput();
-        fflush(stdin);
 
         if (patientloginCheck(ptList, fiscalCode, password)) {
             /* Accesso autorizzato */
@@ -259,6 +256,7 @@ void patientLoginUi(Reservation *res, Patient ptList, Quarantine qtList) {
         else {
             do {
                 /* Credenziali non corrette */
+                clearScreen();
                 printf("Your fiscal code and/or password is incorrect.\n");
                 printf("What do you want to do? Please make a choice:\n");
                 printf("1. TRY AGAIN\n");
@@ -282,18 +280,20 @@ void patientRegisterUi(Patient *ptList) {
         clearScreen();
         printf("Please provide your fiscal code: ");
         scanf("%16s", fiscalCode);
-        fflush(stdin);
+        flushStdin();
         printf("Please choose a password (the echoing is turned off): ");
         password = maskedInput();
-        fflush(stdin);
+        flushStdin();
 
         if (patientRegister(ptList, fiscalCode, password)) {
+            clearScreen();
             printf("You are now registered to the platform!\n");
             printMessage(PAUSE_DEFAULT);
             running = false;
         }
         else {
             do {
+                clearScreen();
                 printf("A person with fiscal code %s was already present.\n", fiscalCode);
                 printf("What do you want to do? Please make a choice:\n");
                 printf("1. REPEAT THE REGISTRATION PROCESS\n");
