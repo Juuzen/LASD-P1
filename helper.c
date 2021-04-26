@@ -203,6 +203,7 @@ int getChoice(int maxOptions) {
     return choice;
 }
 
+/* Pulisce l'stdin da newline e altri caratteri */
 void flushStdin() {
     int c;
     do {

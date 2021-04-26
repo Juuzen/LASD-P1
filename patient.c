@@ -283,7 +283,6 @@ void patientRegisterUi(Patient *ptList) {
         flushStdin();
         printf("Please choose a password (the echoing is turned off): ");
         password = maskedInput();
-        flushStdin();
 
         if (patientRegister(ptList, fiscalCode, password)) {
             clearScreen();
